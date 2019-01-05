@@ -20,6 +20,6 @@ connection_string = "{dialect}://{login}:{password}@{host}/{db_name}{options}".f
 print "Connection string: {}".format(connection_string)
 
 
-engine = create_engine(connection_string, echo=True)
-Session = sessionmaker(engine)
+ENGINE = create_engine(connection_string, echo=True)
+Session = sessionmaker(ENGINE)
 

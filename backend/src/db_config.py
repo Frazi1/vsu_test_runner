@@ -1,7 +1,5 @@
-from sqlalchemy import create_engine, Integer, Column, String
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-from src.models import Base
 
 dialect = "mysql+pymysql"
 

@@ -1,10 +1,14 @@
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
-from src.models import TestTemplate, TestQuestionTemplate, TestTemplateToTestQuestionTemplateAssociation
+
+from src.models import TestTemplate, TestQuestionTemplate, TestTemplateToTestQuestionTemplateAssociation, Function, \
+    FunctionParameter
 
 _models = [
     TestTemplate,
     TestQuestionTemplate,
-    TestTemplateToTestQuestionTemplateAssociation
+    TestTemplateToTestQuestionTemplateAssociation,
+    Function,
+    FunctionParameter,
 ]

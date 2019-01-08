@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 from src.models import TestTemplate, TestQuestionTemplate, TestTemplateToTestQuestionTemplateAssociation, Function, \
-    FunctionParameter
+    FunctionParameter, CodeSnippet
 
 _models = [
     TestTemplate,
@@ -11,4 +11,5 @@ _models = [
     TestTemplateToTestQuestionTemplateAssociation,
     Function,
     FunctionParameter,
+    CodeSnippet
 ]

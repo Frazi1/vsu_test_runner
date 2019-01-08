@@ -12,8 +12,12 @@ class Function(Base):
     name = Column(String(100))
     return_type = Column(Enum(ArgumentType))
     parameters = relationship("FunctionParameter", back_populates="function")
+    code_snippets = relationship("CodeSnippet", back_populates="function")
 
-    def __init__(self, name, return_type, parameters):
+    def __init__(self, name, return_type, parameters=None):
+        if parameters is None:
+            parameters = []
+
         self.name = name
         self.return_type = return_type
         self.parameters = parameters

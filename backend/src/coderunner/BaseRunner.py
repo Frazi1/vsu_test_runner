@@ -1,23 +1,29 @@
-import uuid
+from abc import abstractproperty, abstractmethod
+
+from src.services.CodeExecuterService import Registrator
 
 
-class BaseRunner:
-    __file_ext__ = None
+class BaseRunner(object):
+    # __metaclass__ = Registrator
 
     def __init__(self):
+        pass
+
+    @abstractproperty
+    def supported_languages(self):
         pass
 
     def _translate_parameter(self, function_parameter):
         raise NotImplemented
 
-    def _translate_code(self, function_signature, code_snippet):
-        raise NotImplemented
+    @abstractmethod
+    def translate_code(self, function_signature, code_snippet):
+        pass
 
-    def execute(self, function_signature, code_snippet):
-        raise NotImplemented
+    def execute_snippet(self, function_signature, code_snippet):
+        code = self.translate_code(function_signature, code_snippet)
+        return self.execute_code(function_signature.return_type, code)
 
-    def write_code(self, code):
-        file_name = uuid.uuid4().get_hex()
-        with open(file_name + self.__file_ext__, "w") as file_:
-            file_.write(code)
-        return file_name
+    @abstractmethod
+    def execute_code(self, return_type, code):
+        pass

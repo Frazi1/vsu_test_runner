@@ -1,10 +1,14 @@
-import subprocess
-from BaseRunner import BaseRunner
+import os
+
+from src.coderunner.SimpleRunner import SimpleRunner
+from src.models.LanguageEnum import LanguageEnum
 
 
-class PythonRunner(BaseRunner):
+class PythonRunner(SimpleRunner):
     __file_ext__ = ".py"
     _indentation = 4
+
+    supported_languages = [LanguageEnum.PYTHON]
 
     def _translate_parameter(self, function_parameter):
         return function_parameter.name
@@ -15,7 +19,7 @@ class PythonRunner(BaseRunner):
             res += "\n"
         return res
 
-    def _translate_code(self, function_signature, code_snippet):
+    def translate_code(self, function_signature, code_snippet):
         parameters = [self._translate_parameter(x) for x in function_signature.parameters]
         signature = "def {name}({parameters}):\n".format(name=function_signature.name,
                                                          parameters=", ".join(parameters))
@@ -25,13 +29,11 @@ class PythonRunner(BaseRunner):
             [(self._indent_line(x, index == len(code_lines) - 1)) for index, x in enumerate(code_lines)])
         return signature + formatted_code
 
-    def execute(self, function_signature, code_snippet):
-        code = self._translate_code(function_signature, code_snippet)
-        file_name = self.write_code(code)
+    def execute_code(self, return_type, code):
+        file_name = self.save_code_to_file(None, self.__file_ext__, code)
+        result = self.run_file("python", self.supported_languages[0], file_name, return_type)
+        os.remove(file_name)
+        return result
 
-    def _run_file(self, file_path, return_type):
-        p = subprocess.Popen('python {} 1'.format(file_path), stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        print out
-        print err
 
+python_runner = PythonRunner()

@@ -1,10 +1,11 @@
 from functools import wraps
 from bottle import response
 
-import ujson
+# import ujson as json
+import json as json
 
-
-class UJsonPlugin:
+class JsonPlugin:
+    api = 2
     def __init__(self):
         pass
 
@@ -16,6 +17,6 @@ class UJsonPlugin:
         def wrapper(*args, **kwargs):
             response.content_type = "application/json; charset=utf-8"
             value = callback(*args, **kwargs)
-            return ujson.dumps(value)
+            return json.dumps(value)
 
         return wrapper

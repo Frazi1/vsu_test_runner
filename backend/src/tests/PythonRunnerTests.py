@@ -21,7 +21,7 @@ class PythonRunnerTests(unittest.TestCase):
             'param = FunctionParameter(ArgumentType.STRING, "param1")',
             'self.assertEquals(self.runner.translate_parameter(param), "param1")'
         ], function_)
-        res = self.runner._translate_code(function_, snippet)
+        res = self.runner.translate_code(function_, snippet)
         expected ="""def test_param_conversion():
     param = FunctionParameter(ArgumentType.STRING, "param1")
     self.assertEquals(self.runner.translate_parameter(param), "param1")"""
@@ -34,7 +34,7 @@ class PythonRunnerTests(unittest.TestCase):
             'param = FunctionParameter(ArgumentType.STRING, "param1")',
             'self.assertEquals(self.runner.translate_parameter(param), "param1")'
         ], function_)
-        res = self.runner._translate_code(function_, snippet)
+        res = self.runner.translate_code(function_, snippet)
         expected ="""def test_param_conversion(self):
     param = FunctionParameter(ArgumentType.STRING, "param1")
     self.assertEquals(self.runner.translate_parameter(param), "param1")"""
@@ -48,7 +48,7 @@ class PythonRunnerTests(unittest.TestCase):
             'param = FunctionParameter(ArgumentType.STRING, "param1")',
             'self.assertEquals(self.runner.translate_parameter(param), "param1")'
         ], function_)
-        res = self.runner._translate_code(function_, snippet)
+        res = self.runner.translate_code(function_, snippet)
         print res
         expected = """def test_param_conversion(self, param2):
     param = FunctionParameter(ArgumentType.STRING, "param1")
@@ -61,7 +61,7 @@ class PythonRunnerTests(unittest.TestCase):
             'if a is b:',
             '    self.assertEquals(self.runner.translate_parameter(param), "param1")'
         ], function_)
-        res = self.runner._translate_code(function_, snippet)
+        res = self.runner.translate_code(function_, snippet)
         print res
         expected = """def test_param_conversion():
     if a is b:

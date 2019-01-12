@@ -1,6 +1,5 @@
 from sqlalchemy.orm import joinedload
 
-from src.db_config import Session
 from src.models.TestQuestionTemplate import TestQuestionTemplate
 from src.models.TestTemplate import TestTemplate
 

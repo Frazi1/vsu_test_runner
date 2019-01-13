@@ -1,4 +1,4 @@
 <button [routerLink]="'/template/new'">Add Test</button>
 <div *ngFor="let t of testTemplates">
-  <div [routerLink]="['/template', t.id]">{{t.id}}  {{t.name}}</div>
+  <div [routerLink]="['/template', t.id]">{{t.id}}. Название: {{t.name}}  Вопросов: {{t.questionTemplates.length}}</div>
 </div>

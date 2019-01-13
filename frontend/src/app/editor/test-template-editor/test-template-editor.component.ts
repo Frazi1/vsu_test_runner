@@ -3,7 +3,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/index';
 import {TestTemplate} from '../../shared/TestTemplate';
 import {TestQuestionTemplate} from '../../shared/TestQuestionTemplate';
-import {TemplatesService} from '../../services/templates.service';
+import {MockTemplatesService} from '../../services/mock-templates.service';
+import {ITemplateService} from "../../services/interfaces";
 
 @Component({
   selector: 'app-test-template-editor',
@@ -16,7 +17,7 @@ export class TestTemplateEditorComponent implements OnInit {
   private paramSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
-              private templatesService: TemplatesService,
+              @Inject('ITemplateService') private templatesService: ITemplateService,
               private router: Router) {
   }
 

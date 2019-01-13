@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {TestQuestionTemplate} from '../../shared/TestQuestionTemplate';
 
 @Component({
@@ -8,7 +8,22 @@ import {TestQuestionTemplate} from '../../shared/TestQuestionTemplate';
 })
 export class TestQuestionTemplateEditorComponent implements OnInit {
 
-  public testQuestionTemplate: TestQuestionTemplate;
+  private _editingName = false;
+
+  // region Getters/Setters
+  get editingName(): boolean {
+    return this._editingName;
+  }
+
+  set editingName(value: boolean) {
+    this._editingName = value;
+  }
+
+  // endregion
+
+  @Input()
+  private question: TestQuestionTemplate;
+
 
   constructor() {
   }

@@ -6,7 +6,7 @@ from src.models.LanguageEnum import LanguageEnum
 from src.services.CodeExecuterService import Executer
 
 
-class PythonRunnerTests(unittest.TestCase):
+class CodeExecutorTest(unittest.TestCase):
     executer = Executer()
     executer.register_runner(PythonRunner())
 

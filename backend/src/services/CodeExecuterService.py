@@ -1,7 +1,11 @@
 class Executer:
+    def __init__(self):
+        pass
+
     _runners = {}
 
     def register_runner(self, cls_):
+        print "TYPE: {}".format(type(cls_))
         try:
             languages = cls_.supported_languages
             for lang in languages:
@@ -27,10 +31,3 @@ class Executer:
 
 
 executor = Executer()
-
-
-class Registrator(type):
-    def __new__(cls, clsname, bases, attrs):
-        newclass = type.__new__(cls, clsname, bases, attrs)
-        executor.register_runner(newclass)
-        return newclass

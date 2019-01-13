@@ -2,6 +2,7 @@ import os
 
 from src.coderunner.SimpleRunner import SimpleRunner
 from src.models.LanguageEnum import LanguageEnum
+from src.services.CodeExecuterService import executor
 
 
 class PythonRunner(SimpleRunner):
@@ -36,4 +37,4 @@ class PythonRunner(SimpleRunner):
         return result
 
 
-python_runner = PythonRunner()
+executor.register_runner(PythonRunner())

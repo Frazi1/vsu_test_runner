@@ -1,8 +1,8 @@
 <div>
   <h1>{{testTemplate.name}}</h1>
   <input [(ngModel)]="testTemplate.name">
-  <button (click)="addQuestion()">Add question</button>
+  <button (click)="addQuestion()">Добавить вопрос</button>
 
-  <app-test-question-template-editor *ngFor="let q of testTemplate.questionTemplates"></app-test-question-template-editor>
-  <button (click)="save()">Save</button>
+  <app-test-question-template-editor *ngFor="let q of testTemplate.questionTemplates" [question]="q"></app-test-question-template-editor>
+  <button (click)="save()">Сохранить</button>
 </div>

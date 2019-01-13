@@ -8,10 +8,6 @@ from src.models.TestTemplateToTestQuestionTemplateAssociation import test_templa
 class TestTemplate(Base):
     __tablename__ = 'test_template'
 
-    def __init__(self, name, time_limit=None):
-        self.name = name
-        self.time_limit = time_limit
-
     id = Column(Integer, primary_key=True)
     name = Column(String(length=100))
     time_limit = Column(Integer, nullable=True)

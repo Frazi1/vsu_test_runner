@@ -3,17 +3,24 @@ class TestTemplateDto:
     def list_of(test_templates):
         return [TestTemplateDto(x) for x in test_templates]
 
-    def __init__(self, test_template):
-        self.name = test_template.name
-        self.time_limit = test_template.time_limit
-        self.questions = [TestQuestionTemplateDto(x) for x in test_template.questions]
-
+    @classmethod
+    def from_test(cls, test_template):
+        res = cls()
+        res.id = test_template.id
+        res.name = test_template.name
+        res.time_limit = test_template.time_limit
+        res.questions = [TestQuestionTemplateDto(x) for x in test_template.questions]
+        return res
 
 class TestQuestionTemplateDto:
-    def __init__(self, test_template_question):
-        self.name = test_template_question.name
-        self.description = test_template_question.description
-        self.time_limit = test_template_question.time_limit
+    @classmethod
+    def from_test(cls, test_template_question):
+        res = cls()
+        res.id = test_template_question.id
+        res.name = test_template_question.name
+        res.description = test_template_question.description
+        res.time_limit = test_template_question.time_limit
+        return res
 
 
 class CodeRunResult:

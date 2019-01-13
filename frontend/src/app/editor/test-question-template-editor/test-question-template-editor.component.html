@@ -1,3 +1,7 @@
-<p>
-  test-question-template-editor works!
-</p>
+<div>
+  <h3 (click)="editingName = !editingName">Вопрос:
+    <span *ngIf="!editingName">{{question.name}}</span>
+    <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
+  </h3>
+  <textarea [(ngModel)]="question.text"></textarea>
+</div>

@@ -1,31 +1,31 @@
 import {Injectable} from '@angular/core';
-import {TestTemplate} from '../shared/TestTemplate';
+import {ITemplateService} from './interfaces';
 import {Observable, of} from 'rxjs/index';
-import {TestQuestionTemplate} from '../shared/TestQuestionTemplate';
+import {TestTemplate} from '../shared/TestTemplate';
+import {HttpClient} from '@angular/common/http';
+import {Config} from '../shared/Config';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TemplatesService {
-  templates = [
-    new TestTemplate(1, '123', null, [new TestQuestionTemplate('q1'), new TestQuestionTemplate('q2')]),
-    new TestTemplate(2, '345'),
-    new TestTemplate(3, '678')];
+export class TemplatesService implements ITemplateService {
 
-  constructor() {
+  private _templatesUrl;
+
+  constructor(private http: HttpClient,
+              private config: Config) {
+    this._templatesUrl = config.serverUrl + '/template';
   }
 
-  public getTemplates(): Observable<TestTemplate[]> {
-    return of(this.templates);
+  getTemplate(id: number): Observable<TestTemplate> {
+    return of(null);
   }
 
-  public getTemplate(id: number): Observable<TestTemplate> {
-    return of(this.templates[id - 1]);
+  getTemplates(): Observable<TestTemplate[]> {
+    return this.http.get<TestTemplate[]>(this._templatesUrl);
   }
 
-  public addTemplate(testTemplate: TestTemplate): Observable<number> {
-    testTemplate.id = this.templates.length + 1;
-    this.templates.push(testTemplate);
-    return of(testTemplate.id);
+  addTemplate(testTemplate: TestTemplate): Observable<number> {
+    return this.http.post<number>(this._templatesUrl, testTemplate);
   }
 }

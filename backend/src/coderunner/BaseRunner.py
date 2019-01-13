@@ -1,11 +1,7 @@
 from abc import abstractproperty, abstractmethod
 
-from src.services.CodeExecuterService import Registrator
-
 
 class BaseRunner(object):
-    # __metaclass__ = Registrator
-
     def __init__(self):
         pass
 

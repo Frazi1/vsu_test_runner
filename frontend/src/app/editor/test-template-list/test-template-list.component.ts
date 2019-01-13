@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {TestTemplate} from '../../shared/TestTemplate';
-import {TemplatesService} from '../../services/templates.service';
+import {MockTemplatesService} from '../../services/mock-templates.service';
+import {ITemplateService} from "../../services/interfaces";
 
 @Component({
   selector: 'app-test-template-list',
@@ -10,7 +11,7 @@ import {TemplatesService} from '../../services/templates.service';
 export class TestTemplateListComponent implements OnInit {
   private testTemplates: TestTemplate[];
 
-  constructor(@Inject(TemplatesService) private templatesService) {
+  constructor(@Inject('ITemplateService') private templatesService: ITemplateService) {
   }
 
   ngOnInit() {

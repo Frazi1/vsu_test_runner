@@ -1,27 +1,29 @@
 from marshmallow import Schema, fields, post_load
+from marshmallow.fields import Nested, String, List, Integer
 
 from src.models.TestQuestionTemplate import TestQuestionTemplate
 from src.models.TestTemplate import TestTemplate
 
 
 class TestQuestionTemplateSchema(Schema):
-    name = fields.String()
-    description = fields.Str()
-    time_limit = fields.Integer(data_key='timeLimit', attribute='time_limit')
+    id = String(required=False, allow_none=True)
+    name = String(required=False)
+    description = String(required=False)
+    text = String(required=False)
+    time_limit = Integer(load_from='timeLimit', dump_to='timeLimit', attribute='time_limit', required=False, allow_none=True)
 
     @post_load
-    def load(self, value):
+    def create_class(self, value):
         return TestQuestionTemplate(**value)
 
 
 class TestTemplateSchema(Schema):
     id = fields.Integer(required=False, allow_none=True)
     name = fields.String()
-    time_limit = fields.Integer(data_key='timeLimit', attribute='time_limit')
-    questions = fields.Nested(TestQuestionTemplateSchema, data_key='questionTemplates', many=True, required=False, allow_none=True)
+    time_limit = Integer(load_from='timeLimit', dump_to='timeLimit', attribute='time_limit', allow_none=True)
+    # many = False, required = False, allow_none = True
+    questions = Nested(TestQuestionTemplateSchema, load_from='questionTemplates', dump_to='questionTemplates', attribute='questions', many=True)
 
     @post_load
-    def fuck_my_fucking_life_bitches(self, value):
-        print "DESERIALIZATION!!!"
-        print value
+    def create_class(self, value):
         return TestTemplate(**value)

@@ -17,4 +17,8 @@ class TestTemplate(Base):
     )
 
     def __repr__(self):
-        return "<TestTemplate(id='{}', name='{}', time_limit='{}'".format(self.id, self.name, self.time_limit)
+        return "<TestTemplate(id='{}', name='{}', time_limit='{}', questions={})>" \
+            .format(self.id,
+                    self.name,
+                    self.time_limit,
+                    [str(x) for x in self.questions])

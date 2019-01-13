@@ -15,7 +15,7 @@ from src.services.CodeExecuterService import executor
 
 app = Bottle(autojson=False)
 app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
-app.install(JsonPlugin())
+# app.install(JsonPlugin())
 app.install(EnableCors())
 
 
@@ -27,13 +27,18 @@ def cors():
 @app.get('/template')
 def get_test_templates(db):
     templates = TemplatesServiceInstance.get_test_templates(db)
-    return TestTemplateDto.list_of(templates)
+    schema = TestTemplateSchema(many=True)
+    return schema.dumps(templates).data
 
 @app.post('/template')
 def add_test_template(db):
-    print request.json
-    var = TestTemplateSchema().load(request.json)
-    print var
+    json = request.json
+    print json
+    schema = TestTemplateSchema()
+    test = schema.load(json).data
+    TemplatesServiceInstance.add_test_template(db, test)
+    return test.id
+
 
 
 @app.get('/languages')

@@ -1,7 +1,7 @@
 class TestTemplateDto:
     @staticmethod
     def list_of(test_templates):
-        return [TestTemplateDto(x) for x in test_templates]
+        return [TestTemplateDto.from_test(x) for x in test_templates]
 
     @classmethod
     def from_test(cls, test_template):
@@ -9,7 +9,7 @@ class TestTemplateDto:
         res.id = test_template.id
         res.name = test_template.name
         res.time_limit = test_template.time_limit
-        res.questions = [TestQuestionTemplateDto(x) for x in test_template.questions]
+        res.questions = [TestQuestionTemplateDto.from_test(x) for x in test_template.questions]
         return res
 
 class TestQuestionTemplateDto:

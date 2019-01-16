@@ -7,4 +7,6 @@ export interface ITemplateService {
   getTemplates(): Observable<TestTemplate[]>;
 
   addTemplate(testTemplate: TestTemplate): Observable<number>;
+
+  updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate>;
 }

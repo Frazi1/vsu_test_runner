@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/index';
 import {TestTemplate} from '../../shared/TestTemplate';
@@ -13,8 +13,10 @@ import {ITemplateService} from "../../services/interfaces";
 })
 export class TestTemplateEditorComponent implements OnInit {
 
+  @Output()
   private testTemplate: TestTemplate;
   private paramSubscription: Subscription;
+  private isCreating: boolean;
 
   constructor(private route: ActivatedRoute,
               @Inject('ITemplateService') private templatesService: ITemplateService,
@@ -25,8 +27,10 @@ export class TestTemplateEditorComponent implements OnInit {
     this.paramSubscription = this.route.params.subscribe(params => {
       const id = params['id'];
       if (!id) {
+        this.isCreating = true;
         this.testTemplate = new TestTemplate();
       } else {
+        this.isCreating = false;
         this.templatesService.getTemplate(+id).subscribe(res => this.testTemplate = res);
       }
     });
@@ -37,7 +41,20 @@ export class TestTemplateEditorComponent implements OnInit {
   }
 
   private save(): void {
+    if (this.isCreating) {
+      this.add();
+    } else {
+      this.update();
+    }
+  }
+
+  private add(): void {
     this.templatesService.addTemplate(this.testTemplate)
       .subscribe(id => this.router.navigate(['/template', id]));
+  }
+
+  private update(): void {
+    this.templatesService.updateTemplate(this.testTemplate)
+      .subscribe(res => this.testTemplate = res);
   }
 }

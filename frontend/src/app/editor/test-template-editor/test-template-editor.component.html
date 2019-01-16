@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="testTemplate != null">
   <h1>{{testTemplate.name}}</h1>
   <input [(ngModel)]="testTemplate.name">
   <button (click)="addQuestion()">Добавить вопрос</button>

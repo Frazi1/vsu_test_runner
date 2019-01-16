@@ -3,5 +3,5 @@
     <span *ngIf="!editingName">{{question.name}}</span>
     <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
   </h3>
-  <textarea [(ngModel)]="question.text"></textarea>
+  <textarea [(ngModel)]="question.description"></textarea>
 </div>

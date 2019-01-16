@@ -4,8 +4,10 @@ from bottle import response, request
 # import ujson as json
 import json as json
 
+
 class JsonPlugin:
     api = 2
+
     def __init__(self):
         pass
 
@@ -20,6 +22,7 @@ class JsonPlugin:
             return json.dumps(value)
 
         return wrapper
+
 
 class EnableCors(object):
     name = 'enable_cors'
@@ -37,3 +40,58 @@ class EnableCors(object):
                 return fn(*args, **kwargs)
 
         return _enable_cors
+
+
+class BodyParser(object):
+    name = 'body_parser'
+    api = 2
+
+    def __init__(self, encode_with_json_by_default=False):
+        self.encode_with_json_by_default = encode_with_json_by_default
+        self.response_content_type = 'application/json; charset=utf-8'
+
+    def _set_resp_content_type(self, response_):
+        response_.headers['Content-Type'] = self.response_content_type
+
+    def _add_parsed_req_body(self, callback, schema, request_):
+        body = request_.json  # TODO: check is json exists
+        parsed_body = schema.load(body).data
+
+        def wrapped(*a, **ka):
+            print a
+            print ka
+
+            return callback(parsed_body=parsed_body, *a, **ka)
+
+        return wrapped
+
+    def _encode_with_json(self, callback, response_):
+        self._set_resp_content_type(response_)
+
+        def wrapped(*a, **ka):
+            return json.dumps(callback(*a, **ka))
+
+        return wrapped
+
+    def _encode_with_schema(self, callback, schema, response_):
+        self._set_resp_content_type(response_)
+
+        def wrapped(*a, **ka):
+            callback_res = callback(*a, **ka)
+            dumps = schema.dumps(callback_res)
+            return dumps.data
+
+        return wrapped
+
+    def apply(self, callback, context):
+        accept_body_schema = context.config.accept_body_schema
+        response_schema = context.config.response_schema
+        if accept_body_schema is not None:
+            callback = self._add_parsed_req_body(callback, accept_body_schema, request)
+
+        if response_schema is not None:
+            callback = self._encode_with_schema(callback, response_schema, response)
+        elif self.encode_with_json_by_default is True:
+            callback = self._encode_with_json(callback, response)
+
+        return callback

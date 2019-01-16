@@ -23,5 +23,10 @@ class TemplatesService:
             .options(joinedload(TestTemplate.questions)) \
             .all()
 
+    def get_template_by_id(self, session, id_):
+        return session.query(TestTemplate)\
+            .filter(TestTemplate.id == id_)\
+            .first()
+
 
 TemplatesServiceInstance = TemplatesService()

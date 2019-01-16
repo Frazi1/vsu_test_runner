@@ -58,9 +58,6 @@ class BodyParser(object):
         parsed_body = schema.load(body).data
 
         def wrapped(*a, **ka):
-            print a
-            print ka
-
             return callback(parsed_body=parsed_body, *a, **ka)
 
         return wrapped
@@ -84,14 +81,19 @@ class BodyParser(object):
         return wrapped
 
     def apply(self, callback, context):
-        accept_body_schema = context.config.accept_body_schema
+        request_body_schema = context.config.request_body_schema
         response_schema = context.config.response_schema
-        if accept_body_schema is not None:
-            callback = self._add_parsed_req_body(callback, accept_body_schema, request)
 
-        if response_schema is not None:
-            callback = self._encode_with_schema(callback, response_schema, response)
-        elif self.encode_with_json_by_default is True:
-            callback = self._encode_with_json(callback, response)
+        def inner(*a, **ka):
+            inner_callback = callback
+            if request_body_schema is not None:
+                inner_callback = self._add_parsed_req_body(inner_callback, request_body_schema, request)
 
-        return callback
+            if response_schema is not None:
+                inner_callback = self._encode_with_schema(inner_callback, response_schema, response)
+            elif self.encode_with_json_by_default is True:
+                inner_callback = self._encode_with_json(inner_callback, response)
+
+            return inner_callback(*a, **ka)
+
+        return inner

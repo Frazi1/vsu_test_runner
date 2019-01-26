@@ -1,9 +1,9 @@
 import unittest
 
-from src.coderunner.PythonRunner import PythonRunner
-from src.models.ArgumentType import ArgumentType
-from src.models.LanguageEnum import LanguageEnum
-from src.services.CodeExecuterService import Executer
+from coderunner.python_runner import PythonRunner
+from models.argument_type import ArgumentType
+from models.language_enum import LanguageEnum
+from services.code_executer_service import Executer
 
 
 class CodeExecutorTest(unittest.TestCase):

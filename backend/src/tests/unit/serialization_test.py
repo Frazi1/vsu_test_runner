@@ -1,8 +1,8 @@
 import unittest
 
-from src.dtos.schemas import TestTemplateSchema
-from src.models.TestQuestionTemplate import TestQuestionTemplate
-from src.models.TestTemplate import TestTemplate
+from dtos.schemas import TestTemplateSchema
+from models.test_question_template import TestQuestionTemplate
+from models.test_template import TestTemplate
 
 
 class SerializationTest(unittest.TestCase):

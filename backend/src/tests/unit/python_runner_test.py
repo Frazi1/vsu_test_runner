@@ -1,11 +1,11 @@
 import unittest
 
-from src.coderunner.PythonRunner import PythonRunner
-from src.models.ArgumentType import ArgumentType
-from src.models.CodeSnippet import CodeSnippet
-from src.models.Function import Function
-from src.models.FunctionParameter import FunctionParameter
-from src.models.LanguageEnum import LanguageEnum
+from coderunner.python_runner import PythonRunner
+from models.argument_type import ArgumentType
+from models.code_snippet import CodeSnippet
+from models.function import Function
+from models.function_parameter import FunctionParameter
+from models.language_enum import LanguageEnum
 
 
 class PythonRunnerTests(unittest.TestCase):

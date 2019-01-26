@@ -1,16 +1,21 @@
 # coding=utf-8
 import os
 
+from gevent import monkey
+
+monkey.patch_all()
+
 from bottle import Bottle, run, response
 from bottle_sqlalchemy import SQLAlchemyPlugin
 
-from src.db_config import ENGINE
-from src.dtos.schemas import *
-from src.helpers import load_modules
-from src.models import Base
-from src.plugins import EnableCors, BodyParser
-from src.services.CodeExecuterService import executor
-from src.services.TemplatesService import TemplatesServiceInstance
+from db_config import ENGINE
+from dtos.schemas import *
+from helpers import load_modules
+from models import Base
+from models.argument_type import ArgumentType
+from plugins import EnableCors, BodyParser
+from services.code_executer_service import executor
+from services.templates_service import TemplatesServiceInstance
 
 app = Bottle(autojson=False)
 app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
@@ -52,7 +57,18 @@ def supported_languages():
     return [e.name for e in executor.get_supported_languages()]
 
 
+@app.get('/code-types')
+def supported_code_types():
+    return ArgumentType.__members__.keys()
+
+
 if __name__ == "__main__":
     code_runner = os.path.join(os.path.dirname(__file__), "coderunner")
-    load_modules(code_runner, "src.coderunner")
-    run(app, host='localhost', port=8080, reloader=True, debug=True)
+    load_modules(code_runner, "coderunner")
+    run(app,
+        host='localhost',
+        port=8080,
+        # reloader=True,
+        # debug=True,
+        server='gevent'
+        )

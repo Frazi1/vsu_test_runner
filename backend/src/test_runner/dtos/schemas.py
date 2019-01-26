@@ -1,8 +1,8 @@
 from marshmallow import Schema, fields, post_load
-from marshmallow.fields import Nested, String, List, Integer
+from marshmallow.fields import Nested, String, Integer
 
-from src.models.TestQuestionTemplate import TestQuestionTemplate
-from src.models.TestTemplate import TestTemplate
+from models.test_question_template import TestQuestionTemplate
+from models.test_template import TestTemplate
 
 
 class TestQuestionTemplateSchema(Schema):

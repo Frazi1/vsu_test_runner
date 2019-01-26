@@ -20,4 +20,3 @@ print "Connection string: {}".format(connection_string)
 
 ENGINE = create_engine(connection_string, echo=True)
 Session = sessionmaker(ENGINE)
-

@@ -1,8 +1,8 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
 
-from src.models import Base
-from src.models.ArgumentType import ArgumentType
+from models import Base
+from models.argument_type import ArgumentType
 
 
 class Function(Base):

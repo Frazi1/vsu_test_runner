@@ -9,9 +9,13 @@ class TemplatesService:
         pass
 
     def add_test_template(self, session, test):
-        session.add(test)
-        session.commit()
-        return test.id
+        try:
+            session.add(test)
+            session.commit()
+            return test.id
+        except Exception, e:
+            a= e
+
 
     def get_test_templates(self, session):
         # for x in range(1, 100000):

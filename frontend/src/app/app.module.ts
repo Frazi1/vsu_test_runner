@@ -10,6 +10,8 @@ import {TestTemplateListComponent} from './editor/test-template-list/test-templa
 import {NavMenuComponent} from './nav-menu/nav-menu.component';
 import {HttpClientModule} from '@angular/common/http';
 import {TemplatesService} from './services/templates.service';
+import { FunctionEditorComponent } from './editor/function-signature-editor/function-editor.component';
+import { CodeTypeSelectorComponent } from './editor/code-type-selector/code-type-selector.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import {TemplatesService} from './services/templates.service';
     TestTemplateEditorComponent,
     TestQuestionTemplateEditorComponent,
     TestTemplateListComponent,
-    NavMenuComponent
+    NavMenuComponent,
+    FunctionEditorComponent,
+    CodeTypeSelectorComponent
   ],
   imports: [
     BrowserModule,

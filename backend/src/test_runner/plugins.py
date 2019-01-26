@@ -4,6 +4,8 @@ from functools import wraps
 
 from bottle import response, request
 
+from dtos.validation_exception import ValidationException
+
 
 class JsonPlugin:
     api = 2
@@ -55,7 +57,11 @@ class BodyParser(object):
 
     def _add_parsed_req_body(self, callback, schema, request_):
         body = request_.json  # TODO: check is json exists
-        parsed_body = schema.load(body).data
+        load = schema.load(body)
+        if load.errors and len(load.errors) > 0:
+            raise ValidationException(load.errors)
+
+        parsed_body = load.data
 
         def wrapped(*a, **ka):
             return callback(parsed_body=parsed_body, *a, **ka)

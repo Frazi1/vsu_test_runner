@@ -1,6 +1,6 @@
 # coding=utf-8
 import os
-
+import json
 from gevent import monkey
 
 monkey.patch_all()
@@ -22,6 +22,18 @@ app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True,
 # app.install(JsonPlugin())
 app.install(EnableCors())
 app.install(BodyParser(encode_with_json_by_default=True))
+
+
+@app.error(500)
+def error(err):
+    a = 10
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    message_ = {"code": err.status_code,
+                "exception": str(err.exception.message),
+                "trace": err.traceback}
+    dump = json.dumps(message_)
+    return dump
 
 
 @app.route('/<:re:.*>', method='OPTIONS')
@@ -70,5 +82,5 @@ if __name__ == "__main__":
         port=8080,
         # reloader=True,
         # debug=True,
-        server='gevent'
+        # server='gevent'
         )

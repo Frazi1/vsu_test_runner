@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TestQuestionTemplate} from '../../shared/TestQuestionTemplate';
+import {Function} from '../../shared/Function';
 
 @Component({
   selector: 'app-test-question-template-editor',
@@ -29,6 +30,12 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.question.getFunctionSignature == null) {
+      this.question.functionObj = new Function('', null, []);
+    }
+
+    console.log(this.question);
+
   }
 
 }

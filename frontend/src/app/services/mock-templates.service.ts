@@ -29,4 +29,9 @@ export class MockTemplatesService implements ITemplateService {
     this.templates.push(testTemplate);
     return of(testTemplate.id);
   }
+
+
+  updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate> {
+    return null;
+  }
 }

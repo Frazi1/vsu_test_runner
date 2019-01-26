@@ -12,12 +12,4 @@ class CodeSnippet(Base):
     language = Column(Enum(LanguageEnum))
     code = Column(Text)
     function_id = Column(Integer, ForeignKey('function.id'), nullable=false)
-    function = relationship("Function", back_populates="code_snippets")
-
-    def __init__(self, language, code, function_):
-        if isinstance(code, list):
-            code = "".join(x + "\n" for x in code)
-
-        self.language = language
-        self.code = code
-        self.function = function_
+    function = relationship("Function", back_populates="code_snippet")

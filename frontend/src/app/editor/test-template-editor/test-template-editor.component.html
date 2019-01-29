@@ -3,6 +3,8 @@
   <input [(ngModel)]="testTemplate.name">
   <button (click)="addQuestion()">Добавить вопрос</button>
 
-  <app-test-question-template-editor *ngFor="let q of testTemplate.questionTemplates" [question]="q"></app-test-question-template-editor>
+  <app-test-question-template-editor *ngFor="let q of testTemplate.questionTemplates"
+                                     [question]="q"></app-test-question-template-editor>
   <button (click)="save()">Сохранить</button>
+  <button *ngIf="isCreating === false" (click)="deleteTemplate()">Удалить</button>
 </div>

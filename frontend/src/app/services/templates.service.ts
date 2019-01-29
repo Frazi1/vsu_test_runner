@@ -11,7 +11,6 @@ import {JsonConvert, ValueCheckingMode} from 'json2typescript';
   providedIn: 'root'
 })
 export class TemplatesService implements ITemplateService {
-
   private _templatesUrl;
   private _jsonConvert: JsonConvert = new JsonConvert();
 
@@ -46,4 +45,9 @@ export class TemplatesService implements ITemplateService {
         map(jsonValue => this._jsonConvert.deserialize(jsonValue, TestTemplate))
       );
   }
+
+  deleteTemplate(id: number): Observable<any> {
+    return this.http.delete(`${this._templatesUrl}/${id}`);
+  }
+
 }

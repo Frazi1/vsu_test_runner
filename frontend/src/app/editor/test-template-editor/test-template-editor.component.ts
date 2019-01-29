@@ -57,4 +57,11 @@ export class TestTemplateEditorComponent implements OnInit {
     this.templatesService.updateTemplate(this.testTemplate)
       .subscribe(res => this.testTemplate = res);
   }
+
+  private deleteTemplate(): void {
+    if (this.isCreating === false) {
+      this.templatesService.deleteTemplate(this.testTemplate.id)
+        .subscribe(() => this.router.navigate(['/']));
+    }
+  }
 }

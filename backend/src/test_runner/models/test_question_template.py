@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, BigInteger, func, text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, BigInteger, text, Boolean
 from sqlalchemy.orm import relationship
 
 from . import Base
@@ -14,8 +14,9 @@ class TestQuestionTemplate(Base):
     solution_function_id = Column(Integer, ForeignKey("function.id"), nullable=True)
     solution_function = relationship("Function", back_populates="question_templates")
     version = Column(BigInteger, server_default=text('1')) #TODO: increment version on update
+    is_deleted = Column(Boolean, server_default=text('FALSE'))
 
-    def __repr__(self):
+def __repr__(self):
         return "<TestQuestionTemplate(id='{}', name='{}', description='{}', time_limit='{}'".format(self.id,
                                                                                                     self.name,
                                                                                                     self.description,

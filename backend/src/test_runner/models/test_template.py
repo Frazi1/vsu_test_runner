@@ -11,6 +11,7 @@ class TestTemplate(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(length=100))
     time_limit = Column(Integer, nullable=True)
+    is_deleted = Column(Boolean, server_default=text("FALSE"))
     questions = relationship(
         "TestQuestionTemplate",
         secondary=test_template_test_question_template_association,

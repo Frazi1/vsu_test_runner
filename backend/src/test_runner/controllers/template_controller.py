@@ -24,3 +24,7 @@ class TemplateController(BaseController):
     @BaseController.put('/template/<id:int>', request_body_schema=TestTemplateSchema(), response_schema=TestTemplateSchema())
     def update_test_template(self, db, id, parsed_body):
         return self.templates_service.update_test_template(db, id, parsed_body)
+
+    @BaseController.delete('/template/<id:int>')
+    def delete_test_template(self, db, id):
+        self.templates_service.delete_test_template(db, id)

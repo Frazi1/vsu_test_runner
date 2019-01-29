@@ -8,6 +8,7 @@ import {ITemplateService} from './interfaces';
   providedIn: 'root'
 })
 export class MockTemplatesService implements ITemplateService {
+
   templates = [
     new TestTemplate(1, '123', null, [new TestQuestionTemplate('q1'), new TestQuestionTemplate('q2')]),
     new TestTemplate(2, '345'),
@@ -33,5 +34,9 @@ export class MockTemplatesService implements ITemplateService {
 
   updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate> {
     return null;
+  }
+
+  deleteTemplate(id: number): Observable<any> {
+    return undefined;
   }
 }

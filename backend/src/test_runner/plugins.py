@@ -103,3 +103,17 @@ class BodyParser(object):
             return inner_callback(*a, **ka)
 
         return inner
+
+
+class ControllerPlugin(object):
+    api = 2
+    name = 'controller-plugin'
+
+    def apply(self, callback, context):
+        def inner(*a, **ka):
+            controller_instance = context.config._controller_instance
+            if controller_instance is None:
+                return callback(*a, **ka)
+            return callback(controller_instance, *a, **ka)
+
+        return inner

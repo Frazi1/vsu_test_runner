@@ -1,7 +1,13 @@
 # coding=utf-8
-import os
 import json
+import os
+
 from gevent import monkey
+
+from controllers.instance_controller import InstanceController
+from controllers.template_controller import TemplateController
+from logger.console_logger import ConsoleLogger
+from services.instance_service import InstanceService
 
 monkey.patch_all()
 
@@ -9,19 +15,40 @@ from bottle import Bottle, run, response
 from bottle_sqlalchemy import SQLAlchemyPlugin
 
 from db_config import ENGINE
-from dtos.schemas import *
 from helpers import load_modules
 from models import Base
 from models.argument_type import ArgumentType
-from plugins import EnableCors, BodyParser
+from plugins import EnableCors, BodyParser, ControllerPlugin
 from services.code_executer_service import executor
-from services.templates_service import TemplatesServiceInstance
+from services.template_service import TemplateService
 
 app = Bottle(autojson=False)
-app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
 # app.install(JsonPlugin())
 app.install(EnableCors())
+app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
 app.install(BodyParser(encode_with_json_by_default=True))
+app.install(ControllerPlugin())
+
+
+def init_services():
+    template_service = TemplateService()
+    instance_service = InstanceService(template_service)
+    return [template_service, instance_service]
+
+
+def init_controllers(app, template_service, instance_service, logger):
+    template_ctrl = TemplateController(app, template_service, logger)
+    instance_ctrl = InstanceController(app, instance_service, logger)
+
+    return [template_ctrl, instance_ctrl]
+
+
+logger = ConsoleLogger()
+services = init_services()
+controllers = init_controllers(app,
+                               next((x for x in services if isinstance(x, TemplateService))),
+                               next((x for x in services if isinstance(x, InstanceService))),
+                               logger)
 
 
 @app.error(500)
@@ -40,28 +67,6 @@ def error(err):
 def cors():
     print 'After request hook.'
     response.headers['Access-Control-Allow-Origin'] = '*'
-
-
-@app.get('/template', response_schema=TestTemplateSchema(many=True))
-def get_test_templates(db):
-    return TemplatesServiceInstance.get_test_templates(db)
-
-
-@app.post('/template', request_body_schema=TestTemplateSchema())
-def add_test_template(db, parsed_body):
-    id_ = TemplatesServiceInstance.add_test_template(db, parsed_body)
-    return id_
-
-
-@app.get('/template/<id:int>', response_schema=TestTemplateSchema())
-def get_test_template_by_id(db, id):
-    res = TemplatesServiceInstance.get_test_template_by_id(db, id)
-    return res
-
-
-@app.put('/template/<id:int>', request_body_schema=TestTemplateSchema(), response_schema=TestTemplateSchema())
-def update_test_template(db, id, parsed_body):
-    return TemplatesServiceInstance.update_test_template(db, id, parsed_body)
 
 
 @app.get('/languages')

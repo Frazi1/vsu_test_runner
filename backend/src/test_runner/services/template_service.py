@@ -3,7 +3,7 @@ from sqlalchemy.orm import joinedload
 from models.test_template import TestTemplate
 
 
-class TemplatesService:
+class TemplateService:
 
     def __init__(self):
         pass
@@ -36,7 +36,3 @@ class TemplatesService:
         db_test = self.get_test_template_by_id(session, id_)
         session.merge(test)
         return db_test
-
-
-
-TemplatesServiceInstance = TemplatesService()

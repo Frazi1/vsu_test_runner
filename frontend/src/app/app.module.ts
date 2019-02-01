@@ -10,8 +10,10 @@ import {TestTemplateListComponent} from './editor/test-template-list/test-templa
 import {NavMenuComponent} from './nav-menu/nav-menu.component';
 import {HttpClientModule} from '@angular/common/http';
 import {TemplatesService} from './services/templates.service';
-import { FunctionEditorComponent } from './editor/function-signature-editor/function-editor.component';
-import { CodeTypeSelectorComponent } from './editor/code-type-selector/code-type-selector.component';
+import {FunctionEditorComponent} from './editor/function-signature-editor/function-editor.component';
+import {CodeTypeSelectorComponent} from './editor/code-type-selector/code-type-selector.component';
+import {JsonConvert} from 'json2typescript';
+import {jsonConvert} from './configuration/JsonConfiguration';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,10 @@ import { CodeTypeSelectorComponent } from './editor/code-type-selector/code-type
     AppRoutingModule,
     FormsModule
   ],
-  providers: [{provide: 'ITemplateService', useClass: TemplatesService}],
+  providers: [
+    {provide: 'ITemplateService', useClass: TemplatesService},
+    {provide: JsonConvert, useValue: jsonConvert}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

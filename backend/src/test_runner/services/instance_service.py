@@ -1,3 +1,5 @@
+from sqlalchemy.orm import joinedload
+
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 
@@ -19,3 +21,8 @@ class InstanceService(object):
         session.add(test_instance)
         session.commit()
         return test_instance.id
+
+    def get_instances(self, db):
+        return db.query(TestInstance) \
+            .options(joinedload(TestInstance.questions)) \
+            .all()

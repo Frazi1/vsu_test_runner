@@ -23,6 +23,7 @@ class BaseController(object):
                 self.logger.info("Controller: '{}', register endpoint: '{}'".format(ctrl_name, name_method[0]))
             except Exception, e:
                 self.logger.error("Tried to execute:{}".format(name_method[0]), e)
+
     @staticmethod
     def get(*args, **kwargs):
         return BaseController._register_route(lambda app: app.get, *args, **kwargs)

@@ -1,4 +1,5 @@
 from controllers.base_controller import BaseController
+from dtos.instance_schema import TestInstanceSchema
 
 
 class InstanceController(BaseController):
@@ -6,6 +7,11 @@ class InstanceController(BaseController):
         super(InstanceController, self).__init__(bottle_app, logger)
         self.instance_service = instance_service
 
-    @BaseController.post('/instance/<id:int>')
-    def create_instance(self, db, id):
-        return self.instance_service.create_test_instance(id, db)
+    @BaseController.get('/instance', response_schema=TestInstanceSchema(many=True))
+    def get_instances(self, db):
+        instances = self.instance_service.get_instances(db)
+        return instances
+
+    @BaseController.post('/instance/create/<template_id:int>', )
+    def create_instance(self, db, template_id):
+        return self.instance_service.create_test_instance(template_id, db)

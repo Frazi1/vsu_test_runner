@@ -10,6 +10,7 @@ export class NavMenuComponent implements OnInit {
   private items = [
     {name: 'Главная', path: '/'},
     {name: 'Шаблоны', path: '/template'},
+    {name: 'Активные тесты', path: '/instance'}
   ];
 
   constructor() {

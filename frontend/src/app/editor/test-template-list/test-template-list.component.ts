@@ -20,7 +20,7 @@ export class TestTemplateListComponent implements OnInit {
   }
 
   private createTestInstance(templateId: number): void {
-    this.instanceService.createInstance(templateId)
+    this.instanceService.createTestInstance(templateId)
       .subscribe(res => {
         console.log(`Instance created. ID: ${res}`);
       });

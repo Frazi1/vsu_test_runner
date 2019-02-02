@@ -16,20 +16,27 @@ export class InstanceService {
   constructor(private http: HttpClient,
               private config: Config,
               private json: JsonConvert) {
-    this.endpoint = `${this.config.serverUrl}/instance/`;
+    this.endpoint = `${this.config.serverUrl}/instance`;
   }
 
-  public createInstance(templateId: number): Observable<number> {
-    return this.http.post(`${this.endpoint}create/${templateId}`, null)
+  public createTestInstance(templateId: number): Observable<number> {
+    return this.http.post(`${this.endpoint}/create/${templateId}`, null)
       .pipe(
         map(res => +res)
       );
   }
 
-  public getInstances(): Observable<TestInstance[]> {
+  public getTestInstances(): Observable<TestInstance[]> {
     return this.http.get(this.endpoint)
       .pipe(
         map((values: any[]) => this.json.deserializeArray(values, TestInstance))
+      );
+  }
+
+  public getTestInstance(id: number): Observable<TestInstance> {
+    return this.http.get(`${this.endpoint}/${id}`)
+      .pipe(
+        map(res => this.json.deserialize(res, TestInstance))
       );
   }
 }

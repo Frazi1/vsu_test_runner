@@ -14,6 +14,10 @@ import {FunctionEditorComponent} from './editor/function-signature-editor/functi
 import {CodeTypeSelectorComponent} from './editor/code-type-selector/code-type-selector.component';
 import {JsonConvert} from 'json2typescript';
 import {jsonConvert} from './configuration/JsonConfiguration';
+import {TestInstanceListComponent} from './components/instance/test-instance-list/test-instance-list.component';
+import {TestInstanceEditorComponent} from './components/instance/test-instance-editor/test-instance-editor.component';
+import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -23,13 +27,18 @@ import {jsonConvert} from './configuration/JsonConfiguration';
     TestTemplateListComponent,
     NavMenuComponent,
     FunctionEditorComponent,
-    CodeTypeSelectorComponent
+    CodeTypeSelectorComponent,
+    TestInstanceListComponent,
+    TestInstanceEditorComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    OwlDateTimeModule,
+    OwlNativeDateTimeModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     {provide: 'ITemplateService', useClass: TemplatesService},

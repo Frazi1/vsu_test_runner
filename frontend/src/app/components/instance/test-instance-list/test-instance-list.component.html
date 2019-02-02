@@ -1,0 +1,10 @@
+<div *ngFor="let t of tests">
+  <div [routerLink]="['/instance', t.id]">
+    <span>{{t.name}}</span>
+    <span>Вопросов: {{t.questions?.length}}</span>
+    <span>Начало: {{t.availableAfter || "Не указано"}}</span>
+    <span>Окончание: {{t.disabledAfter || "Не указано"}}</span>
+    <span>Лимит по времени:{{t.timeLimit}}</span>
+    <button>Редактировать</button>
+  </div>
+</div>

@@ -15,6 +15,7 @@ class BaseController(object):
         ctrl_name = type(self).__name__
 
         self.logger.info(
+            "======================================================\n"
             "Controller: '{}', found endpoints: '{}'".format(ctrl_name, ", ".join(x[0] for x in public_methods)))
 
         for name_method in public_methods:
@@ -23,6 +24,7 @@ class BaseController(object):
                 self.logger.info("Controller: '{}', register endpoint: '{}'".format(ctrl_name, name_method[0]))
             except Exception, e:
                 self.logger.error("Tried to execute:{}".format(name_method[0]), e)
+        self.logger.info("======================================================\n")
 
     @staticmethod
     def get(*args, **kwargs):

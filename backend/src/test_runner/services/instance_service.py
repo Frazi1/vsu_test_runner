@@ -26,3 +26,9 @@ class InstanceService(object):
         return db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .all()
+
+    def get_test_instance(self, test_instance_id, db):
+        return db.query(TestInstance) \
+            .options(joinedload(TestInstance.questions)) \
+            .filter(TestInstance.id == test_instance_id) \
+            .first()

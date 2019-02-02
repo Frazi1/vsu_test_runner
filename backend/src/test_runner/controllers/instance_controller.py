@@ -12,6 +12,11 @@ class InstanceController(BaseController):
         instances = self.instance_service.get_instances(db)
         return instances
 
+    @BaseController.get('/instance/<instance_id:int>', response_schema=TestInstanceSchema())
+    def get_test_instance_by_id(self, instance_id, db):
+        res = self.instance_service.get_test_instance(instance_id, db)
+        return res
+
     @BaseController.post('/instance/create/<template_id:int>', )
     def create_instance(self, db, template_id):
         return self.instance_service.create_test_instance(template_id, db)

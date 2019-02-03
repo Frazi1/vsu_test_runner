@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime, func
+from sqlalchemy import Column, String, Integer, DateTime, func, Boolean, text
 from sqlalchemy.orm import relationship
 
 from models import Base
@@ -14,8 +14,11 @@ class TestInstance(Base):
     available_after = Column(DateTime, nullable=True)
     disabled_after = Column(DateTime, nullable=True)
     time_limit = Column(Integer, nullable=True)
+    is_active = Column(Boolean, server_default=text('TRUE'))
     questions = relationship(
         "QuestionInstance",
         secondary=test_instance_to_question_instance_association,
         back_populates="tests"
     )
+
+    test_runs = relationship("TestRun", back_populates="test_instance")

@@ -12,5 +12,4 @@ class Function(Base):
     name = Column(String(100))
     return_type = Column(Enum(ArgumentType))
     arguments = relationship("FunctionArgument", back_populates="function")
-    code_snippet = relationship("CodeSnippet", uselist=False, back_populates="function")
-    question_templates = relationship("TestQuestionTemplate", back_populates="solution_function")
+    code_snippets = relationship("CodeSnippet", back_populates="function")

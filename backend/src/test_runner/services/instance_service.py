@@ -1,5 +1,6 @@
 from sqlalchemy.orm import joinedload
 
+from models.helpers.helper import clone_code_snippet
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 
@@ -13,7 +14,8 @@ class InstanceService(object):
         question_instances = [QuestionInstance(name=x.name,
                                                time_limit=x.time_limit,
                                                parent_id=x.id,
-                                               parent_version=x.version)
+                                               parent_version=x.version,
+                                               solution_code_snippet=clone_code_snippet(x.solution_code_snippet))
                               for x in test_template.questions]
         test_instance = TestInstance(name=test_template.name,
                                      time_limit=test_template.time_limit,
@@ -22,13 +24,19 @@ class InstanceService(object):
         session.commit()
         return test_instance.id
 
-    def get_instances(self, db):
-        return db.query(TestInstance) \
-            .options(joinedload(TestInstance.questions)) \
-            .all()
-
     def get_test_instance(self, test_instance_id, db):
         return db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .filter(TestInstance.id == test_instance_id) \
             .first()
+
+    def get_instances(self, db):
+        return db.query(TestInstance) \
+            .options(joinedload(TestInstance.questions)) \
+            .all()
+
+    def update_test_template(self, test_instance, db):
+        db_test_instance = self.get_test_instance(test_instance.id, db)
+        db.merge(test_instance)
+        db.commit()
+        return db_test_instance

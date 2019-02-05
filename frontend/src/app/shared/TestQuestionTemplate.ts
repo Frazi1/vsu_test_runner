@@ -1,6 +1,5 @@
-import {Function} from './Function';
-import {CodeType} from './CodeType';
 import {JsonObject, JsonProperty} from 'json2typescript';
+import {CodeSnippet} from './CodeSnippet';
 
 @JsonObject('TestQuestionTemplate')
 export class TestQuestionTemplate {
@@ -13,20 +12,28 @@ export class TestQuestionTemplate {
   @JsonProperty('timeLimit', String, true)
   public timeLimit: number;
 
-  @JsonProperty('solutionFunction', Function)
-  public functionObj: Function;
+  @JsonProperty('codeSnippet', CodeSnippet)
+  private _codeSnippet: CodeSnippet;
 
-  get getFunctionSignature(): Function {
-    return this.functionObj;
+
+  // region Getters/Setters
+  get codeSnippet(): CodeSnippet {
+    return this._codeSnippet;
   }
+
+  set codeSnippet(value: CodeSnippet) {
+    this._codeSnippet = value;
+  }
+
+  // endregion
 
   constructor(name: string = '',
               text: string = '',
               timeLimit: number = null,
-              functionSignature: Function = null) {
+              codeSnippet: CodeSnippet = null) {
     this.name = name;
     this.description = text;
     this.timeLimit = timeLimit;
-    this.functionObj = functionSignature;
+    this.codeSnippet = codeSnippet;
   }
 }

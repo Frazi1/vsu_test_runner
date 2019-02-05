@@ -4,5 +4,5 @@
     <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
   </h3>
   <textarea [(ngModel)]="question.description"></textarea>
-  <app-function-editor [functionObj]="question.functionObj"></app-function-editor>
+  <app-function-editor [functionObj]="question.codeSnippet.functionObj"></app-function-editor>
 </div>

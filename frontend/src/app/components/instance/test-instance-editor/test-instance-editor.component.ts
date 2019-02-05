@@ -39,7 +39,7 @@ export class TestInstanceEditorComponent implements OnInit {
     if (!this.test.disabledAfter || !this.test.availableAfter) {
       return null;
     }
-    const res = this.test.disabledAfter - this.test.availableAfter;
+    const res: number = this.test.disabledAfter - this.test.availableAfter;
     return `${res / 100 / 60} минут`;
   }
 }

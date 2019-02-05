@@ -27,6 +27,10 @@ export class FunctionEditorComponent implements OnInit {
     this.supportedCodeProviderService.codeTypes()
       .subscribe(res => this._codeTypes = res);
 
+    if (this.functionObj == null) {
+      this.functionObj = new Function();
+    }
+
     if (this.functionObj.returnType == null) {
       this.functionObj.returnType = this._defaultCodeTypeValue;
     }

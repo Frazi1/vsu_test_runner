@@ -1,6 +1,5 @@
 import {CodeType} from './CodeType';
 import {FunctionArgument} from './FunctionArgument';
-import {CodeSnippet} from './CodeSnippet';
 import {JsonObject, JsonProperty} from 'json2typescript';
 
 
@@ -15,14 +14,9 @@ export class Function {
   @JsonProperty('arguments', [FunctionArgument])
   public arguments: FunctionArgument[];
 
-  @JsonProperty('codeSnippet', CodeSnippet)
-  public codeSnippet: CodeSnippet;
-
-
-  constructor(name: string, returnType: CodeType, args: FunctionArgument[] = [], codeSnippet = null) {
+  constructor(name: string = '', returnType: CodeType = null, args: FunctionArgument[] = []) {
     this.name = name;
     this.returnType = returnType;
     this.arguments = args;
-    this.codeSnippet = codeSnippet;
   }
 }

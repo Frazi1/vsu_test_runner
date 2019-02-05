@@ -5,9 +5,11 @@ import os
 from gevent import monkey
 
 from controllers.instance_controller import InstanceController
+from controllers.run_controller import RunController
 from controllers.template_controller import TemplateController
 from logger.console_logger import ConsoleLogger
 from services.instance_service import InstanceService
+from services.run_service import RunService
 
 monkey.patch_all()
 
@@ -33,14 +35,16 @@ app.install(ControllerPlugin())
 def init_services():
     template_service = TemplateService()
     instance_service = InstanceService(template_service)
-    return [template_service, instance_service]
+    run_service = RunService(instance_service)
+    return [template_service, instance_service, run_service]
 
 
-def init_controllers(app, template_service, instance_service, logger):
+def init_controllers(app, template_service, instance_service, run_service, logger):
     template_ctrl = TemplateController(app, template_service, logger)
     instance_ctrl = InstanceController(app, instance_service, logger)
+    run_ctrl = RunController(app, run_service, logger)
 
-    return [template_ctrl, instance_ctrl]
+    return [template_ctrl, instance_ctrl, run_ctrl]
 
 
 logger = ConsoleLogger()
@@ -48,6 +52,7 @@ services = init_services()
 controllers = init_controllers(app,
                                next((x for x in services if isinstance(x, TemplateService))),
                                next((x for x in services if isinstance(x, InstanceService))),
+                               next((x for x in services if isinstance(x, RunService))),
                                logger)
 
 

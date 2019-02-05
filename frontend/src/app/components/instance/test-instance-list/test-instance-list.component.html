@@ -6,5 +6,6 @@
     <span>Окончание: {{t.disabledAfter || "Не указано"}}</span>
     <span>Лимит по времени:{{t.timeLimit}}</span>
     <button>Редактировать</button>
+    <button (click)="$event.stopPropagation();startTest(t)" >Начать</button>
   </div>
 </div>

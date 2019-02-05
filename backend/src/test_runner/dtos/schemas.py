@@ -1,13 +1,13 @@
 from marshmallow import Schema, fields, post_load
-from marshmallow.fields import Nested, String, Integer
+from marshmallow.fields import Nested, String, Integer, List
 
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
+from models.function import Function
 from models.function_parameter import FunctionArgument
 from models.language_enum import LanguageEnum
 from models.test_question_template import TestQuestionTemplate
 from models.test_template import TestTemplate
-from models.function import Function
 
 
 class ArgumentTypeSchema(Schema):
@@ -38,18 +38,6 @@ class LanguageSchema(Schema):
         return LanguageEnum[name]
 
 
-class CodeSnippetSchema(Schema):
-    id = Integer(required=False, allow_none=True)
-    language = Nested(LanguageEnum, required=True)
-    code = String(many=True, required=True)
-
-    @post_load()
-    def create_class(self, value):
-        code_lines = value['code']
-        value['code'] = "\n".join(code_lines)
-        return CodeSnippet(**value)
-
-
 class FunctionSchema(Schema):
     id = Integer(required=False, allow_none=True)
     name = String(required=True)
@@ -65,16 +53,31 @@ class FunctionSchema(Schema):
                        many=True,
                        )
 
-    code_snippet = Nested(CodeSnippetSchema,
-                          required=False,
-                          allow_none=True,
-                          load_from='codeSnippet',
-                          dump_to='codeSnippet'
-                          )
-
     @post_load()
     def create_class(self, value):
         return Function(**value)
+
+
+class CodeSnippetSchema(Schema):
+    id = Integer(required=False, allow_none=True)
+    language = Nested(LanguageSchema,
+                      required=False,
+                      allow_none=True)
+    code = List(String(),
+                required=False,
+                allow_none=True
+                )
+    function = Nested(FunctionSchema,
+                      required=False,
+                      allow_none=True,
+                      load_from="function",
+                      dump_to="function")
+
+    @post_load()
+    def create_class(self, value):
+        code_lines = value['code'] or []
+        value['code'] = "\n".join(code_lines)
+        return CodeSnippet(**value)
 
 
 class TestQuestionTemplateSchema(Schema):
@@ -87,10 +90,10 @@ class TestQuestionTemplateSchema(Schema):
                          required=False,
                          allow_none=True)
     version = Integer(required=False, allow_none=True)
-    solution_function = Nested(FunctionSchema,
-                               load_from='solutionFunction',
-                               dump_to='solutionFunction',
-                               attribute='solution_function')
+    solution_code_snippet = Nested(CodeSnippetSchema,
+                                   load_from='codeSnippet',
+                                   dump_to='codeSnippet',
+                                   attribute='solution_code_snippet')
 
     @post_load()
     def create_class(self, value):
@@ -104,7 +107,6 @@ class TestTemplateSchema(Schema):
                          dump_to='timeLimit',
                          attribute='time_limit',
                          allow_none=True)
-    # many = False, required = False, allow_none = True
     questions = Nested(TestQuestionTemplateSchema,
                        load_from='questionTemplates',
                        dump_to='questionTemplates',

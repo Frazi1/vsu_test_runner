@@ -12,6 +12,6 @@ class CodeSnippet(Base):
     language = Column(Enum(LanguageEnum))
     code = Column(Text)
     function_id = Column(Integer, ForeignKey('function.id'), nullable=false)
-    function = relationship("Function", back_populates="code_snippet")
+    function = relationship("Function", back_populates="code_snippets")
     question_template = relationship("TestQuestionTemplate", back_populates="solution_code_snippet", uselist=False)
     question_answer = relationship("QuestionAnswer", back_populates="code_snippet", uselist=False)

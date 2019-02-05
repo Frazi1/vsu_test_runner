@@ -2,7 +2,7 @@ import os
 
 from sqlalchemy.ext.declarative import declarative_base
 
-from helpers import load_modules
+from utils.helpers import load_modules
 
 Base = declarative_base()
 

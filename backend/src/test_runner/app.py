@@ -15,7 +15,7 @@ from bottle import Bottle, run, response
 from bottle_sqlalchemy import SQLAlchemyPlugin
 
 from db_config import ENGINE
-from helpers import load_modules
+from utils.helpers import load_modules
 from models import Base
 from models.argument_type import ArgumentType
 from plugins import EnableCors, BodyParser, ControllerPlugin

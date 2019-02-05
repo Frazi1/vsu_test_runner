@@ -1,5 +1,5 @@
-from models.Function import Function
 from models.code_snippet import CodeSnippet
+from models.function import Function
 from models.function_parameter import FunctionArgument
 
 

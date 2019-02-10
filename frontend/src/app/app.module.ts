@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -18,6 +18,8 @@ import {TestInstanceListComponent} from './components/instance/test-instance-lis
 import {TestInstanceEditorComponent} from './components/instance/test-instance-editor/test-instance-editor.component';
 import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ToastrModule} from 'ngx-toastr';
+import {GlobalErrorHandler} from './configuration/global-error-handler';
 
 @NgModule({
   declarations: [
@@ -39,10 +41,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     {provide: 'ITemplateService', useClass: TemplatesService},
-    {provide: JsonConvert, useValue: jsonConvert}
+    {provide: JsonConvert, useValue: jsonConvert},
+    {provide: ErrorHandler, useClass: GlobalErrorHandler}
   ],
   bootstrap: [AppComponent]
 })

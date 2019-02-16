@@ -1,8 +1,8 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {Function} from '../../shared/Function';
-import {SupportedCodeProviderService} from '../../services/supported-code-provider.service';
-import {CodeType} from '../../shared/CodeType';
-import {FunctionArgument} from '../../shared/FunctionArgument';
+import {Function} from '../../../shared/Function';
+import {SupportedCodeProviderService} from '../../../services/supported-code-provider.service';
+import {CodeType} from '../../../shared/CodeType';
+import {FunctionArgument} from '../../../shared/FunctionArgument';
 
 @Component({
   selector: 'app-function-editor',

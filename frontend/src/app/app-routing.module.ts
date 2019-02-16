@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {TestTemplateEditorComponent} from './editor/test-template-editor/test-template-editor.component';
-import {TestTemplateListComponent} from './editor/test-template-list/test-template-list.component';
+import {TestTemplateEditorComponent} from './components/editor/test-template-editor/test-template-editor.component';
+import {TestTemplateListComponent} from './components/editor/test-template-list/test-template-list.component';
 import {TestInstanceListComponent} from './components/instance/test-instance-list/test-instance-list.component';
 import {TestInstanceEditorComponent} from './components/instance/test-instance-editor/test-instance-editor.component';
 

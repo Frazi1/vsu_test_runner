@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {TestQuestionTemplate} from '../../shared/TestQuestionTemplate';
-import {Function} from '../../shared/Function';
-import {CodeSnippet} from '../../shared/CodeSnippet';
+import {TestQuestionTemplate} from '../../../shared/TestQuestionTemplate';
+import {Function} from '../../../shared/Function';
+import {CodeSnippet} from '../../../shared/CodeSnippet';
 
 @Component({
   selector: 'app-test-question-template-editor',

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CodeType} from '../../shared/CodeType';
-import {SupportedCodeProviderService} from '../../services/supported-code-provider.service';
+import {CodeType} from '../../../shared/CodeType';
+import {SupportedCodeProviderService} from '../../../services/supported-code-provider.service';
 
 @Component({
   selector: 'app-code-type-selector',

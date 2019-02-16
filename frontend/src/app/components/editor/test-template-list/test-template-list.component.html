@@ -2,6 +2,6 @@
 <div *ngFor="let t of testTemplates">
   <div [routerLink]="['/template', t.id]">
     <span>{{t.id}}. Название: {{t.name}}  Вопросов: {{t.questionTemplates.length}}</span>
-    <button (click)="createTestInstance(t.id)">Запустить</button>
+    <button (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить</button>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {TestTemplate} from '../../shared/TestTemplate';
-import {ITemplateService} from '../../services/interfaces';
-import {InstanceService} from '../../services/instance.service';
+import {TestTemplate} from '../../../shared/TestTemplate';
+import {ITemplateService} from '../../../services/interfaces';
+import {InstanceService} from '../../../services/instance.service';
 
 @Component({
   selector: 'app-test-template-list',

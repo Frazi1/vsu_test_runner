@@ -1,10 +1,10 @@
 import {Component, Inject, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/index';
-import {TestTemplate} from '../../shared/TestTemplate';
-import {TestQuestionTemplate} from '../../shared/TestQuestionTemplate';
-import {MockTemplatesService} from '../../services/mock-templates.service';
-import {ITemplateService} from '../../services/interfaces';
+import {TestTemplate} from '../../../shared/TestTemplate';
+import {TestQuestionTemplate} from '../../../shared/TestQuestionTemplate';
+import {MockTemplatesService} from '../../../services/mock-templates.service';
+import {ITemplateService} from '../../../services/interfaces';
 
 @Component({
   selector: 'app-test-template-editor',

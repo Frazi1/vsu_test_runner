@@ -1,6 +1,7 @@
 from marshmallow import Schema, post_load
 from marshmallow.fields import *
 
+from dtos import TestInstanceUpdate
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 
@@ -60,3 +61,25 @@ class TestInstanceSchema(Schema):
     @post_load()
     def create_class(self, value):
         return TestInstance(**value)
+
+
+class TestInstanceUpdateSchema(Schema):
+    available_after = DateTime(required=False,
+                               allow_none=True,
+                               load_from='availableAfter',
+                               dump_to='availableAfter')
+
+    disabled_after = DateTime(required=False,
+                              allow_none=True,
+                              load_from='disabledAfter',
+                              dump_to='disabledAfter')
+
+    time_limit = Integer(load_from='timeLimit',
+                         dump_to='timeLimit',
+                         attribute='time_limit',
+                         required=False,
+                         allow_none=True)
+
+    @post_load()
+    def create_class(self, value):
+        return TestInstanceUpdate(**value)

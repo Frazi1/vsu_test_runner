@@ -1,5 +1,6 @@
 from sqlalchemy.orm import joinedload
 
+from dtos.dtos import TestInstanceUpdate
 from models.helpers.helper import clone_code_snippet
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
@@ -7,10 +8,10 @@ from models.test_instance import TestInstance
 
 class InstanceService(object):
     def __init__(self, template_service):
-        self.template_service = template_service
+        self._template_service = template_service
 
     def create_test_instance(self, test_template_id, session):
-        test_template = self.template_service.get_test_template_by_id(session, test_template_id)
+        test_template = self._template_service.get_test_template_by_id(session, test_template_id)
         question_instances = [QuestionInstance(name=x.name,
                                                time_limit=x.time_limit,
                                                parent_id=x.id,
@@ -25,6 +26,7 @@ class InstanceService(object):
         return test_instance.id
 
     def get_test_instance(self, test_instance_id, db):
+        # type: ()-> TestInstance
         return db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .filter(TestInstance.id == test_instance_id) \
@@ -35,8 +37,12 @@ class InstanceService(object):
             .options(joinedload(TestInstance.questions)) \
             .all()
 
-    def update_test_template(self, test_instance, db):
-        db_test_instance = self.get_test_instance(test_instance.id, db)
-        db.merge(test_instance)
+    def update_test_instance(self, test_instance_id, test_instance_update, db):
+        # type: (int, TestInstanceUpdate)-> TestInstance
+
+        db_test_instance = self.get_test_instance(test_instance_id, db)
+        db_test_instance.available_after = test_instance_update.available_after
+        db_test_instance.disabled_after = test_instance_update.disabled_after
+        db_test_instance.time_limit = test_instance_update.time_limit
         db.commit()
         return db_test_instance

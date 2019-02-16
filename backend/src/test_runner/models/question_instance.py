@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, BigInteger
+from sqlalchemy import Column, String, Integer, ForeignKey, BigInteger, Text
 from sqlalchemy.orm import relationship
 
 from models import Base
@@ -11,6 +11,8 @@ class QuestionInstance(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(length=100))
     time_limit = Column(Integer, nullable=True)
+    description = Column(Text, nullable=True)
+
     tests = relationship(
         "TestInstance",
         secondary=test_instance_to_question_instance_association,

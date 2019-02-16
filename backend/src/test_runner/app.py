@@ -58,11 +58,11 @@ controllers = init_controllers(app,
 
 @app.error(500)
 def error(err):
-    a = 10
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     response.headers['Access-Control-Allow-Origin'] = '*'
     message_ = {"code": err.status_code,
                 "exception": str(err.exception.message),
+                "message": str(err.exception.message),
                 "trace": err.traceback}
     dump = json.dumps(message_)
     return dump

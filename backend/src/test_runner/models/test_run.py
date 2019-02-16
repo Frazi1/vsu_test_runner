@@ -13,3 +13,4 @@ class TestRun(Base):
     question_answers = relationship("QuestionAnswer", back_populates="test_run")
     started_at = Column(DateTime, server_default=func.now())
     finished_at = Column(DateTime, nullable=True)
+    ends_at = Column(DateTime, nullable=True)

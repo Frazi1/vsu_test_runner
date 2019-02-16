@@ -20,6 +20,7 @@ import {OwlDateTimeModule, OwlNativeDateTimeModule} from 'ng-pick-datetime';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {GlobalErrorHandler} from './configuration/global-error-handler';
+import { TestRunnerComponent } from './components/runner/test-runner/test-runner.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {GlobalErrorHandler} from './configuration/global-error-handler';
     FunctionEditorComponent,
     CodeTypeSelectorComponent,
     TestInstanceListComponent,
-    TestInstanceEditorComponent
+    TestInstanceEditorComponent,
+    TestRunnerComponent
   ],
   imports: [
     BrowserModule,

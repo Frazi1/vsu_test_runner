@@ -5,18 +5,18 @@ import {Observable} from 'rxjs/index';
 import {TestInstance} from '../shared/instance/TestInstance';
 import {map} from 'rxjs/internal/operators';
 import {Injectable} from '@angular/core';
+import {BaseService} from './base.service';
+import {TestInstanceUpdate} from '../shared/instance/TestInstanceUpdate';
 
 @Injectable({
   providedIn: 'root'
 })
-export class InstanceService {
+export class InstanceService extends BaseService {
 
-  private endpoint;
-
-  constructor(private http: HttpClient,
-              private config: Config,
-              private json: JsonConvert) {
-    this.endpoint = `${this.config.serverUrl}/instance`;
+  constructor(http: HttpClient,
+              config: Config,
+              json: JsonConvert) {
+    super(http, config, json, 'instance');
   }
 
   public createTestInstance(templateId: number): Observable<number> {
@@ -35,6 +35,13 @@ export class InstanceService {
 
   public getTestInstance(id: number): Observable<TestInstance> {
     return this.http.get(`${this.endpoint}/${id}`)
+      .pipe(
+        map(res => this.json.deserialize(res, TestInstance))
+      );
+  }
+
+  public updateTestInstance(id: number, testInstanceUpdate: TestInstanceUpdate): Observable<TestInstance> {
+    return this.http.put(this.buildUrl(`${id}`), this.json.serialize(testInstanceUpdate))
       .pipe(
         map(res => this.json.deserialize(res, TestInstance))
       );

@@ -11,6 +11,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any): void {
     if (error instanceof HttpErrorResponse) {
+      // noinspection TypeScriptValidateTypes
       this.toastr.error(error.error.message || error.message, 'Server error',
         {onActivateTick: true});
     }

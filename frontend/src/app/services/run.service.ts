@@ -5,6 +5,7 @@ import {Config} from '../shared/Config';
 import {Observable} from 'rxjs/index';
 import {map} from 'rxjs/internal/operators';
 import {Injectable} from '@angular/core';
+import {TestRun} from '../shared/runner/TestRun';
 
 @Injectable({
   'providedIn': 'root'
@@ -20,5 +21,9 @@ export class RunService extends BaseService {
       .pipe(
         map(res => +res)
       );
+  }
+
+  public getTestRun(testRunId: number): Observable<TestRun> {
+    return this.getOne(testRunId, TestRun);
   }
 }

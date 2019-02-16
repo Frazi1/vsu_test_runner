@@ -1,5 +1,5 @@
-<div *ngIf="test">
-  {{test.name}}
+<div *ngIf="testInstance">
+  {{testInstance.name}}
   <div>
     <label for="">Время:</label>
     <input #timeInput [owlDateTime]="time" [owlDateTimeTrigger]="time" placeholder="Выберите время теста"
@@ -7,7 +7,8 @@
            (ngModelChange)="onSelectedRangedValueChange($event, selectedRange)">
     <owl-date-time #time></owl-date-time>
   </div>
-  <div>Начало: {{test.availableAfter}}</div>
-  <div>Окончание: {{test.disabledAfter}}</div>
+  <div>Начало: {{testInstance.availableAfter}}</div>
+  <div>Окончание: {{testInstance.disabledAfter}}</div>
   <div>Длительность: {{getDuration()}}</div>
+  <div><button (click)="save()">Сохранить</button></div>
 </div>

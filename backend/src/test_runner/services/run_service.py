@@ -15,18 +15,18 @@ class RunService(BaseService):
         super(RunService, self).__init__()
         self._instance_service = instance_service
 
-    def get_active_test_run(self, test_run_id, db):
+    def get_active_test_run(self, test_run_id):
         # .options(joinedload(TestRun.test_instance, TestRun.question_answers)) \
-        return db.query(TestRun) \
+        return self.db.query(TestRun) \
             .filter(TestRun.id == test_run_id) \
             .first()
 
-    def start_run_from_instance(self, instance_id, db):
-        test_instance = self._instance_service.get_test_instance(instance_id, db)
+    def start_run_from_instance(self, instance_id):
+        test_instance = self._instance_service.get_test_instance(instance_id)
         test_run = TestRun(test_instance=test_instance)
         test_run.question_answers = self._create_empty_question_answers(test_instance, test_run)
-        db.add(test_run)
-        db.commit()
+        self.db.add(test_run)
+        self.db.commit()
         return test_run.id
 
     def _create_empty_question_answers(self, test_instance, test_run):

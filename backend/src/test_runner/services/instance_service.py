@@ -4,9 +4,10 @@ from dtos.dtos import TestInstanceUpdate
 from models.helpers.helper import clone_code_snippet
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
+from services.base_service import BaseService
 
 
-class InstanceService(object):
+class InstanceService(BaseService):
     def __init__(self, template_service):
         self._template_service = template_service
 
@@ -25,24 +26,24 @@ class InstanceService(object):
         session.commit()
         return test_instance.id
 
-    def get_test_instance(self, test_instance_id, db):
+    def get_test_instance(self, test_instance_id):
         # type: ()-> TestInstance
-        return db.query(TestInstance) \
+        return self.db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .filter(TestInstance.id == test_instance_id) \
             .first()
 
-    def get_instances(self, db):
-        return db.query(TestInstance) \
+    def get_instances(self):
+        return self.db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .all()
 
-    def update_test_instance(self, test_instance_id, test_instance_update, db):
+    def update_test_instance(self, test_instance_id, test_instance_update):
         # type: (int, TestInstanceUpdate)-> TestInstance
 
-        db_test_instance = self.get_test_instance(test_instance_id, db)
+        db_test_instance = self.get_test_instance(test_instance_id)
         db_test_instance.available_after = test_instance_update.available_after
         db_test_instance.disabled_after = test_instance_update.disabled_after
         db_test_instance.time_limit = test_instance_update.time_limit
-        db.commit()
+        self.db.commit()
         return db_test_instance

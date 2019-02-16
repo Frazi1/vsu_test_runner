@@ -16,22 +16,22 @@ class InstanceController(BaseController):
         self.instance_service = instance_service
 
     @BaseController.get('/instance', response_schema=TestInstanceSchema(many=True))
-    def get_instances(self, db):
-        instances = self.instance_service.get_instances(db)
+    def get_instances(self):
+        instances = self.instance_service.get_instances()
         return instances
 
     @BaseController.get('/instance/<instance_id:int>', response_schema=TestInstanceSchema())
-    def get_test_instance_by_id(self, instance_id, db):
-        res = self.instance_service.get_test_instance(instance_id, db)
+    def get_test_instance_by_id(self, instance_id):
+        res = self.instance_service.get_test_instance(instance_id)
         return res
 
     @BaseController.put('/instance/<instance_id:int>',
                         request_body_schema=TestInstanceUpdateSchema(),
                         response_schema=TestInstanceSchema())
-    def update_test_instance_by_id(self, parsed_body, db, instance_id):
+    def update_test_instance_by_id(self, parsed_body, instance_id):
         # type: (TestInstanceUpdate, int) -> TestInstance
 
-        res = self.instance_service.update_test_instance(instance_id, parsed_body, db)
+        res = self.instance_service.update_test_instance(instance_id, parsed_body)
         return res
 
     @BaseController.post('/instance/create/<template_id:int>', )

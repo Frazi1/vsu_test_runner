@@ -1,43 +1,39 @@
 from sqlalchemy.orm import joinedload
 
 from models.test_template import TestTemplate
+from services.base_service import BaseService
 
 
-class TemplateService:
+class TemplateService(BaseService):
 
     def __init__(self):
         pass
 
-    def add_test_template(self, session, test):
-        try:
-            session.add(test)
-            session.commit()
-            return test.id
-        except Exception, e:
-            a= e
+    def add_test_template(self, test):
+        self.db.add(test)
+        self.db.commit()
+        return test.id
 
-
-    def get_test_templates(self, session, include_deleted=False):
-
-        q = session.query(TestTemplate).options(joinedload(TestTemplate.questions))
+    def get_test_templates(self, include_deleted=False):
+        q = self.db.query(TestTemplate).options(joinedload(TestTemplate.questions))
         if include_deleted is False:
             q = q.filter(TestTemplate.is_deleted == False)
-        questions__all = q.all()
-        return questions__all
+        test_templates = q.all()
+        return test_templates
 
-    def get_test_template_by_id(self, session, id_):
-        return session.query(TestTemplate) \
+    def get_test_template_by_id(self, id_):
+        return self.db.query(TestTemplate) \
             .options(joinedload(TestTemplate.questions)) \
             .filter(TestTemplate.id == id_) \
             .first()
 
-    def update_test_template(self, session, id_, test):
-        db_test = self.get_test_template_by_id(session, id_)
-        session.merge(test)
+    def update_test_template(self, id_, test):
+        db_test = self.get_test_template_by_id(id_)
+        self.db.merge(test)
         return db_test
 
-    def delete_test_template(self, session, id_):
-        test_template = self.get_test_template_by_id(session, id_)
+    def delete_test_template(self, id_):
+        test_template = self.get_test_template_by_id(id_)
         test_template.is_deleted = True
 
         for question in test_template.questions:

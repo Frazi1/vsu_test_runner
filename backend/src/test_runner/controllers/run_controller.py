@@ -14,10 +14,10 @@ class RunController(BaseController):
         self._run_service = run_service
 
     @BaseController.get('/run/<test_run_id:int>', response_schema=TestRunSchema())
-    def get_test_run_by_id(self, test_run_id, db):
-        run = self._run_service.get_active_test_run(test_run_id, db)
+    def get_test_run_by_id(self, test_run_id):
+        run = self._run_service.get_active_test_run(test_run_id)
         return TestRunDto.map_from(run)
 
     @BaseController.post('/run/<test_instance_id:int>')
-    def start_test_run(self, test_instance_id, db):
-        return self._run_service.start_run_from_instance(test_instance_id, db)
+    def start_test_run(self, test_instance_id):
+        return self._run_service.start_run_from_instance(test_instance_id)

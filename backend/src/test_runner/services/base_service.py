@@ -1,2 +1,10 @@
+from bottle import request
+from sqlalchemy.orm import Session
+
+
 class BaseService(object):
-    pass
+
+    @property
+    def db(self):
+        # type: () -> Session
+        return request.environ['db']

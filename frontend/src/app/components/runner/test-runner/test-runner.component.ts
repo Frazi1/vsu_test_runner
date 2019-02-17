@@ -3,6 +3,7 @@ import {RunService} from '../../../services/run.service';
 import {ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs/index';
 import {TestRun} from '../../../shared/runner/TestRun';
+import {TestRunQuestion} from '../../../shared/runner/TestRunQuestion';
 
 @Component({
   selector: 'app-test-runner',
@@ -12,7 +13,8 @@ import {TestRun} from '../../../shared/runner/TestRun';
 export class TestRunnerComponent implements OnInit {
 
   private routeSubscription: Subscription;
-  private testRun: TestRun;
+  private _testRun: TestRun;
+  private _currentQuestionIndex = 0;
 
   constructor(private runService: RunService,
               private activatedRoute: ActivatedRoute) {
@@ -21,8 +23,23 @@ export class TestRunnerComponent implements OnInit {
   ngOnInit() {
     this.routeSubscription = this.activatedRoute.params.subscribe(params => {
       const id = +params['id'];
-      this.runService.getTestRun(id).subscribe(testRun => this.testRun = testRun);
+      this.runService.getTestRun(id).subscribe(testRun => this._testRun = testRun);
     });
   }
 
+  get currentQuestion(): TestRunQuestion {
+    return this._testRun.questionAnswers[this._currentQuestionIndex];
+  }
+
+  private nextQuestion(): void {
+    if (this._currentQuestionIndex < this._testRun.questionAnswers.length - 1) {
+      this._currentQuestionIndex++;
+    }
+  }
+
+  private previousQuestion(): void {
+    if (this._currentQuestionIndex > 0) {
+      this._currentQuestionIndex--;
+    }
+  }
 }

@@ -21,6 +21,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ToastrModule} from 'ngx-toastr';
 import {GlobalErrorHandler} from './configuration/global-error-handler';
 import { TestRunnerComponent } from './components/runner/test-runner/test-runner.component';
+import { QuestionRunnerComponent } from './components/runner/question-runner/question-runner.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { TestRunnerComponent } from './components/runner/test-runner/test-runner
     CodeTypeSelectorComponent,
     TestInstanceListComponent,
     TestInstanceEditorComponent,
-    TestRunnerComponent
+    TestRunnerComponent,
+    QuestionRunnerComponent
   ],
   imports: [
     BrowserModule,

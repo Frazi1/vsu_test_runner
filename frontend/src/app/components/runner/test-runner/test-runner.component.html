@@ -1,3 +1,12 @@
-<p>
-  test-runner works!
-</p>
+<div *ngIf="_testRun">
+  <h1>{{_testRun.name}}</h1>
+  <span>Заканчивается в: {{_testRun.endsAt || "Не указано"}}</span>
+
+  <div>
+    <app-question-runner [questionRun]="currentQuestion"></app-question-runner>
+    <div>
+      <button (click)="previousQuestion()">Предыдущий</button>
+      <button (click)="nextQuestion()">Следующий</button>
+    </div>
+  </div>
+</div>

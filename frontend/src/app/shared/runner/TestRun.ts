@@ -7,6 +7,12 @@ export class TestRun {
   @JsonProperty('id')
   private _id: number = undefined;
 
+  @JsonProperty('name')
+  private _name: string = undefined;
+
+  @JsonProperty('timeLimit')
+  private _timeLimit: number = undefined;
+
   @JsonProperty('startedAt')
   private _startedAt: Date = undefined;
 
@@ -19,21 +25,13 @@ export class TestRun {
   @JsonProperty('questionAnswers', [TestRunQuestion])
   private _questionAnswers: TestRunQuestion[] = undefined;
 
-  // region Getters/Setters
+// region Getters/Setters
   get id(): number {
     return this._id;
   }
 
-  set id(value: number) {
-    this._id = value;
-  }
-
   get startedAt(): Date {
     return this._startedAt;
-  }
-
-  set startedAt(value: Date) {
-    this._startedAt = value;
   }
 
   get finishedAt(): Date {
@@ -48,17 +46,17 @@ export class TestRun {
     return this._endsAt;
   }
 
-  set endsAt(value: Date) {
-    this._endsAt = value;
-  }
-
   get questionAnswers(): TestRunQuestion[] {
     return this._questionAnswers;
   }
 
-  set questionAnswers(value: TestRunQuestion[]) {
-    this._questionAnswers = value;
+  get name(): string {
+    return this._name;
   }
 
-  // endregion
+  get timeLimit(): number {
+    return this._timeLimit;
+  }
+
+// endregion
 }

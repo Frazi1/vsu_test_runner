@@ -5,16 +5,20 @@ from models.helpers.helper import clone_code_snippet
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 from services.base_service import BaseService
+from services.template_service import TemplateService
 
 
 class InstanceService(BaseService):
-    def __init__(self, template_service):
+    def __init__(self,
+                 template_service  # type: TemplateService
+                 ):
         self._template_service = template_service
 
-    def create_test_instance(self, test_template_id, session):
-        test_template = self._template_service.get_test_template_by_id(session, test_template_id)
+    def create_test_instance(self, test_template_id):
+        test_template = self._template_service.get_test_template_by_id(test_template_id)
         question_instances = [QuestionInstance(name=x.name,
                                                time_limit=x.time_limit,
+                                               description=x.description,
                                                parent_id=x.id,
                                                parent_version=x.version,
                                                solution_code_snippet=clone_code_snippet(x.solution_code_snippet))
@@ -22,8 +26,8 @@ class InstanceService(BaseService):
         test_instance = TestInstance(name=test_template.name,
                                      time_limit=test_template.time_limit,
                                      questions=question_instances)
-        session.add(test_instance)
-        session.commit()
+        self.db.add(test_instance)
+        self.db.commit()
         return test_instance.id
 
     def get_test_instance(self, test_instance_id):

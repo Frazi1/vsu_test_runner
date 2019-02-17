@@ -22,6 +22,7 @@ class TemplateService(BaseService):
         return test_templates
 
     def get_test_template_by_id(self, id_):
+        # type: (int) -> TestTemplate
         return self.db.query(TestTemplate) \
             .options(joinedload(TestTemplate.questions)) \
             .filter(TestTemplate.id == id_) \

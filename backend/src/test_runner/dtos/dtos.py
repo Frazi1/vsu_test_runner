@@ -1,3 +1,5 @@
+from models.test_run import TestRun
+
 class TestTemplateDto:
     @staticmethod
     def list_of(test_templates):
@@ -49,19 +51,24 @@ class TestRunQuestionAnswerDto:
 
 
 class TestRunDto:
-    def __init__(self, id, started_at, ends_at, finished_at, question_answers):
+    def __init__(self, id, name, started_at, ends_at, finished_at, time_limit, question_answers):
         self.id = id
+        self.name = name
         self.started_at = started_at
         self.ends_at = ends_at
         self.finished_at = finished_at
+        self.time_limit = time_limit
         self.question_answers = question_answers
 
     @classmethod
     def map_from(cls, test_run):
+        # type: (TestRun) -> TestRunDto
         cls_ = cls(id=test_run.id,
+                   name=test_run.test_instance.name,
                    started_at=test_run.started_at,
                    ends_at=test_run.ends_at,
                    finished_at=test_run.finished_at,
+                   time_limit=test_run.test_instance.time_limit,
                    question_answers=[TestRunQuestionAnswerDto.map_from(x) for x in test_run.question_answers])
         return cls_
     

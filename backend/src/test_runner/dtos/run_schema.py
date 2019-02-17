@@ -20,6 +20,7 @@ class TestRunQuestionSchema(Schema):
 
 class TestRunSchema(Schema):
     id = Integer()
+    name = String(required=True)
     started_at = DateTime(dump_to='startedAt',
                           load_from='startedAt')
 
@@ -30,6 +31,12 @@ class TestRunSchema(Schema):
                            allow_none=True,
                            dump_to='finishedAt',
                            load_from='finishedAt')
+
+    time_limit = Integer(load_from='timeLimit',
+                         dump_to='timeLimit',
+                         attribute='time_limit',
+                         required=False,
+                         allow_none=True)
 
     question_answers = List(Nested(TestRunQuestionSchema),
                             dump_to='questionAnswers',

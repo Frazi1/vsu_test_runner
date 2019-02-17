@@ -1,8 +1,10 @@
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
+from typing import List
 
 from models import Base
 from models.associations import test_template_test_question_template_association
+from models.test_question_template import TestQuestionTemplate
 
 
 class TestTemplate(Base):
@@ -15,7 +17,7 @@ class TestTemplate(Base):
     questions = relationship(
         "TestQuestionTemplate",
         secondary=test_template_test_question_template_association,
-    )
+    ) # type: List[TestQuestionTemplate]
 
     def __repr__(self):
         return "<TestTemplate(id='{}', name='{}', time_limit='{}', questions={})>" \

@@ -18,8 +18,10 @@ class QuestionInstance(Base):
         secondary=test_instance_to_question_instance_association,
         back_populates="questions"
     )
-    parent_id = Column(Integer, ForeignKey('test_question_template.id'), nullable=False)
+
     parent_version = Column(BigInteger, nullable=False)
     answers = relationship("QuestionAnswer", back_populates="question_instance")
-    solution_code_snippet_id = Column(Integer, ForeignKey("code_snippet.id"), nullable=False)
     solution_code_snippet = relationship("CodeSnippet", uselist=False)
+
+    solution_code_snippet_id = Column(Integer, ForeignKey("code_snippet.id"), nullable=False)
+    parent_id = Column(Integer, ForeignKey('test_question_template.id'), nullable=False)

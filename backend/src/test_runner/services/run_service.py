@@ -1,3 +1,4 @@
+from sqlalchemy.orm import joinedload, raiseload
 from typing import List
 
 from models.question_answer import QuestionAnswer
@@ -16,8 +17,12 @@ class RunService(BaseService):
         self._instance_service = instance_service
 
     def get_active_test_run(self, test_run_id):
-        # .options(joinedload(TestRun.test_instance, TestRun.question_answers)) \
+        # type: (int) -> TestRun
         return self.db.query(TestRun) \
+            .options(joinedload(TestRun.question_answers).joinedload(QuestionAnswer.question_instance),
+                     joinedload(TestRun.question_answers).joinedload(QuestionAnswer.code_snippet),
+                     joinedload(TestRun.test_instance),
+                     raiseload('*')) \
             .filter(TestRun.id == test_run_id) \
             .first()
 

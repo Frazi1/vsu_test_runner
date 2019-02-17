@@ -35,5 +35,5 @@ class InstanceController(BaseController):
         return res
 
     @BaseController.post('/instance/create/<template_id:int>', )
-    def create_instance(self, db, template_id):
-        return self.instance_service.create_test_instance(template_id, db)
+    def create_instance(self, template_id):
+        return self.instance_service.create_test_instance(template_id)

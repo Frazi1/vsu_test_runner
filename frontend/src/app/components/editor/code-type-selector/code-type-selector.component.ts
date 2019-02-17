@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CodeType} from '../../../shared/CodeType';
-import {SupportedCodeProviderService} from '../../../services/supported-code-provider.service';
+import {CodeService} from '../../../services/code.service';
 
 @Component({
   selector: 'app-code-type-selector',
@@ -18,7 +18,7 @@ export class CodeTypeSelectorComponent implements OnInit {
   @Output()
   public valueChange = new EventEmitter<CodeType>();
 
-  constructor(private supportedCodeProviderService: SupportedCodeProviderService) {
+  constructor(private supportedCodeProviderService: CodeService) {
     this.codeTypeComparer = this.codeTypeComparer.bind(this);
   }
 

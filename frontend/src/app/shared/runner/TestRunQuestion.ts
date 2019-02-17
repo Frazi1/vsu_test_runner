@@ -13,6 +13,9 @@ export class TestRunQuestion {
   @JsonProperty('description')
   private _description: string = undefined;
 
+  @JsonProperty('functionId')
+  private _functionId: number = undefined;
+
   @JsonProperty('answerCodeSnippet', CodeSnippet)
   private _answerCodeSnippet: CodeSnippet = undefined;
 
@@ -37,5 +40,9 @@ export class TestRunQuestion {
     this._answerCodeSnippet = value;
   }
 
-  // endregion
+  get functionId(): number {
+    return this._functionId;
+  }
+
+// endregion
 }

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {Function} from '../../../shared/Function';
-import {SupportedCodeProviderService} from '../../../services/supported-code-provider.service';
+import {CodeService} from '../../../services/code.service';
 import {CodeType} from '../../../shared/CodeType';
 import {FunctionArgument} from '../../../shared/FunctionArgument';
 
@@ -12,7 +12,7 @@ import {FunctionArgument} from '../../../shared/FunctionArgument';
 export class FunctionEditorComponent implements OnInit {
 
 
-  constructor(private supportedCodeProviderService: SupportedCodeProviderService) {
+  constructor(private supportedCodeProviderService: CodeService) {
   }
 
   @Input()

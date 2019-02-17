@@ -18,7 +18,7 @@ export class BaseService {
     this._endpoint = `${this.config.serverUrl}/${endpointPostfix}`;
   }
 
-  protected buildUrl(...args: string[]): string {
+  protected buildUrl(...args: (string | number)[]): string {
     let url = this.endpoint;
     if (!url.endsWith('/')) {
       url += '/';

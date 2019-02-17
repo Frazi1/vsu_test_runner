@@ -5,6 +5,10 @@ import {JsonObject, JsonProperty} from 'json2typescript';
 
 @JsonObject('Function')
 export class Function {
+
+  @JsonProperty('id')
+  private _id: number = undefined;
+
   @JsonProperty('name', String)
   public name: string;
 
@@ -19,4 +23,11 @@ export class Function {
     this.returnType = returnType;
     this.arguments = args;
   }
+
+  // region Getters
+  get id(): number {
+    return this._id;
+  }
+
+  // endregion
 }

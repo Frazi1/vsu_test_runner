@@ -1,6 +1,14 @@
-class Executer:
-    def __init__(self):
-        pass
+from coderunner.base_runner import BaseRunner
+from dtos.dtos import FunctionScaffoldingDto
+from models.language_enum import LanguageEnum
+from services.function_service import FunctionService
+
+
+class CodeExecuterService:
+    def __init__(self,
+                 function_service  # type: FunctionService
+                 ):
+        self._function_service = function_service
 
     _runners = {}
 
@@ -15,19 +23,24 @@ class Executer:
         except Exception, e:
             print e.message
 
-    def find_runner(self, language):
+    def _find_runner(self, language):
+        # type: (LanguageEnum) -> BaseRunner
         return self._runners[language]
 
     def get_supported_languages(self):
         return self._runners.keys()
 
     def execute_snippet(self, function_signature, code_snippet):
-        runner = self.find_runner(code_snippet.language)
+        runner = self._find_runner(code_snippet.language)
         return runner.execute_snippet(function_signature, code_snippet)
 
     def execute_code(self, language, return_type, code):
-        runner = self.find_runner(language)
+        runner = self._find_runner(language)
         return runner.execute_code(return_type, code)
 
-
-executor = Executer()
+    def scaffold_function(self, function_id, language):
+        # type: (int, LanguageEnum) -> FunctionScaffoldingDto
+        func = self._function_service.get_function_by_id(function_id)
+        runner = self._find_runner(language)
+        code = runner.scaffold_function_declaration_text(func)
+        return FunctionScaffoldingDto(code, language, func)

@@ -3,11 +3,11 @@ import unittest
 from coderunner.python_runner import PythonRunner
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
-from services.code_executer_service import Executer
+from services.code_executer_service import CodeExecuterService
 
 
 class CodeExecutorTest(unittest.TestCase):
-    executer = Executer()
+    executer = CodeExecuterService()
     executer.register_runner(PythonRunner())
 
     def test_run_hello_world_code(self):

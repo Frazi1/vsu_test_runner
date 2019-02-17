@@ -9,9 +9,13 @@ class TestRunQuestionSchema(Schema):
     id = Integer()
     name = String(required=True)
     description = String(required=True)
+    function_id = Integer(required=True,
+                          dump_to='functionId',
+                          load_from='functionId')
+
     answer_code_snippet = Nested(CodeSnippetSchema,
-                                 dump_to='answerCodeSnippet',
-                                 load_from='answerCodeSnippet')
+                          dump_to='answerCodeSnippet',
+                          load_from='answerCodeSnippet')
 
     @post_load()
     def create_class(self, value):

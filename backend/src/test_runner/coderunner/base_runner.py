@@ -1,5 +1,8 @@
 from abc import abstractproperty, abstractmethod
 
+from models.function import Function
+from models.language_enum import LanguageEnum
+
 
 class BaseRunner(object):
     def __init__(self):
@@ -22,4 +25,9 @@ class BaseRunner(object):
 
     @abstractmethod
     def execute_code(self, return_type, code):
+        pass
+
+    @abstractmethod
+    def scaffold_function_declaration_text(self, function_):
+        # type: (Function, LanguageEnum) -> str
         pass

@@ -5,6 +5,6 @@ from sqlalchemy.orm import Session
 class BaseService(object):
 
     @property
-    def db(self):
+    def _db(self):
         # type: () -> Session
         return request.environ['db']

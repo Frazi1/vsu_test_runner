@@ -2,6 +2,7 @@ from sqlalchemy.orm import joinedload, raiseload
 from typing import List
 
 from models.question_answer import QuestionAnswer
+from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 from models.test_run import TestRun
 from services.base_service import BaseService
@@ -18,8 +19,8 @@ class RunService(BaseService):
 
     def get_active_test_run(self, test_run_id):
         # type: (int) -> TestRun
-        return self.db.query(TestRun) \
-            .options(joinedload(TestRun.question_answers).joinedload(QuestionAnswer.question_instance),
+        return self._db.query(TestRun) \
+            .options(joinedload(TestRun.question_answers).joinedload(QuestionAnswer.question_instance).joinedload(QuestionInstance.solution_code_snippet),
                      joinedload(TestRun.question_answers).joinedload(QuestionAnswer.code_snippet),
                      joinedload(TestRun.test_instance),
                      raiseload('*')) \
@@ -30,8 +31,8 @@ class RunService(BaseService):
         test_instance = self._instance_service.get_test_instance(instance_id)
         test_run = TestRun(test_instance=test_instance)
         test_run.question_answers = self._create_empty_question_answers(test_instance, test_run)
-        self.db.add(test_run)
-        self.db.commit()
+        self._db.add(test_run)
+        self._db.commit()
         return test_run.id
 
     def _create_empty_question_answers(self, test_instance, test_run):

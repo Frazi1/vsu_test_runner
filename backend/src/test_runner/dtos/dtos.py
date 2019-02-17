@@ -1,4 +1,6 @@
+from models.question_answer import QuestionAnswer
 from models.test_run import TestRun
+
 
 class TestTemplateDto:
     @staticmethod
@@ -35,18 +37,21 @@ class CodeRunResult:
 
 
 class TestRunQuestionAnswerDto:
-    def __init__(self, id, name, description, answer_code_snippet):
+    def __init__(self, id, name, description, answer_code_snippet, function_id):
         self.id = id
         self.name = name
         self.description = description
         self.answer_code_snippet = answer_code_snippet
+        self.function_id = function_id
 
     @classmethod
     def map_from(cls, question_answer):
+        # type: (QuestionAnswer) -> TestRunQuestionAnswerDto
         cls_ = cls(id=question_answer.id,
                    name=question_answer.question_instance.name,
                    description=question_answer.question_instance.description,
-                   answer_code_snippet=question_answer.code_snippet)
+                   answer_code_snippet=question_answer.code_snippet,
+                   function_id=question_answer.question_instance.solution_code_snippet.function_id)
         return cls_
 
 
@@ -71,10 +76,17 @@ class TestRunDto:
                    time_limit=test_run.test_instance.time_limit,
                    question_answers=[TestRunQuestionAnswerDto.map_from(x) for x in test_run.question_answers])
         return cls_
-    
-    
+
+
 class TestInstanceUpdate:
     def __init__(self, available_after, disabled_after, time_limit):
         self.available_after = available_after
         self.disabled_after = disabled_after
         self.time_limit = time_limit
+
+
+class FunctionScaffoldingDto:
+    def __init__(self, code, language, function):
+        self.function = function
+        self.language = language
+        self.code = code

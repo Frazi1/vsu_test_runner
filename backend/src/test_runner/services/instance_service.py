@@ -26,19 +26,19 @@ class InstanceService(BaseService):
         test_instance = TestInstance(name=test_template.name,
                                      time_limit=test_template.time_limit,
                                      questions=question_instances)
-        self.db.add(test_instance)
-        self.db.commit()
+        self._db.add(test_instance)
+        self._db.commit()
         return test_instance.id
 
     def get_test_instance(self, test_instance_id):
         # type: ()-> TestInstance
-        return self.db.query(TestInstance) \
+        return self._db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .filter(TestInstance.id == test_instance_id) \
             .first()
 
     def get_instances(self):
-        return self.db.query(TestInstance) \
+        return self._db.query(TestInstance) \
             .options(joinedload(TestInstance.questions)) \
             .all()
 
@@ -49,5 +49,5 @@ class InstanceService(BaseService):
         db_test_instance.available_after = test_instance_update.available_after
         db_test_instance.disabled_after = test_instance_update.disabled_after
         db_test_instance.time_limit = test_instance_update.time_limit
-        self.db.commit()
+        self._db.commit()
         return db_test_instance

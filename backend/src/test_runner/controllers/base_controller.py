@@ -27,8 +27,14 @@ class BaseController(object):
         self.logger.info("======================================================\n")
 
     @staticmethod
-    def get(*args, **kwargs):
-        return BaseController._register_route(lambda app: app.get, *args, **kwargs)
+    def _merge_args(kwargs, request_body_schema, response_schema):
+        kwargs['request_body_schema'] = request_body_schema
+        kwargs['response_schema'] = response_schema
+
+    @staticmethod
+    def get(route, request_body_schema=None, response_schema=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+        return BaseController._register_route(lambda app: app.get, route, *args, **kwargs)
 
     @staticmethod
     def post(*args, **kwargs):

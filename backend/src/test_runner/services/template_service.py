@@ -10,12 +10,12 @@ class TemplateService(BaseService):
         pass
 
     def add_test_template(self, test):
-        self.db.add(test)
-        self.db.commit()
+        self._db.add(test)
+        self._db.commit()
         return test.id
 
     def get_test_templates(self, include_deleted=False):
-        q = self.db.query(TestTemplate).options(joinedload(TestTemplate.questions))
+        q = self._db.query(TestTemplate).options(joinedload(TestTemplate.questions))
         if include_deleted is False:
             q = q.filter(TestTemplate.is_deleted == False)
         test_templates = q.all()
@@ -23,14 +23,14 @@ class TemplateService(BaseService):
 
     def get_test_template_by_id(self, id_):
         # type: (int) -> TestTemplate
-        return self.db.query(TestTemplate) \
+        return self._db.query(TestTemplate) \
             .options(joinedload(TestTemplate.questions)) \
             .filter(TestTemplate.id == id_) \
             .first()
 
     def update_test_template(self, id_, test):
         db_test = self.get_test_template_by_id(id_)
-        self.db.merge(test)
+        self._db.merge(test)
         return db_test
 
     def delete_test_template(self, id_):

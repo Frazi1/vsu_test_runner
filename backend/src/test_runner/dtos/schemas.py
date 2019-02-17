@@ -117,3 +117,11 @@ class TestTemplateSchema(Schema):
     def create_class(self, value):
         template = TestTemplate(**value)
         return template
+
+
+class FunctionScaffoldingDtoSchema(Schema):
+    function = Nested(FunctionSchema, required=True,
+                      dump_to='function',
+                      load_from='function')
+    language = Nested(LanguageSchema, required=True)
+    code = String(required=True)

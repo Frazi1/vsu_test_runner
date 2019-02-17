@@ -1,18 +1,28 @@
 import os
 
 from coderunner.simple_runner import SimpleRunner
+from models.function import Function
+from models.function_parameter import FunctionArgument
 from models.language_enum import LanguageEnum
-from services.code_executer_service import executor
 
 
 class PythonRunner(SimpleRunner):
     __file_ext__ = ".py"
     _indentation = 4
+    _indentation_symbol = " "
 
     supported_languages = [LanguageEnum.PYTHON]
 
-    def _translate_parameter(self, function_parameter):
-        return function_parameter.name
+    def _translate_parameter(self, argument):
+        # type: (FunctionArgument) -> str
+        return argument.name
+
+    def _get_indent(self):
+        # type: () -> str
+        return self._indentation * self._indentation_symbol
+
+    def _get_commented_text(self, text):
+        return "# {}".format(text)
 
     def _indent_line(self, line, last):
         res = " " * self._indentation + line
@@ -36,5 +46,12 @@ class PythonRunner(SimpleRunner):
         os.remove(file_name)
         return result
 
+    def scaffold_function_declaration_text(self, function_):
+        # type: (Function, LanguageEnum) -> str
 
-executor.register_runner(PythonRunner())
+        args = [self._translate_parameter(x) for x in function_.arguments]
+        res = "def {name}({args}):\n".format(name=function_.name,
+                                             args=", ".join(args))
+        res += self._get_indent() + self._get_commented_text("Write code here")
+
+        return res

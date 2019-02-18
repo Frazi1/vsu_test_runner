@@ -12,11 +12,11 @@ export class CodeTypeSelectorComponent implements OnInit {
   private _codeTypes: CodeType[];
   private _defaultCodeTypeValue: CodeType = new CodeType('Not set');
 
-  @Input()
-  public value: CodeType;
+  @Input() public isReadOnly = false;
 
-  @Output()
-  public valueChange = new EventEmitter<CodeType>();
+  @Input() public value: CodeType;
+
+  @Output() public valueChange = new EventEmitter<CodeType>();
 
   constructor(private supportedCodeProviderService: CodeService) {
     this.codeTypeComparer = this.codeTypeComparer.bind(this);

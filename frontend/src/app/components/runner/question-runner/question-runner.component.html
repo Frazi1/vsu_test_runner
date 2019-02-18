@@ -2,5 +2,8 @@
   <h1>{{_questionRun.name}}</h1>
   <h2>{{_questionRun.description}}</h2>
   <h3>Code</h3>
+  <app-function-editor [functionObj]="_questionRun.answerCodeSnippet.functionObj"
+                       [isReadOnly]="true"></app-function-editor>
   <textarea [(ngModel)]="_code"></textarea>
+  <button (click)="runCode()">Запустить код</button>
 </div>

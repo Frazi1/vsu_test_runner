@@ -7,6 +7,7 @@ import {filter, mergeMap, switchMap, tap} from 'rxjs/internal/operators';
 import {CodeLanguage} from '../../../shared/CodeLanguage';
 import {FunctionScaffoldingDto} from '../../../shared/code/FunctionScaffoldingDto';
 import {Observable, Subject} from 'rxjs/index';
+import {CodeExecutionRequest} from '../../../shared/runner/CodeExecutionRequest';
 
 @Component({
   selector: 'app-question-runner',
@@ -58,5 +59,12 @@ export class QuestionRunnerComponent implements OnInit {
       this.questionRun.answerCodeSnippet = new CodeSnippet(null, codeLanguage, scaffold.code.split('\n'), scaffold.functionObj);
     }
     this._code = this.questionRun.answerCodeSnippet.code.join('\n');
+  }
+
+  private async runCode() {
+    const snippet = this._questionRun.answerCodeSnippet;
+    const req = CodeExecutionRequest.fromReturnType(snippet.language, this._code, snippet.functionObj.returnType, true);
+    const res = await this.codeService.runCode(req).toPromise();
+    console.log(res.codeRunResult);
   }
 }

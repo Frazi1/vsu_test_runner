@@ -16,8 +16,9 @@ export class FunctionEditorComponent implements OnInit {
   }
 
   @Input()
-  @Output()
-  public functionObj: Function;
+  @Output() public functionObj: Function;
+
+  @Input()  public isReadOnly = false;
 
   private _defaultCodeTypeValue: CodeType = new CodeType('Unset');
   private _codeTypes: CodeType[];

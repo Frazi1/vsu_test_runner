@@ -8,6 +8,8 @@ import {BaseService} from './base.service';
 import {JsonConvert} from 'json2typescript';
 import {FunctionScaffoldingDto} from '../shared/code/FunctionScaffoldingDto';
 import {CodeLanguage} from '../shared/CodeLanguage';
+import {CodeExecutionRequest} from '../shared/runner/CodeExecutionRequest';
+import {CodeExecutionResponse} from '../shared/runner/CodeExecutionResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -54,4 +56,10 @@ export class CodeService extends BaseService {
       );
   }
 
+  public runCode(codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponse> {
+    return this.http.post(this.buildUrl('run'), this.json.serialize(codeExecutionRequest))
+      .pipe(
+        map(res => this.json.deserialize(res, CodeExecutionResponse))
+      );
+  }
 }

@@ -4,6 +4,7 @@ import os
 
 from gevent import monkey
 
+from app_config import Config
 from coderunner.python_runner import PythonRunner
 from controllers.code_execution_controller import CodeExecutionController
 from controllers.instance_controller import InstanceController
@@ -32,6 +33,7 @@ app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=True, create_session_b
 app.install(BodyParser(encode_with_json_by_default=True))
 app.install(ControllerPlugin())
 
+app_config = Config()
 
 def _init_services():
     template_service = TemplateService()
@@ -42,17 +44,18 @@ def _init_services():
     return [template_service, instance_service, run_service, code_execution_service, function_service]
 
 
-def _init_controllers(app, template_service, instance_service, run_service, logger, code_execution_service):
+def _init_controllers(app, template_service, instance_service, run_service, logger, code_execution_service,
+                      function_service):
     template_ctrl = TemplateController(app, template_service, logger)
     instance_ctrl = InstanceController(app, instance_service, logger)
     run_ctrl = RunController(app, run_service, logger)
-    code_execution_ctrl = CodeExecutionController(app, logger, code_execution_service)
+    code_execution_ctrl = CodeExecutionController(app, logger, code_execution_service, function_service)
 
     return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl]
 
 
 def _init_code_runners(code_execution_service):
-    runners = [PythonRunner()]
+    runners = [PythonRunner(app_config)]
     for r in runners:
         code_execution_service.register_runner(r)
 
@@ -64,7 +67,8 @@ _controllers = _init_controllers(app,
                                  next((x for x in _services if isinstance(x, InstanceService))),
                                  next((x for x in _services if isinstance(x, RunService))),
                                  _logger,
-                                 next((x for x in _services if isinstance(x, CodeExecuterService)))
+                                 next((x for x in _services if isinstance(x, CodeExecuterService))),
+                                 next((x for x in _services if isinstance(x, FunctionService)))
                                  )
 _code_executer_service = next((x for x in _services if isinstance(x, CodeExecuterService)))
 _init_code_runners(_code_executer_service)
@@ -86,8 +90,6 @@ def error(err):
 def cors():
     print 'After request hook.'
     response.headers['Access-Control-Allow-Origin'] = '*'
-
-
 
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
+import os
 import subprocess
 import uuid
 
+from app_config import Config
 from coderunner.base_runner import BaseRunner
 from dtos.dtos import CodeRunResult
 from models.argument_type import ArgumentType
@@ -8,6 +10,13 @@ from shared.value_converter import ValueConverter
 
 
 class SimpleRunner(BaseRunner):
+
+    def __init__(self, config):
+        # type: (Config)-> None
+
+        super(SimpleRunner, self).__init__()
+        self._config = config
+
     def run_file(self, utility_name, language, file_path, return_type):
         p = subprocess.Popen('{} {} 1'.format(utility_name,
                                               file_path), stdout=subprocess.PIPE)
@@ -25,9 +34,10 @@ class SimpleRunner(BaseRunner):
     def save_code_to_file(self, name, extension, code):
         if name is None:
             name = uuid.uuid4().get_hex()
-        with open(name + extension, "w") as file_:
+        file_path = os.path.join(self._config.tmp_folder_path, name + extension)
+        with open(file_path, "w") as file_:
             if isinstance(code, list):
                 file_.writelines(code)
             else:
                 file_.write(code)
-            return file_.name
+            return file_path

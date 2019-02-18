@@ -1,6 +1,9 @@
 import os
 
+from app_config import Config
 from coderunner.simple_runner import SimpleRunner
+from dtos.dtos import CodeRunResult
+from models.argument_type import ArgumentType
 from models.function import Function
 from models.function_parameter import FunctionArgument
 from models.language_enum import LanguageEnum
@@ -12,6 +15,11 @@ class PythonRunner(SimpleRunner):
     _indentation_symbol = " "
 
     supported_languages = [LanguageEnum.PYTHON]
+
+    def __init__(self, config):
+        # type: (Config) -> None
+
+        super(PythonRunner, self).__init__(config)
 
     def _translate_parameter(self, argument):
         # type: (FunctionArgument) -> str
@@ -40,10 +48,14 @@ class PythonRunner(SimpleRunner):
             [(self._indent_line(x, index == len(code_lines) - 1)) for index, x in enumerate(code_lines)])
         return signature + formatted_code
 
-    def execute_code(self, return_type, code):
-        file_name = self.save_code_to_file(None, self.__file_ext__, code)
-        result = self.run_file("python", self.supported_languages[0], file_name, return_type)
-        os.remove(file_name)
+    def execute_plain_code(self, return_type, code):
+        # type: (ArgumentType, str) -> CodeRunResult
+
+        file_path = self.save_code_to_file(None, self.__file_ext__, code)
+        try:
+            result = self.run_file("python", self.supported_languages[0], file_path, return_type)
+        finally:
+            os.remove(file_path)
         return result
 
     def scaffold_function_declaration_text(self, function_):

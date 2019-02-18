@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, post_load
-from marshmallow.fields import Nested, String, Integer, List
+from marshmallow.fields import Nested, String, Integer, List, Boolean
 
+from dtos import CodeExecutionRequestDto
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
@@ -125,3 +126,59 @@ class FunctionScaffoldingDtoSchema(Schema):
                       load_from='function')
     language = Nested(LanguageSchema, required=True)
     code = String(required=True)
+
+
+class CodeExecutionRequestSchema(Schema):
+    language = Nested(LanguageSchema,
+                      required=True,
+                      allow_none=False)
+
+    return_type = Nested(ArgumentTypeSchema,
+                         required=False,
+                         allow_none=True,
+                         load_from='returnType',
+                         dump_to='returnType')
+
+    function_id = Integer(required=False,
+                          allow_none=True,
+                          load_from='functionId',
+                          dump_to='functionId')
+
+    is_plain_code = Boolean(required=True,
+                            allow_none=False,
+                            load_from='isPlainCode',
+                            dump_to='isPlainCode')
+
+    code = String(required=True)
+
+    client_id = String(required=False,
+                       allow_none=True,
+                       load_from='clientId',
+                       dump_to='clientId')
+
+    @post_load
+    def create_class(self, value):
+        return CodeExecutionRequestDto(**value)
+
+
+class CodeRunResultSchema(Schema):
+    language = Nested(LanguageSchema, required=True)
+    output = String(required=True, allow_none=False)
+    output_type = Nested(ArgumentTypeSchema, required=True,
+                         allow_none=False,
+                         load_from='outputType',
+                         dump_to='outputType')
+    error = String(required=True, allow_none=False)
+
+
+class CodeExecutionResponseSchema(Schema):
+    code_run_result = Nested(CodeRunResultSchema,
+                             required=True,
+                             allow_none=False,
+                             dump_to='codeRunResult',
+                             load_from='codeRunResult')
+
+    client_id = String(required=False,
+                       allow_none=True,
+                       load_from='clientId',
+                       dump_to='clientId')

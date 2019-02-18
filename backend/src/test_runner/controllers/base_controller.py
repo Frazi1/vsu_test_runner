@@ -37,16 +37,19 @@ class BaseController(object):
         return BaseController._register_route(lambda app: app.get, route, *args, **kwargs)
 
     @staticmethod
-    def post(*args, **kwargs):
-        return BaseController._register_route(lambda app: app.post, *args, **kwargs)
+    def post(route, request_body_schema=None, response_schema=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+        return BaseController._register_route(lambda app: app.post, route, *args, **kwargs)
 
     @staticmethod
-    def put(*args, **kwargs):
-        return BaseController._register_route(lambda app: app.put, *args, **kwargs)
+    def put(route, request_body_schema=None, response_schema=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+        return BaseController._register_route(lambda app: app.put, route, *args, **kwargs)
 
     @staticmethod
-    def delete(*args, **kwargs):
-        return BaseController._register_route(lambda app: app.delete, *args, **kwargs)
+    def delete(route, request_body_schema=None, response_schema=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+        return BaseController._register_route(lambda app: app.delete, route, *args, **kwargs)
 
     @staticmethod
     def _register_route(router_provider, *args, **kwargs):

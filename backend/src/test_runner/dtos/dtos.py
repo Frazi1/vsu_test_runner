@@ -1,3 +1,5 @@
+from models.argument_type import ArgumentType
+from models.language_enum import LanguageEnum
 from models.question_answer import QuestionAnswer
 from models.test_run import TestRun
 
@@ -32,7 +34,7 @@ class CodeRunResult:
     def __init__(self, language, output, output_type, error=None):
         self.language = language
         self.output = output
-        self.output_type = output
+        self.output_type = output_type
         self.error = error
 
 
@@ -90,3 +92,23 @@ class FunctionScaffoldingDto:
         self.function = function
         self.language = language
         self.code = code
+
+
+class CodeExecutionRequestDto:
+    def __init__(self, code, language, is_plain_code, client_id=None, function_id=None, return_type=None):
+        # type: (str, LanguageEnum, str, int, ArgumentType) -> None
+
+        self.return_type = return_type  # type: ArgumentType
+        self.function_id = function_id  # type: int
+        self.language = language  # type: LanguageEnum
+        self.code = code  # type: str
+        self.is_plain_code = is_plain_code  # type: bool
+        self.client_id = client_id  # type: str
+
+
+class CodeExecutionResponseDto:
+    def __init__(self, code_run_result, client_id=None):
+        # type: (CodeRunResult, str) -> None
+
+        self.code_run_result = code_run_result
+        self.client_id = client_id

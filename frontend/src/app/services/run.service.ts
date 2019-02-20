@@ -26,4 +26,11 @@ export class RunService extends BaseService {
   public getTestRun(testRunId: number): Observable<TestRun> {
     return this.getOne(testRunId, TestRun);
   }
+
+  public getActiveTestRuns(): Observable<TestRun[]> {
+    return this.http.get(this.buildUrl())
+      .pipe(
+        map((res: any[]) => this.json.deserializeArray(res, TestRun))
+      );
+  }
 }

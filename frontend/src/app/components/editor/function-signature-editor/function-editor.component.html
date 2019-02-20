@@ -9,7 +9,7 @@
   <div *ngFor="let arg of functionObj.arguments" class="function-argument">
     <!--<label>{{arg.name}}</label>-->
     <input [(ngModel)]="arg.name" [disabled]="isReadOnly">
-    <app-code-type-selector [(value)]="arg.type"></app-code-type-selector>
+    <app-code-type-selector [(value)]="arg.type" [isReadOnly]="isReadOnly"></app-code-type-selector>
     <button *ngIf="!isReadOnly" (click)="deleteArgument(arg)">Удалить</button>
   </div>
   <div class="function-return-type">

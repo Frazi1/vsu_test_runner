@@ -1,0 +1,8 @@
+<div *ngIf="_testRuns">
+  <div *ngFor="let t of _testRuns" (click)="openTestRun(t.id)">
+    <span>{{t.id}}</span>
+    <span>{{t.name}}</span>
+    <span>{{t.startedAt | date}}</span>
+    <span>Вопросов: {{t.questionAnswers.length}}</span>
+  </div>
+</div>

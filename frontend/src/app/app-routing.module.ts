@@ -5,6 +5,7 @@ import {TestTemplateListComponent} from './components/editor/test-template-list/
 import {TestInstanceListComponent} from './components/instance/test-instance-list/test-instance-list.component';
 import {TestInstanceEditorComponent} from './components/instance/test-instance-editor/test-instance-editor.component';
 import {TestRunnerComponent} from './components/runner/test-runner/test-runner.component';
+import {TestRunsListComponent} from './components/runner/test-runs-list/test-runs-list.component';
 
 const routes: Routes = [
   {path: 'template/new', component: TestTemplateEditorComponent},
@@ -12,7 +13,8 @@ const routes: Routes = [
   {path: 'template', component: TestTemplateListComponent},
   {path: 'instance', component: TestInstanceListComponent},
   {path: 'instance/:id', component: TestInstanceEditorComponent},
-  {path: 'run/:id', component: TestRunnerComponent}
+  {path: 'run/:id', component: TestRunnerComponent},
+  {path: 'run', component: TestRunsListComponent}
 ];
 
 @NgModule({

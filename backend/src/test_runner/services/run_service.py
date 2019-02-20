@@ -1,4 +1,4 @@
-from sqlalchemy.orm import joinedload, raiseload
+from sqlalchemy.orm import joinedload, raiseload, Query
 from typing import List
 
 from models.question_answer import QuestionAnswer
@@ -19,13 +19,25 @@ class RunService(BaseService):
 
     def get_active_test_run(self, test_run_id):
         # type: (int) -> TestRun
-        return self._db.query(TestRun) \
-            .options(joinedload(TestRun.question_answers).joinedload(QuestionAnswer.question_instance).joinedload(QuestionInstance.solution_code_snippet),
-                     joinedload(TestRun.question_answers).joinedload(QuestionAnswer.code_snippet),
-                     joinedload(TestRun.test_instance),
-                     raiseload('*')) \
+        return self._test_run_query() \
             .filter(TestRun.id == test_run_id) \
             .first()
+
+    def get_all_active_test_runs(self):
+        # type: () -> List[TestRun]
+        return self._test_run_query().all()
+
+    def _test_run_query(self):
+        # type:() -> Query
+        return self._db.query(TestRun) \
+            .options(
+            joinedload(
+                TestRun.question_answers)
+                .joinedload(QuestionAnswer.question_instance)
+                .joinedload(QuestionInstance.solution_code_snippet),
+            joinedload(TestRun.question_answers).joinedload(QuestionAnswer.code_snippet),
+            joinedload(TestRun.test_instance),
+            raiseload('*'))
 
     def start_run_from_instance(self, instance_id):
         test_instance = self._instance_service.get_test_instance(instance_id)
@@ -37,5 +49,4 @@ class RunService(BaseService):
 
     def _create_empty_question_answers(self, test_instance, test_run):
         # type: (TestInstance, TestRun) -> List(QuestionAnswer)
-
         return [QuestionAnswer(test_run=test_run, question_instance=q) for q in test_instance.questions]

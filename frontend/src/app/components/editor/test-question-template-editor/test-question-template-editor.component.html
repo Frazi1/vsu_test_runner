@@ -4,5 +4,13 @@
     <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
   </h3>
   <textarea [(ngModel)]="question.description"></textarea>
+  <div>
+    <h2>Код решения</h2>
+    <div>
+      <app-code-language-selector [(value)]="question.codeSnippet.language"></app-code-language-selector>
+      <button (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
+    </div>
+    <app-code-editor [(code)]="question.codeSnippet.code"></app-code-editor>
+  </div>
   <app-function-editor [functionObj]="question.codeSnippet.functionObj"></app-function-editor>
 </div>

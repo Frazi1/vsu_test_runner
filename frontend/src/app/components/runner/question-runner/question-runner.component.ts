@@ -58,7 +58,7 @@ export class QuestionRunnerComponent implements OnInit {
       const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId, codeLanguage).toPromise();
       this.questionRun.answerCodeSnippet = new CodeSnippet(null, codeLanguage, scaffold.code.split('\n'), scaffold.functionObj);
     }
-    this._code = this.questionRun.answerCodeSnippet.code.join('\n');
+    this._code = this.questionRun.answerCodeSnippet.code;
   }
 
   private async runCode() {

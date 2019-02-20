@@ -6,7 +6,7 @@ import {JsonObject, JsonProperty} from 'json2typescript';
 @JsonObject('Function')
 export class Function {
 
-  @JsonProperty('id')
+  @JsonProperty('id', Number)
   private _id: number = undefined;
 
   @JsonProperty('name', String)
@@ -19,6 +19,7 @@ export class Function {
   public arguments: FunctionArgument[];
 
   constructor(name: string = '', returnType: CodeType = null, args: FunctionArgument[] = []) {
+    this.id = null;
     this.name = name;
     this.returnType = returnType;
     this.arguments = args;
@@ -29,5 +30,9 @@ export class Function {
     return this._id;
   }
 
-  // endregion
+  set id(value: number) {
+    this._id = value;
+  }
+
+// endregion
 }

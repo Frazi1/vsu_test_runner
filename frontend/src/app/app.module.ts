@@ -23,6 +23,8 @@ import {GlobalErrorHandler} from './configuration/global-error-handler';
 import {TestRunnerComponent} from './components/runner/test-runner/test-runner.component';
 import {QuestionRunnerComponent} from './components/runner/question-runner/question-runner.component';
 import {TestRunsListComponent} from './components/runner/test-runs-list/test-runs-list.component';
+import {CodeEditorComponent} from './code-editor/code-editor.component';
+import {LanguageSelectorComponent} from './components/editor/language-selector/language-selector.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import {TestRunsListComponent} from './components/runner/test-runs-list/test-run
     TestInstanceEditorComponent,
     TestRunnerComponent,
     QuestionRunnerComponent,
-    TestRunsListComponent
+    TestRunsListComponent,
+    CodeEditorComponent,
+    LanguageSelectorComponent
   ],
   imports: [
     BrowserModule,

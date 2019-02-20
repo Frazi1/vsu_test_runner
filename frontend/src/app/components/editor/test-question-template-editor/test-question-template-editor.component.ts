@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {TestQuestionTemplate} from '../../../shared/TestQuestionTemplate';
 import {Function} from '../../../shared/Function';
 import {CodeSnippet} from '../../../shared/CodeSnippet';
+import {CodeService} from '../../../services/code.service';
 
 @Component({
   selector: 'app-test-question-template-editor',
@@ -26,8 +27,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
   @Input()
   private question: TestQuestionTemplate;
 
-
-  constructor() {
+  constructor(private codeService: CodeService) {
   }
 
   ngOnInit() {
@@ -36,7 +36,13 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
     }
 
     console.log(this.question);
+  }
 
+  private async scaffoldSolutionFunction(): void {
+    const functionId = this.question.codeSnippet.functionObj.id;
+    const language = this.question.codeSnippet.language;
+    const functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId, language).toPromise();
+    this.question.codeSnippet.code = functionScaffoldingDto.code;
   }
 
 }

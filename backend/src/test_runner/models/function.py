@@ -6,6 +6,7 @@ from typing import List
 from models import Base
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
+from models.function_inputs.base_function_input import BaseFunctionInput
 from models.function_parameter import FunctionArgument
 
 
@@ -17,3 +18,4 @@ class Function(Base):
     return_type = Column(Enum(ArgumentType))  # type: ArgumentType
     arguments = relationship("FunctionArgument", back_populates="function")  # type: List[FunctionArgument]
     code_snippets = relationship("CodeSnippet", back_populates="function")  # type: List[CodeSnippet]
+    testing_input = relationship("BaseFunctionInput", back_populates="target_function")  #type: BaseFunctionInput

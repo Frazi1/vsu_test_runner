@@ -1,8 +1,12 @@
-<div>
+<div class="header">
+  <button (click)="_displayContent = !_displayContent">Переключить</button>
   <h3 (click)="editingName = !editingName">Вопрос:
     <span *ngIf="!editingName">{{question.name}}</span>
     <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
   </h3>
+</div>
+
+<ng-container *ngIf="_displayContent">
   <textarea [(ngModel)]="question.description"></textarea>
   <div>
     <h2>Код решения</h2>
@@ -13,4 +17,4 @@
     <app-code-editor [(code)]="question.codeSnippet.code"></app-code-editor>
   </div>
   <app-function-editor [functionObj]="question.codeSnippet.functionObj"></app-function-editor>
-</div>
+</ng-container>

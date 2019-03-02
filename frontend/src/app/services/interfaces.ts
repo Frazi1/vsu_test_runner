@@ -4,11 +4,13 @@ import { TestTemplate } from '../shared/TestTemplate'
 export interface ITemplateService {
   getTemplate(id: number): Observable<TestTemplate>
 
-  getTemplates(): Observable<TestTemplate[]>
+  getTemplates(includeDeleted: boolean): Observable<TestTemplate[]>
 
   addTemplate(testTemplate: TestTemplate): Observable<number>
 
   updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate>
 
   deleteTemplate(id: number): Observable<any>
+
+  restore(id: number): Observable<number>
 }

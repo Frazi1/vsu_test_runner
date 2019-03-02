@@ -12,6 +12,7 @@ import { CodeService } from '../../../services/code.service'
 export class TestQuestionTemplateEditorComponent implements OnInit {
 
   private _editingName = false
+  private _displayContent = true
 
   // region Getters/Setters
   get editingName(): boolean {

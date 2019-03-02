@@ -15,7 +15,8 @@ export class MockTemplatesService implements ITemplateService {
     new TestTemplate(3, '678')
   ]
 
-  constructor() {
+  public restore(id: number): Observable<number> {
+    return undefined
   }
 
   public getTemplates(): Observable<TestTemplate[]> {

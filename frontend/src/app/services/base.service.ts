@@ -1,8 +1,8 @@
-import {JsonConvert} from 'json2typescript';
-import {Config} from '../shared/Config';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/index';
-import {map} from 'rxjs/internal/operators';
+import { JsonConvert } from 'json2typescript';
+import { Config } from '../shared/Config';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/index';
+import { map } from 'rxjs/internal/operators';
 
 export class BaseService {
   private _endpoint: string;
@@ -26,10 +26,10 @@ export class BaseService {
     return url + args.join('/');
   }
 
-  protected getOne<T>(id: number, classRef: {new(): T; }): Observable<T> {
+  protected getOne<T>(id: number, classRef: { new(): T; }): Observable<T> {
     return this.http.get(this.buildUrl(`${id}`))
-      .pipe(
-        map(res => this.json.deserialize(res, classRef))
-      );
+               .pipe(
+                 map(res => this.json.deserialize(res, classRef))
+               );
   }
 }

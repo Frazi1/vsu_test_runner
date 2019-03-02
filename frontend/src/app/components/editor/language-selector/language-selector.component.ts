@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {CodeLanguage} from '../../../shared/CodeLanguage';
-import {CodeService} from '../../../services/code.service';
-import {BaseSelectorWithDefaultValueComponent} from '../base/BaseSelectorWithDefaultValueComponent';
+import { Component, OnInit } from '@angular/core';
+import { CodeLanguage } from '../../../shared/CodeLanguage';
+import { CodeService } from '../../../services/code.service';
+import { BaseSelectorWithDefaultValueComponent } from '../base/BaseSelectorWithDefaultValueComponent';
 
 @Component({
-  selector: 'app-code-language-selector',
+  selector:    'app-code-language-selector',
   templateUrl: './language-selector.component.html',
-  styleUrls: ['./language-selector.component.less']
+  styleUrls:   ['./language-selector.component.less']
 })
 export class LanguageSelectorComponent extends BaseSelectorWithDefaultValueComponent<CodeLanguage> implements OnInit {
 

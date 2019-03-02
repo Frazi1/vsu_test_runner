@@ -1,4 +1,4 @@
-import {JsonConvert, ValueCheckingMode} from 'json2typescript';
+import { JsonConvert, ValueCheckingMode } from 'json2typescript';
 
 class JsonConfiguration {
   public static createJson(): JsonConvert {

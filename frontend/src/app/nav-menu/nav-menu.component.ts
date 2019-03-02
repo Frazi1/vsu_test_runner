@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-nav-menu',
+  selector:    'app-nav-menu',
   templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.less']
+  styleUrls:   ['./nav-menu.component.less']
 })
 
 export class NavMenuComponent implements OnInit {

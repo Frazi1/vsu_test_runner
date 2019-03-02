@@ -1,5 +1,5 @@
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {CodeSnippet} from './CodeSnippet';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { CodeSnippet } from './CodeSnippet';
 
 @JsonObject('TestQuestionTemplate')
 export class TestQuestionTemplate {
@@ -27,9 +27,9 @@ export class TestQuestionTemplate {
 
   // endregion
 
-  constructor(name: string = '',
-              text: string = '',
-              timeLimit: number = null,
+  constructor(name: string             = '',
+              text: string             = '',
+              timeLimit: number        = null,
               codeSnippet: CodeSnippet = null) {
     this.name = name;
     this.description = text;

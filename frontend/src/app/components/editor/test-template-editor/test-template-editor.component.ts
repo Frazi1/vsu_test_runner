@@ -1,15 +1,14 @@
-import {Component, Inject, OnInit, Output} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/index';
-import {TestTemplate} from '../../../shared/TestTemplate';
-import {TestQuestionTemplate} from '../../../shared/TestQuestionTemplate';
-import {MockTemplatesService} from '../../../services/mock-templates.service';
-import {ITemplateService} from '../../../services/interfaces';
+import { Component, Inject, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs/index';
+import { TestTemplate } from '../../../shared/TestTemplate';
+import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate';
+import { ITemplateService } from '../../../services/interfaces';
 
 @Component({
-  selector: 'app-test-template-editor',
+  selector:    'app-test-template-editor',
   templateUrl: './test-template-editor.component.html',
-  styleUrls: ['./test-template-editor.component.less']
+  styleUrls:   ['./test-template-editor.component.less']
 })
 export class TestTemplateEditorComponent implements OnInit {
 
@@ -50,18 +49,18 @@ export class TestTemplateEditorComponent implements OnInit {
 
   private add(): void {
     this.templatesService.addTemplate(this.testTemplate)
-      .subscribe(id => this.router.navigate(['/template', id]));
+        .subscribe(id => this.router.navigate(['/template', id]));
   }
 
   private update(): void {
     this.templatesService.updateTemplate(this.testTemplate)
-      .subscribe(res => this.testTemplate = res);
+        .subscribe(res => this.testTemplate = res);
   }
 
   private deleteTemplate(): void {
     if (this.isCreating === false) {
       this.templatesService.deleteTemplate(this.testTemplate.id)
-        .subscribe(() => this.router.navigate(['/']));
+          .subscribe(() => this.router.navigate(['/']));
     }
   }
 }

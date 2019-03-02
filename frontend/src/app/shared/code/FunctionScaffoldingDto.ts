@@ -1,7 +1,6 @@
-import {CodeType} from '../CodeType';
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {Function} from '../Function';
-import {CodeLanguage} from '../CodeLanguage';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { Function } from '../Function';
+import { CodeLanguage } from '../CodeLanguage';
 
 @JsonObject('FunctionScaffoldingDto')
 export class FunctionScaffoldingDto {

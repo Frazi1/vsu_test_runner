@@ -1,6 +1,6 @@
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {CodeType} from '../CodeType';
-import {CodeLanguage} from '../CodeLanguage';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { CodeType } from '../CodeType';
+import { CodeLanguage } from '../CodeLanguage';
 
 @JsonObject('CodeExecutionRequest')
 export class CodeExecutionRequest {

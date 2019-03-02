@@ -1,6 +1,6 @@
-import {CodeLanguage} from './CodeLanguage';
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {Function} from './Function';
+import { CodeLanguage } from './CodeLanguage';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { Function } from './Function';
 
 @JsonObject('CodeSnippet')
 export class CodeSnippet {

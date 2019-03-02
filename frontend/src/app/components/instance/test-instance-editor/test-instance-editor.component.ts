@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {InstanceService} from '../../../services/instance.service';
-import {TestInstance} from '../../../shared/instance/TestInstance';
-import {ActivatedRoute, Router} from '@angular/router';
-import {TestInstanceUpdate} from '../../../shared/instance/TestInstanceUpdate';
+import { Component, OnInit } from '@angular/core';
+import { InstanceService } from '../../../services/instance.service';
+import { TestInstance } from '../../../shared/instance/TestInstance';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TestInstanceUpdate } from '../../../shared/instance/TestInstanceUpdate';
 
 @Component({
-  selector: 'app-test-instance-editor',
+  selector:    'app-test-instance-editor',
   templateUrl: './test-instance-editor.component.html',
-  styleUrls: ['./test-instance-editor.component.less']
+  styleUrls:   ['./test-instance-editor.component.less']
 })
 export class TestInstanceEditorComponent implements OnInit {
   private testInstance: TestInstance;
@@ -47,9 +47,10 @@ export class TestInstanceEditorComponent implements OnInit {
   private save(): void {
     const testInstanceUpdate = new TestInstanceUpdate(this.testInstance.availableAfter,
       this.testInstance.disabledAfter,
-      this.testInstance.timeLimit);
+      this.testInstance.timeLimit
+    );
 
     this.instanceService.updateTestInstance(this.testInstance.id, testInstanceUpdate)
-      .subscribe(updatedInstance => this.testInstance = updatedInstance);
+        .subscribe(updatedInstance => this.testInstance = updatedInstance);
   }
 }

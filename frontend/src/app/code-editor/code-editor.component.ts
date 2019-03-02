@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-code-editor',
+  selector:    'app-code-editor',
   templateUrl: './code-editor.component.html',
-  styleUrls: ['./code-editor.component.less'],
+  styleUrls:   ['./code-editor.component.less'],
 })
 export class CodeEditorComponent implements OnInit {
 

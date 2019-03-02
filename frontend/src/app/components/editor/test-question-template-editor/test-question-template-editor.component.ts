@@ -1,13 +1,13 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TestQuestionTemplate} from '../../../shared/TestQuestionTemplate';
-import {Function} from '../../../shared/Function';
-import {CodeSnippet} from '../../../shared/CodeSnippet';
-import {CodeService} from '../../../services/code.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate';
+import { Function } from '../../../shared/Function';
+import { CodeSnippet } from '../../../shared/CodeSnippet';
+import { CodeService } from '../../../services/code.service';
 
 @Component({
-  selector: 'app-test-question-template-editor',
+  selector:    'app-test-question-template-editor',
   templateUrl: './test-question-template-editor.component.html',
-  styleUrls: ['./test-question-template-editor.component.less']
+  styleUrls:   ['./test-question-template-editor.component.less']
 })
 export class TestQuestionTemplateEditorComponent implements OnInit {
 

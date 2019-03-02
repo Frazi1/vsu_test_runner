@@ -1,5 +1,5 @@
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {QuestionInstance} from './QuestionInstance';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { QuestionInstance } from './QuestionInstance';
 
 @JsonObject('TestInstance')
 export class TestInstance {

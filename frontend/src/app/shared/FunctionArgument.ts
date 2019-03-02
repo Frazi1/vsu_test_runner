@@ -1,5 +1,5 @@
-import {CodeType} from './CodeType';
-import {JsonObject, JsonProperty} from 'json2typescript';
+import { CodeType } from './CodeType';
+import { JsonObject, JsonProperty } from 'json2typescript';
 
 @JsonObject('FunctionArgument')
 export class FunctionArgument {

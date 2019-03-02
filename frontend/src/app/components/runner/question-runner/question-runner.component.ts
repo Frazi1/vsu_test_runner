@@ -1,18 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {TestRunQuestion} from '../../../shared/runner/TestRunQuestion';
-import {CodeService} from '../../../services/code.service';
-import {CodeSnippet} from '../../../shared/CodeSnippet';
-import {CodeType} from '../../../shared/CodeType';
-import {filter, mergeMap, switchMap, tap} from 'rxjs/internal/operators';
-import {CodeLanguage} from '../../../shared/CodeLanguage';
-import {FunctionScaffoldingDto} from '../../../shared/code/FunctionScaffoldingDto';
-import {Observable, Subject} from 'rxjs/index';
-import {CodeExecutionRequest} from '../../../shared/runner/CodeExecutionRequest';
+import { Component, Input, OnInit } from '@angular/core';
+import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion';
+import { CodeService } from '../../../services/code.service';
+import { CodeSnippet } from '../../../shared/CodeSnippet';
+import { CodeLanguage } from '../../../shared/CodeLanguage';
+import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest';
 
 @Component({
-  selector: 'app-question-runner',
+  selector:    'app-question-runner',
   templateUrl: './question-runner.component.html',
-  styleUrls: ['./question-runner.component.less']
+  styleUrls:   ['./question-runner.component.less']
 })
 export class QuestionRunnerComponent implements OnInit {
   private _questionRun: TestRunQuestion;
@@ -56,7 +52,11 @@ export class QuestionRunnerComponent implements OnInit {
     if (this.questionRun.answerCodeSnippet == null) {
       const codeLanguage = this._codeLanguages[0];
       const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId, codeLanguage).toPromise();
-      this.questionRun.answerCodeSnippet = new CodeSnippet(null, codeLanguage, scaffold.code.split('\n'), scaffold.functionObj);
+      this.questionRun.answerCodeSnippet = new CodeSnippet(null,
+        codeLanguage,
+        scaffold.code.split('\n'),
+        scaffold.functionObj
+      );
     }
     this._code = this.questionRun.answerCodeSnippet.code;
   }

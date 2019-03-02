@@ -1,6 +1,6 @@
-import {CodeLanguage} from '../CodeLanguage';
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {CodeType} from '../CodeType';
+import { CodeLanguage } from '../CodeLanguage';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { CodeType } from '../CodeType';
 
 @JsonObject('CodeExecutionResult')
 export class CodeExecutionResult {
@@ -34,5 +34,6 @@ export class CodeExecutionResult {
   get error(): string {
     return this._error;
   }
+
   // endregion
 }

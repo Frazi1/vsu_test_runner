@@ -1,5 +1,5 @@
-import {JsonObject, JsonProperty} from 'json2typescript';
-import {CodeExecutionResult} from './CodeRunResult';
+import { JsonObject, JsonProperty } from 'json2typescript';
+import { CodeExecutionResult } from './CodeRunResult';
 
 @JsonObject('CodeExecutionResponse')
 export class CodeExecutionResponse {
@@ -19,5 +19,6 @@ export class CodeExecutionResponse {
   get codeRunResult(): CodeExecutionResult {
     return this._codeRunResult;
   }
+
   // endregion
 }

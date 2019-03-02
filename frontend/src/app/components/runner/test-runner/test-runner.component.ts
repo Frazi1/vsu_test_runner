@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {RunService} from '../../../services/run.service';
-import {ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs/index';
-import {TestRun} from '../../../shared/runner/TestRun';
-import {TestRunQuestion} from '../../../shared/runner/TestRunQuestion';
+import { Component, OnInit } from '@angular/core';
+import { RunService } from '../../../services/run.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/index';
+import { TestRun } from '../../../shared/runner/TestRun';
+import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion';
 
 @Component({
-  selector: 'app-test-runner',
+  selector:    'app-test-runner',
   templateUrl: './test-runner.component.html',
-  styleUrls: ['./test-runner.component.less']
+  styleUrls:   ['./test-runner.component.less']
 })
 export class TestRunnerComponent implements OnInit {
 

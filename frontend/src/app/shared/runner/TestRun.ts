@@ -1,5 +1,5 @@
-import {TestRunQuestion} from './TestRunQuestion';
-import {JsonObject, JsonProperty} from 'json2typescript';
+import { TestRunQuestion } from './TestRunQuestion';
+import { JsonObject, JsonProperty } from 'json2typescript';
 
 @JsonObject('TestRun')
 export class TestRun {

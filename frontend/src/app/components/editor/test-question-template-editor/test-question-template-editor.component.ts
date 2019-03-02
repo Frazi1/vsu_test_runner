@@ -38,7 +38,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
     console.log(this.question)
   }
 
-  private async scaffoldSolutionFunction(): void {
+  private async scaffoldSolutionFunction(): Promise<void> {
     const functionId = this.question.codeSnippet.functionObj.id
     const language = this.question.codeSnippet.language
     const functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId, language).toPromise()

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
 import { CodeService } from '../../../services/code.service'
 import { BaseSelectorWithDefaultValueComponent } from '../base/BaseSelectorWithDefaultValueComponent'
+import { Observable } from 'rxjs/index'
 
 @Component({
   selector:    'app-code-language-selector',
@@ -10,13 +11,13 @@ import { BaseSelectorWithDefaultValueComponent } from '../base/BaseSelectorWithD
 })
 export class LanguageSelectorComponent extends BaseSelectorWithDefaultValueComponent<CodeLanguage> implements OnInit {
 
-  protected options: CodeLanguage[]
+  protected options: Observable<CodeLanguage[]>
 
   constructor(private codeService: CodeService) {
     super(new CodeLanguage('Не задано'))
   }
 
   async ngOnInit() {
-    this.options = await this.codeService.languages().toPromise()
+    this.options = this.codeService.languages()
   }
 }

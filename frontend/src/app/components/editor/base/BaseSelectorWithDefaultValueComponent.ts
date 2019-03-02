@@ -1,8 +1,9 @@
 import { EventEmitter, Input, Output } from '@angular/core'
+import { Observable } from 'rxjs/index'
 
 export abstract class BaseSelectorWithDefaultValueComponent<T extends { 'name' }> {
   protected defaultValue: T
-  protected abstract options: T[]
+  protected abstract options: Observable<T[]>
 
   @Input() public isReadOnly = false
 

@@ -27,37 +27,40 @@ class BaseController(object):
         self.logger.info("======================================================\n")
 
     @staticmethod
-    def _merge_args(kwargs, request_body_schema, response_schema):
+    def _merge_args(kwargs, request_body_schema, response_schema, query):
         kwargs['request_body_schema'] = request_body_schema
         kwargs['response_schema'] = response_schema
+        kwargs['query'] = query
 
     @staticmethod
-    def get(route, request_body_schema=None, response_schema=None, *args, **kwargs):
-        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+    def get(route, request_body_schema=None, response_schema=None, query=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema, query)
         return BaseController._register_route(lambda app: app.get, route, *args, **kwargs)
 
     @staticmethod
-    def post(route, request_body_schema=None, response_schema=None, *args, **kwargs):
-        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+    def post(route, request_body_schema=None, response_schema=None, query=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema, query)
         return BaseController._register_route(lambda app: app.post, route, *args, **kwargs)
 
     @staticmethod
-    def put(route, request_body_schema=None, response_schema=None, *args, **kwargs):
-        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+    def put(route, request_body_schema=None, response_schema=None, query=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema, query)
         return BaseController._register_route(lambda app: app.put, route, *args, **kwargs)
 
     @staticmethod
-    def delete(route, request_body_schema=None, response_schema=None, *args, **kwargs):
-        BaseController._merge_args(kwargs, request_body_schema, response_schema)
+    def delete(route, request_body_schema=None, response_schema=None, query=None, *args, **kwargs):
+        BaseController._merge_args(kwargs, request_body_schema, response_schema, query)
         return BaseController._register_route(lambda app: app.delete, route, *args, **kwargs)
 
     @staticmethod
-    def _register_route(router_provider, *args, **kwargs):
+    def _register_route(router_provider, route, *args, **kwargs):
+        route = route.rstrip('/')
+
         def inner_decorator(func):
             @wraps(inner_decorator)
             def wrapper(self, *wa, **wkwargs):
                 kwargs['_controller_instance'] = self
-                router = router_provider(self.app)(*args, **kwargs)
+                router = router_provider(self.app)(route, *args, **kwargs)
                 router(func)
 
             return wrapper

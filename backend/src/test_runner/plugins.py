@@ -7,6 +7,7 @@ from bottle import response, request
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.scoping import ScopedSession
+from typing import List
 
 from dtos.validation_exception import ValidationException
 
@@ -162,3 +163,66 @@ class SQLAlchemySessionPlugin(object):
             return rv
 
         return wrapper
+
+
+class QueryParamParser(object):
+    api = 2
+    name = 'query_param_parser'
+    type_parsers = {}
+
+    def __init__(self, route_arg_name='query'):
+        super(QueryParamParser, self).__init__()
+        self.route_arg_name = route_arg_name
+        self.init_parsers()
+
+    def init_parsers(self):
+        self.type_parsers[str] = lambda x: str(x)
+        self.type_parsers[int] = lambda x: int(x)
+        self.type_parsers[bool] = lambda x: bool_parser(x)
+
+        def bool_parser(value):
+            # type: (str | None) -> bool
+            if value is None:
+                return False
+
+            lower_value = value.lower()
+            if lower_value == 'true':
+
+                return True
+            if lower_value == 'false':
+                return False
+
+            raise QueryParserException("Value: '{}' is not supported.".format(value))
+
+    def apply(self, callback, context):
+        queries = getattr(context.config, self.route_arg_name)  # type: List[QueryParam]
+
+        if queries is None:
+            return callback
+
+        def wrapper(*a, **kwa):
+            for query in queries:
+                value = request.query.get(query.name)
+                parser = self.type_parsers.get(query.type)
+                if parser is None:
+                    raise QueryParserException("Parser for type '{}' is not defined.".format(str(query.type)))
+                parsed_value = parser(value)
+
+                if kwa.get(query.inject_name) is not None:
+                    raise QueryParserException("Parameter '{}' cannot be injected because it already exists.".format(query.inject_name))
+
+                kwa[query.inject_name] = parsed_value
+            return callback(*a, **kwa)
+
+        return wrapper
+
+
+class QueryParam:
+    def __init__(self, name, type_, inject_name=None):
+        self.name = name  # type: str
+        self.type = type_  # type: type
+        self.inject_name = inject_name or self.name  # type: str
+
+
+class QueryParserException(Exception):
+    pass

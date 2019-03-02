@@ -37,5 +37,7 @@ class TemplateService(BaseService):
         test_template = self.get_test_template_by_id(id_)
         test_template.is_deleted = True
 
-        for question in test_template.questions:
-            question.is_deleted = True
+    def restore(self, id_):
+        test_template = self.get_test_template_by_id(id_)
+        test_template.is_deleted = False
+        self._db.commit()

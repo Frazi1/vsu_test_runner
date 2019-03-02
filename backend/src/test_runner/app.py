@@ -17,11 +17,11 @@ from services.run_service import RunService
 
 monkey.patch_all()
 
-from bottle import Bottle, run, response
+from bottle import Bottle, run, response, request
 
 from db_config import ENGINE
 from utils.helpers import load_modules
-from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin
+from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin, QueryParamParser
 from services.code_executer_service import CodeExecuterService
 from services.template_service import TemplateService
 
@@ -32,6 +32,7 @@ app.install(EnableCors())
 app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=True, create_session_by_default=True))
 app.install(BodyParser(encode_with_json_by_default=True))
 app.install(ControllerPlugin())
+app.install(QueryParamParser())
 
 app_config = Config()
 
@@ -85,6 +86,10 @@ def error(err):
     dump = json.dumps(message_)
     return dump
 
+
+@app.hook('before_request')
+def strip_path():
+    request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
 
 @app.route('/<:re:.*>', method='OPTIONS')
 def cors():

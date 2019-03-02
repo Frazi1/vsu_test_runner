@@ -76,7 +76,7 @@ class CodeSnippetSchema(Schema):
 
     @post_load()
     def create_class(self, value):
-        code_lines = value['code'] or []
+        code_lines = value.get('code') or []
         value['code'] = "\n".join(code_lines)
         return CodeSnippet(**value)
 
@@ -113,6 +113,11 @@ class TestTemplateSchema(Schema):
                        dump_to='questionTemplates',
                        attribute='questions',
                        many=True)
+    is_deleted = Boolean(required=False,
+                         allow_none=True,
+                         load_from='isDeleted',
+                         dump_to='isDeleted',
+                         )
 
     @post_load()
     def create_class(self, value):

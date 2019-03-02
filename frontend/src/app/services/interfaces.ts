@@ -1,14 +1,14 @@
-import { Observable } from 'rxjs/index';
-import { TestTemplate } from '../shared/TestTemplate';
+import { Observable } from 'rxjs/index'
+import { TestTemplate } from '../shared/TestTemplate'
 
 export interface ITemplateService {
-  getTemplate(id: number): Observable<TestTemplate>;
+  getTemplate(id: number): Observable<TestTemplate>
 
-  getTemplates(): Observable<TestTemplate[]>;
+  getTemplates(): Observable<TestTemplate[]>
 
-  addTemplate(testTemplate: TestTemplate): Observable<number>;
+  addTemplate(testTemplate: TestTemplate): Observable<number>
 
-  updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate>;
+  updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate>
 
-  deleteTemplate(id: number): Observable<any>;
+  deleteTemplate(id: number): Observable<any>
 }

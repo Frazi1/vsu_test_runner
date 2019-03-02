@@ -1,6 +1,6 @@
-import { ErrorHandler, Injectable } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
-import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorHandler, Injectable } from '@angular/core'
+import { ToastrService } from 'ngx-toastr'
+import { HttpErrorResponse } from '@angular/common/http'
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       // noinspection TypeScriptValidateTypes
       this.toastr.error(error.error.message || error.message, 'Server error',
         {onActivateTick: true}
-      );
+      )
     }
-    console.error(error);
+    console.error(error)
   }
 }

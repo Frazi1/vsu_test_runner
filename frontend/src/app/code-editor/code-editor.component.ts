@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 
 @Component({
   selector:    'app-code-editor',
@@ -9,10 +9,10 @@ export class CodeEditorComponent implements OnInit {
 
 
   @Input()
-  public code: string;
+  public code: string
 
   @Output()
-  private codeChange = new EventEmitter<String>();
+  private codeChange = new EventEmitter<String>()
 
   constructor() {
   }
@@ -21,6 +21,6 @@ export class CodeEditorComponent implements OnInit {
   }
 
   private onCodeChange(): void {
-    this.codeChange.emit(this.code);
+    this.codeChange.emit(this.code)
   }
 }

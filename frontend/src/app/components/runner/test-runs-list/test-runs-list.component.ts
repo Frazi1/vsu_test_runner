@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { TestRun } from '../../../shared/runner/TestRun';
-import { RunService } from '../../../services/run.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core'
+import { TestRun } from '../../../shared/runner/TestRun'
+import { RunService } from '../../../services/run.service'
+import { Router } from '@angular/router'
 
 @Component({
   selector:    'app-test-runs-list',
@@ -10,17 +10,17 @@ import { Router } from '@angular/router';
 })
 export class TestRunsListComponent implements OnInit {
 
-  private _testRuns: TestRun[];
+  private _testRuns: TestRun[]
 
   constructor(private runService: RunService,
               private router: Router) {
   }
 
   async ngOnInit() {
-    this._testRuns = await this.runService.getActiveTestRuns().toPromise();
+    this._testRuns = await this.runService.getActiveTestRuns().toPromise()
   }
 
   private openTestRun(id: number): void {
-    this.router.navigate(['run', id]);
+    this.router.navigate(['run', id])
   }
 }

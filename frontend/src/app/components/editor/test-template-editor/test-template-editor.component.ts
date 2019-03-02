@@ -1,9 +1,9 @@
-import { Component, Inject, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs/index';
-import { TestTemplate } from '../../../shared/TestTemplate';
-import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate';
-import { ITemplateService } from '../../../services/interfaces';
+import { Component, Inject, OnInit, Output } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Subscription } from 'rxjs/index'
+import { TestTemplate } from '../../../shared/TestTemplate'
+import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
+import { ITemplateService } from '../../../services/interfaces'
 
 @Component({
   selector:    'app-test-template-editor',
@@ -13,9 +13,9 @@ import { ITemplateService } from '../../../services/interfaces';
 export class TestTemplateEditorComponent implements OnInit {
 
   @Output()
-  private testTemplate: TestTemplate;
-  private paramSubscription: Subscription;
-  private isCreating: boolean;
+  private testTemplate: TestTemplate
+  private paramSubscription: Subscription
+  private isCreating: boolean
 
   constructor(private route: ActivatedRoute,
               @Inject('ITemplateService') private templatesService: ITemplateService,
@@ -24,43 +24,43 @@ export class TestTemplateEditorComponent implements OnInit {
 
   ngOnInit() {
     this.paramSubscription = this.route.params.subscribe(params => {
-      const id = params['id'];
+      const id = params['id']
       if (!id) {
-        this.isCreating = true;
-        this.testTemplate = new TestTemplate();
+        this.isCreating = true
+        this.testTemplate = new TestTemplate()
       } else {
-        this.isCreating = false;
-        this.templatesService.getTemplate(+id).subscribe(res => this.testTemplate = res);
+        this.isCreating = false
+        this.templatesService.getTemplate(+id).subscribe(res => this.testTemplate = res)
       }
-    });
+    })
   }
 
   private addQuestion(): void {
-    this.testTemplate.questionTemplates.push(new TestQuestionTemplate());
+    this.testTemplate.questionTemplates.push(new TestQuestionTemplate())
   }
 
   private save(): void {
     if (this.isCreating) {
-      this.add();
+      this.add()
     } else {
-      this.update();
+      this.update()
     }
   }
 
   private add(): void {
     this.templatesService.addTemplate(this.testTemplate)
-        .subscribe(id => this.router.navigate(['/template', id]));
+        .subscribe(id => this.router.navigate(['/template', id]))
   }
 
   private update(): void {
     this.templatesService.updateTemplate(this.testTemplate)
-        .subscribe(res => this.testTemplate = res);
+        .subscribe(res => this.testTemplate = res)
   }
 
   private deleteTemplate(): void {
     if (this.isCreating === false) {
       this.templatesService.deleteTemplate(this.testTemplate.id)
-          .subscribe(() => this.router.navigate(['/']));
+          .subscribe(() => this.router.navigate(['/']))
     }
   }
 }

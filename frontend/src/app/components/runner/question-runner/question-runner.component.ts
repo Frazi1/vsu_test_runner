@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion';
-import { CodeService } from '../../../services/code.service';
-import { CodeSnippet } from '../../../shared/CodeSnippet';
-import { CodeLanguage } from '../../../shared/CodeLanguage';
-import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest';
+import { Component, Input, OnInit } from '@angular/core'
+import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion'
+import { CodeService } from '../../../services/code.service'
+import { CodeSnippet } from '../../../shared/CodeSnippet'
+import { CodeLanguage } from '../../../shared/CodeLanguage'
+import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 
 @Component({
   selector:    'app-question-runner',
@@ -11,10 +11,10 @@ import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionReques
   styleUrls:   ['./question-runner.component.less']
 })
 export class QuestionRunnerComponent implements OnInit {
-  private _questionRun: TestRunQuestion;
-  private _code: string;
-  private _codeLanguages: CodeLanguage[];
-  private _isReady = false;
+  private _questionRun: TestRunQuestion
+  private _code: string
+  private _codeLanguages: CodeLanguage[]
+  private _isReady = false
 
   constructor(private codeService: CodeService) {
 
@@ -31,40 +31,40 @@ export class QuestionRunnerComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this._codeLanguages = await this.codeService.languages().toPromise();
-    this._isReady = true;
-    await this.update();
+    this._codeLanguages = await this.codeService.languages().toPromise()
+    this._isReady = true
+    await this.update()
   }
 
   get questionRun(): TestRunQuestion {
-    return this._questionRun;
+    return this._questionRun
   }
 
   @Input()
   set questionRun(value: TestRunQuestion) {
-    this._questionRun = value;
+    this._questionRun = value
     if (this._isReady) {
-      this.update();
+      this.update()
     }
   }
 
   private async update() {
     if (this.questionRun.answerCodeSnippet == null) {
-      const codeLanguage = this._codeLanguages[0];
-      const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId, codeLanguage).toPromise();
+      const codeLanguage = this._codeLanguages[0]
+      const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId, codeLanguage).toPromise()
       this.questionRun.answerCodeSnippet = new CodeSnippet(null,
         codeLanguage,
         scaffold.code.split('\n'),
         scaffold.functionObj
-      );
+      )
     }
-    this._code = this.questionRun.answerCodeSnippet.code;
+    this._code = this.questionRun.answerCodeSnippet.code
   }
 
   private async runCode() {
-    const snippet = this._questionRun.answerCodeSnippet;
-    const req = CodeExecutionRequest.fromReturnType(snippet.language, this._code, snippet.functionObj.returnType, true);
-    const res = await this.codeService.runCode(req).toPromise();
-    console.log(res.codeRunResult);
+    const snippet = this._questionRun.answerCodeSnippet
+    const req = CodeExecutionRequest.fromReturnType(snippet.language, this._code, snippet.functionObj.returnType, true)
+    const res = await this.codeService.runCode(req).toPromise()
+    console.log(res.codeRunResult)
   }
 }

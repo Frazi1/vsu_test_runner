@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'
 
 @Component({
   selector:    'app-nav-menu',
@@ -12,11 +12,11 @@ export class NavMenuComponent implements OnInit {
     {name: 'Шаблоны', path: '/template'},
     {name: 'Открытые тесты', path: '/instance'},
     {name: 'Мои активные тесты', path: '/run'}
-  ];
+  ]
 
   constructor() {
     for (const item in this.items) {
-      console.log(`key: ${item}, value: ${this.items[item]}`);
+      console.log(`key: ${item}, value: ${this.items[item]}`)
     }
   }
 

@@ -1,37 +1,37 @@
-import { CodeType } from './CodeType';
-import { FunctionArgument } from './FunctionArgument';
-import { JsonObject, JsonProperty } from 'json2typescript';
+import { CodeType } from './CodeType'
+import { FunctionArgument } from './FunctionArgument'
+import { JsonObject, JsonProperty } from 'json2typescript'
 
 
 @JsonObject('Function')
 export class Function {
 
   @JsonProperty('id', Number)
-  private _id: number = undefined;
+  private _id: number = undefined
 
   @JsonProperty('name', String)
-  public name: string;
+  public name: string
 
   @JsonProperty('returnType', CodeType)
-  public returnType: CodeType;
+  public returnType: CodeType
 
   @JsonProperty('arguments', [FunctionArgument])
-  public arguments: FunctionArgument[];
+  public arguments: FunctionArgument[]
 
   constructor(name: string = '', returnType: CodeType = null, args: FunctionArgument[] = []) {
-    this.id = null;
-    this.name = name;
-    this.returnType = returnType;
-    this.arguments = args;
+    this.id = null
+    this.name = name
+    this.returnType = returnType
+    this.arguments = args
   }
 
   // region Getters
   get id(): number {
-    return this._id;
+    return this._id
   }
 
   set id(value: number) {
-    this._id = value;
+    this._id = value
   }
 
 // endregion

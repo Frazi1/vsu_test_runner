@@ -8,6 +8,13 @@ from models.argument_type import ArgumentType
 class DeclarativeInputArgumentItem(Base):
     __tablename__ = 'declarative_input_argument_item'
 
+    def __init__(self, id_, argument_index, input_type, input_value, *args, **kwargs):
+        self.id = id_
+        self.argument_index = argument_index
+        self.input_type = input_type
+        self.input_value = input_value
+        super(DeclarativeInputArgumentItem, self).__init__(*args, **kwargs)
+
     id = Column(Integer, primary_key=True)  # type: int
     argument_index = Column(Integer, nullable=false)
     input_type = Column(Enum(ArgumentType), nullable=false)  # type: ArgumentType

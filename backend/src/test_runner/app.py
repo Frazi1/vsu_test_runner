@@ -3,13 +3,17 @@ import json
 import os
 
 from gevent import monkey
+from typing import List
 
 from app_config import Config
 from coderunner.python_runner import PythonRunner
+from controllers.base_controller import BaseController
 from controllers.code_execution_controller import CodeExecutionController
+from controllers.function_testing_controller import FunctionTestingController
 from controllers.instance_controller import InstanceController
 from controllers.run_controller import RunController
 from controllers.template_controller import TemplateController
+from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
 from services.function_service import FunctionService
 from services.instance_service import InstanceService
@@ -36,23 +40,40 @@ app.install(QueryParamParser())
 
 app_config = Config()
 
+
 def _init_services():
+    logger = ConsoleLogger()
     template_service = TemplateService()
     instance_service = InstanceService(template_service)
     run_service = RunService(instance_service)
     function_service = FunctionService()
     code_execution_service = CodeExecuterService(function_service)
-    return [template_service, instance_service, run_service, code_execution_service, function_service]
+
+    return ServiceResolver(logger,
+                           code_execution_service,
+                           function_service,
+                           instance_service,
+                           run_service,
+                           template_service)
 
 
-def _init_controllers(app, template_service, instance_service, run_service, logger, code_execution_service,
-                      function_service):
-    template_ctrl = TemplateController(app, template_service, logger)
-    instance_ctrl = InstanceController(app, instance_service, logger)
-    run_ctrl = RunController(app, run_service, logger)
-    code_execution_ctrl = CodeExecutionController(app, logger, code_execution_service, function_service)
+def _init_controllers(app, service_resolver):
+    # type: (Bottle, ServiceResolver) -> List[BaseController]
 
-    return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl]
+    template_ctrl = TemplateController(app, service_resolver.template_service, service_resolver.logger)
+
+    instance_ctrl = InstanceController(app, service_resolver.instance_service, service_resolver.logger)
+
+    run_ctrl = RunController(app, service_resolver.run_service, service_resolver.logger)
+
+    code_execution_ctrl = CodeExecutionController(app,
+                                                  service_resolver.logger,
+                                                  service_resolver.code_executer_service,
+                                                  service_resolver.function_service)
+
+    function_testing_ctrl = FunctionTestingController(app, service_resolver)
+
+    return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl, function_testing_ctrl]
 
 
 def _init_code_runners(code_execution_service):
@@ -61,17 +82,9 @@ def _init_code_runners(code_execution_service):
         code_execution_service.register_runner(r)
 
 
-_logger = ConsoleLogger()
-_services = _init_services()
-_controllers = _init_controllers(app,
-                                 next((x for x in _services if isinstance(x, TemplateService))),
-                                 next((x for x in _services if isinstance(x, InstanceService))),
-                                 next((x for x in _services if isinstance(x, RunService))),
-                                 _logger,
-                                 next((x for x in _services if isinstance(x, CodeExecuterService))),
-                                 next((x for x in _services if isinstance(x, FunctionService)))
-                                 )
-_code_executer_service = next((x for x in _services if isinstance(x, CodeExecuterService)))
+_service_resolver = _init_services()
+_controllers = _init_controllers(app, _service_resolver)
+_code_executer_service = _service_resolver.code_executer_service
 _init_code_runners(_code_executer_service)
 
 
@@ -90,6 +103,7 @@ def error(err):
 @app.hook('before_request')
 def strip_path():
     request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
+
 
 @app.route('/<:re:.*>', method='OPTIONS')
 def cors():

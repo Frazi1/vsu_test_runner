@@ -9,6 +9,12 @@ from models.function_inputs.declarative_input_argument_item import DeclarativeIn
 class DeclarativeInputItem(Base):
     __tablename__ = 'declarative_input_item'
 
+    def __init__(self, id_, argument_items, output_value, *args, **kwargs):
+        self.id = id_
+        self.argument_items = argument_items
+        self.output_value = output_value
+        super(DeclarativeInputItem, self).__init__(*args, **kwargs)
+
     id = Column(Integer, primary_key=True)  # type: int
 
     argument_items = relationship("DeclarativeInputArgumentItem",

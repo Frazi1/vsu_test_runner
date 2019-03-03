@@ -10,6 +10,13 @@ from models.test_question_template import TestQuestionTemplate
 class TestTemplate(Base):
     __tablename__ = 'test_template'
 
+    def __init__(self, id_, name, time_limit, questions, *args, **kwargs):
+        self.questions = questions
+        self.time_limit = time_limit
+        self.name = name
+        self.id_ = id_
+        super(TestTemplate, self).__init__(*args, **kwargs)
+
     id = Column(Integer, primary_key=True)
     name = Column(String(length=100))
     time_limit = Column(Integer, nullable=True)

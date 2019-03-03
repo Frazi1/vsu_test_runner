@@ -1,10 +1,9 @@
 from marshmallow import Schema, fields, post_load
 from marshmallow.fields import Nested, String, Integer, List, Boolean
 
-from dtos import CodeExecutionRequestDto
+from dtos import CodeExecutionRequestDto, FunctionDto
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
-from models.function import Function
 from models.function_parameter import FunctionArgument
 from models.language_enum import LanguageEnum
 from models.test_question_template import TestQuestionTemplate
@@ -20,7 +19,7 @@ class ArgumentTypeSchema(Schema):
         return ArgumentType[name]
 
 
-class FunctionArgumentSchema(Schema):
+class FunctionArgumentDtoSchema(Schema):
     id = Integer(required=False, allow_none=True)
     type = Nested(ArgumentTypeSchema)
     name = String()
@@ -39,7 +38,7 @@ class LanguageSchema(Schema):
         return LanguageEnum[name]
 
 
-class FunctionSchema(Schema):
+class FunctionDtoSchema(Schema):
     id = Integer(required=False, allow_none=True)
     name = String(required=True)
     return_type = Nested(ArgumentTypeSchema,
@@ -47,16 +46,23 @@ class FunctionSchema(Schema):
                          dump_to='returnType',
                          attribute='return_type')
 
-    arguments = Nested(FunctionArgumentSchema,
+    arguments = Nested(FunctionArgumentDtoSchema,
                        required=False,
                        load_from='arguments',
                        dump_to='arguments',
                        many=True,
                        )
 
+    testing_input = Nested("FunctionTestingInputDtoSchema",
+                           required=False,
+                           allow_none=True,
+                           load_from='testingInput',
+                           dump_to='testingInput')  # type: "FunctionTestingInputDtoSchema"
+
+
     @post_load()
     def create_class(self, value):
-        return Function(**value)
+        return FunctionDto(**value)
 
 
 class CodeSnippetSchema(Schema):
@@ -68,7 +74,7 @@ class CodeSnippetSchema(Schema):
                 required=False,
                 allow_none=True
                 )
-    function = Nested(FunctionSchema,
+    function = Nested(FunctionDtoSchema,
                       required=False,
                       allow_none=True,
                       load_from="function",
@@ -101,7 +107,7 @@ class TestQuestionTemplateSchema(Schema):
         return TestQuestionTemplate(**value)
 
 
-class TestTemplateSchema(Schema):
+class TestTemplateDtoSchema(Schema):
     id = fields.Integer(required=False, allow_none=True)
     name = fields.String()
     time_limit = Integer(load_from='timeLimit',
@@ -126,7 +132,7 @@ class TestTemplateSchema(Schema):
 
 
 class FunctionScaffoldingDtoSchema(Schema):
-    function = Nested(FunctionSchema, required=True,
+    function = Nested(FunctionDtoSchema, required=True,
                       dump_to='function',
                       load_from='function')
     language = Nested(LanguageSchema, required=True)

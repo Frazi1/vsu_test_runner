@@ -1,6 +1,6 @@
 import { CodeLanguage } from './CodeLanguage'
 import { Function } from './Function'
-import { Type } from 'class-transformer'
+import { Expose, Type } from 'class-transformer'
 
 export class CodeSnippet {
 
@@ -11,6 +11,7 @@ export class CodeSnippet {
 
   code: string = undefined
 
+  @Expose({name: 'function'})
   @Type(() => Function)
   functionObj: Function
 

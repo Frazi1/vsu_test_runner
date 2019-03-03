@@ -3,9 +3,10 @@ from functools import wraps
 
 
 class BaseController(object):
-    def __init__(self, bottle_app, logger):
+    def __init__(self, bottle_app, logger, route_prefix=None):
         self.app = bottle_app
         self.logger = logger
+        self._route_prefix = route_prefix
         self._register_routes()
 
     def _register_routes(self):
@@ -59,8 +60,13 @@ class BaseController(object):
         def inner_decorator(func):
             @wraps(inner_decorator)
             def wrapper(self, *wa, **wkwargs):
+                result_route = route
+
+                if self._route_prefix:
+                    result_route = self._route_prefix.rstrip('/') + '/' + result_route
+
                 kwargs['_controller_instance'] = self
-                router = router_provider(self.app)(route, *args, **kwargs)
+                router = router_provider(self.app)(result_route, *args, **kwargs)
                 router(func)
 
             return wrapper

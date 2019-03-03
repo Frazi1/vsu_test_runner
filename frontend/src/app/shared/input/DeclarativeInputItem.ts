@@ -1,36 +1,13 @@
-import { JsonObject, JsonProperty } from 'json2typescript'
 import { DeclarativeInputArgumentItem } from './DeclarativeInputArgumentItem'
+import { Type } from 'class-transformer'
 
-@JsonObject('DeclarativeInputItem')
 export class DeclarativeInputItem {
-  private _id: number = undefined
-  private _argumentItems: DeclarativeInputArgumentItem[] = undefined
-  private _outputValue: string = undefined
 
-  @JsonProperty('id', Number)
-  get id(): number {
-    return this._id
-  }
+  id: number = undefined
 
-  set id(value: number) {
-    this._id = value
-  }
+  @Type(() => DeclarativeInputArgumentItem)
+  argumentItems: DeclarativeInputArgumentItem[] = undefined
 
-  @JsonProperty('argumentItems', [DeclarativeInputArgumentItem])
-  get argumentItems(): DeclarativeInputArgumentItem[] {
-    return this._argumentItems
-  }
+  outputValue: string = undefined
 
-  set argumentItems(value: DeclarativeInputArgumentItem[]) {
-    this._argumentItems = value
-  }
-
-  @JsonProperty('outputValue', String)
-  get outputValue(): string {
-    return this._outputValue
-  }
-
-  set outputValue(value: string) {
-    this._outputValue = value
-  }
 }

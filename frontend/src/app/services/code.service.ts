@@ -5,18 +5,18 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Config } from '../shared/Config'
 import { map, shareReplay, switchMap, take } from 'rxjs/internal/operators'
 import { BaseService } from './base.service'
-import { JsonConvert } from 'json2typescript'
 import { FunctionScaffoldingDto } from '../shared/code/FunctionScaffoldingDto'
 import { CodeLanguage } from '../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../shared/runner/CodeExecutionRequest'
 import { CodeExecutionResponse } from '../shared/runner/CodeExecutionResponse'
+import { ClassTransformer } from 'class-transformer'
 
 @Injectable({
   providedIn: 'root'
 })
 export class CodeService extends BaseService {
 
-  constructor(http: HttpClient, config: Config, json: JsonConvert) {
+  constructor(http: HttpClient, config: Config, json: ClassTransformer) {
     super(http, config, json, 'code')
   }
 
@@ -62,14 +62,14 @@ export class CodeService extends BaseService {
     const opt = new HttpParams().append('language', codeLanguage.name)
     return this.http.get(this.buildUrl('scaffold', functionId), {params: opt})
                .pipe(
-                 map(res => this.json.deserialize(res, FunctionScaffoldingDto))
+                 map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
                )
   }
 
   public runCode(codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponse> {
     return this.http.post(this.buildUrl('run'), this.json.serialize(codeExecutionRequest))
                .pipe(
-                 map(res => this.json.deserialize(res, CodeExecutionResponse))
+                 map(res => this.json.plainToClass(CodeExecutionResponse, res as Object))
                )
   }
 }

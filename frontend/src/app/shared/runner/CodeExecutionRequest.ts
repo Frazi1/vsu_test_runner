@@ -1,38 +1,33 @@
-import { JsonObject, JsonProperty } from 'json2typescript'
 import { CodeType } from '../CodeType'
 import { CodeLanguage } from '../CodeLanguage'
+import { Type } from 'class-transformer'
 
-@JsonObject('CodeExecutionRequest')
 export class CodeExecutionRequest {
+  clientId: string = undefined
 
-  @JsonProperty('clientId', String)
-  private _clientId: string = undefined
 
-  @JsonProperty('returnType', CodeType)
-  private _returnType: CodeType = undefined
+  @Type(() => CodeType)
+  returnType: CodeType = undefined
 
-  @JsonProperty('functionId', Number)
-  private _functionId: number = undefined
+  functionId: number = undefined
 
-  @JsonProperty('language', CodeLanguage)
-  private _language: CodeLanguage = undefined
+  @Type(() => CodeLanguage)
+  language: CodeLanguage = undefined
 
-  @JsonProperty('code', String)
-  private _code: string = undefined
+  code: string = undefined
 
-  @JsonProperty('isPlainCode', Boolean)
-  private _isPlainCode: boolean = undefined
-
+  isPlainCode: boolean = undefined
 
   private constructor(clientId: string, returnType: CodeType, functionId: number, language: CodeLanguage, code: string,
                       isPlainCode: boolean) {
-    this._clientId = clientId
-    this._returnType = returnType
-    this._functionId = functionId
-    this._language = language
-    this._code = code
-    this._isPlainCode = isPlainCode
+    this.clientId = clientId
+    this.returnType = returnType
+    this.functionId = functionId
+    this.language = language
+    this.code = code
+    this.isPlainCode = isPlainCode
   }
+
 
   public static fromReturnType(language: CodeLanguage, code: string, returnType: CodeType, isPlainCode: boolean,
                                clientId: string = null): CodeExecutionRequest {
@@ -44,47 +39,4 @@ export class CodeExecutionRequest {
     return new CodeExecutionRequest(clientId, null, functionId, language, code, isPlainCode)
   }
 
-
-// region Getters/Setters
-  get clientId(): string {
-    return this._clientId
-  }
-
-  set clientId(value: string) {
-    this._clientId = value
-  }
-
-  get returnType(): CodeType {
-    return this._returnType
-  }
-
-  set returnType(value: CodeType) {
-    this._returnType = value
-  }
-
-  get functionId(): number {
-    return this._functionId
-  }
-
-  set functionId(value: number) {
-    this._functionId = value
-  }
-
-  get language(): CodeLanguage {
-    return this._language
-  }
-
-  set language(value: CodeLanguage) {
-    this._language = value
-  }
-
-  get code(): string {
-    return this._code
-  }
-
-  set code(value: string) {
-    this._code = value
-  }
-
-  // endregion
 }

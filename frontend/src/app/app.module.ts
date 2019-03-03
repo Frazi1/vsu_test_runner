@@ -12,8 +12,6 @@ import { HttpClientModule } from '@angular/common/http'
 import { TemplatesService } from './services/templates.service'
 import { FunctionEditorComponent } from './components/editor/function-signature-editor/function-editor.component'
 import { CodeTypeSelectorComponent } from './components/editor/code-type-selector/code-type-selector.component'
-import { JsonConvert } from 'json2typescript'
-import { jsonConvert } from './configuration/JsonConfiguration'
 import { TestInstanceListComponent } from './components/instance/test-instance-list/test-instance-list.component'
 import { TestInstanceEditorComponent } from './components/instance/test-instance-editor/test-instance-editor.component'
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
@@ -25,6 +23,8 @@ import { QuestionRunnerComponent } from './components/runner/question-runner/que
 import { TestRunsListComponent } from './components/runner/test-runs-list/test-runs-list.component'
 import { CodeEditorComponent } from './code-editor/code-editor.component'
 import { LanguageSelectorComponent } from './components/editor/language-selector/language-selector.component'
+import { FunctionDeclarativeInputEditorComponent } from './components/editor/function-declarative-input-editor/function-declarative-input-editor.component'
+import { ClassTransformer } from 'class-transformer'
 
 @NgModule({
   declarations: [
@@ -41,7 +41,8 @@ import { LanguageSelectorComponent } from './components/editor/language-selector
     QuestionRunnerComponent,
     TestRunsListComponent,
     CodeEditorComponent,
-    LanguageSelectorComponent
+    LanguageSelectorComponent,
+    FunctionDeclarativeInputEditorComponent
   ],
   imports:      [
     BrowserModule,
@@ -55,7 +56,8 @@ import { LanguageSelectorComponent } from './components/editor/language-selector
   ],
   providers:    [
     {provide: 'ITemplateService', useClass: TemplatesService},
-    {provide: JsonConvert, useValue: jsonConvert},
+    // {provide: JsonConvert, useValue: jsonConvert},
+    {provide: ClassTransformer, useValue: new ClassTransformer()},
     {provide: ErrorHandler, useClass: GlobalErrorHandler}
   ],
   bootstrap:    [AppComponent]

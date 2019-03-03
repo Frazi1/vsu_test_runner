@@ -16,6 +16,7 @@
     "semicolon": [
       true,
       "never"
-    ]
+    ],
+    "prefer-const": false
   }
 }

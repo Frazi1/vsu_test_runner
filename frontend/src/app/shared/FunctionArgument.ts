@@ -1,13 +1,12 @@
 import { CodeType } from './CodeType'
-import { JsonObject, JsonProperty } from 'json2typescript'
+import { Type } from 'class-transformer'
 
-@JsonObject('FunctionArgument')
+
 export class FunctionArgument {
-  @JsonProperty('name', String)
-  public name: string
+  name: string
 
-  @JsonProperty('type', CodeType)
-  public type: CodeType
+  @Type(() => CodeType)
+  type: CodeType
 
 
   constructor(name: string, type: CodeType) {

@@ -1,31 +1,18 @@
-import { JsonObject, JsonProperty } from 'json2typescript'
 import { Function } from '../Function'
 import { CodeLanguage } from '../CodeLanguage'
+import { Expose, Type } from 'class-transformer'
 
-@JsonObject('FunctionScaffoldingDto')
+
 export class FunctionScaffoldingDto {
-  @JsonProperty('function', Function)
-  private _function: Function = undefined
 
-  @JsonProperty('language', CodeLanguage)
-  private _codeLanguage: CodeLanguage = undefined
+  @Type(() => Function)
+  @Expose({name: 'function'})
+  functionObj: Function = undefined
 
-  @JsonProperty('code')
-  private _code: string = undefined
+  @Type(() => CodeLanguage)
+  codeLanguage: CodeLanguage = undefined
 
-
-  // region Getters
-  get functionObj(): Function {
-    return this._function
-  }
-
-  get codeLanguage(): CodeLanguage {
-    return this._codeLanguage
-  }
-
-  get code(): string {
-    return this._code
-  }
+  code: string = undefined
 
   // endregion
 }

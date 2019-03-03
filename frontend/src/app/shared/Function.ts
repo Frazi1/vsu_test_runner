@@ -1,22 +1,24 @@
 import { CodeType } from './CodeType'
 import { FunctionArgument } from './FunctionArgument'
-import { JsonObject, JsonProperty } from 'json2typescript'
+import { FunctionTestingInputDto } from './input/FunctionInputDto'
+import { Type } from 'class-transformer'
 
 
-@JsonObject('Function')
 export class Function {
 
-  @JsonProperty('id', Number)
-  private _id: number = undefined
+  id: number = undefined
+  name: string
 
-  @JsonProperty('name', String)
-  public name: string
+  @Type(() => CodeType)
+  returnType: CodeType
 
-  @JsonProperty('returnType', CodeType)
-  public returnType: CodeType
 
-  @JsonProperty('arguments', [FunctionArgument])
-  public arguments: FunctionArgument[]
+  @Type(() => FunctionArgument)
+  arguments: FunctionArgument[]
+
+
+  @Type(() => FunctionTestingInputDto)
+  testingInput: FunctionTestingInputDto = new FunctionTestingInputDto()
 
   constructor(name: string = '', returnType: CodeType = null, args: FunctionArgument[] = []) {
     this.id = null
@@ -24,15 +26,4 @@ export class Function {
     this.returnType = returnType
     this.arguments = args
   }
-
-  // region Getters
-  get id(): number {
-    return this._id
-  }
-
-  set id(value: number) {
-    this._id = value
-  }
-
-// endregion
 }

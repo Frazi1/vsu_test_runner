@@ -5,8 +5,8 @@ import { TestTemplate } from '../shared/TestTemplate'
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Config } from '../shared/Config'
 import { map } from 'rxjs/internal/operators'
-import { JsonConvert } from 'json2typescript'
 import { BaseService } from './base.service'
+import { ClassTransformer } from 'class-transformer'
 
 @Injectable({
   providedIn: 'root'
@@ -15,22 +15,22 @@ export class TemplatesService extends BaseService implements ITemplateService {
 
   constructor(http: HttpClient,
               config: Config,
-              jsonConvert: JsonConvert) {
+              jsonConvert: ClassTransformer) {
     super(http, config, jsonConvert, 'template')
   }
 
   getTemplate(id: number): Observable<TestTemplate> {
-    return this.http.get<TestTemplate>(this.buildUrl(id))
+    return this.http.get(this.buildUrl(id))
                .pipe(
-                 map(jsonValue => this.json.deserialize(jsonValue, TestTemplate))
+                 map(jsonValue => this.json.plainToClass(TestTemplate, jsonValue as Object))
                )
   }
 
   getTemplates(includeDeleted: boolean = false): Observable<TestTemplate[]> {
     const params = new HttpParams().set('includeDeleted', includeDeleted.toString())
-    return this.http.get<TestTemplate[]>(this.buildUrl(), {params: params})
+    return this.http.get(this.buildUrl(), {params: params})
                .pipe(
-                 map((jsonValues: any[]) => this.json.deserializeArray(jsonValues, TestTemplate))
+                 map(jsonValues => this.json.plainToClass(TestTemplate, jsonValues as Object[]))
                )
   }
 
@@ -40,9 +40,9 @@ export class TemplatesService extends BaseService implements ITemplateService {
 
   updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate> {
     const json = this.json.serialize(testTemplate)
-    return this.http.put<TestTemplate>(this.buildUrl(testTemplate.id), json)
+    return this.http.put(this.buildUrl(testTemplate.id), json)
                .pipe(
-                 map(jsonValue => this.json.deserialize(jsonValue, TestTemplate))
+                 map(jsonValue => this.json.plainToClass(TestTemplate, jsonValue as Object))
                )
   }
 

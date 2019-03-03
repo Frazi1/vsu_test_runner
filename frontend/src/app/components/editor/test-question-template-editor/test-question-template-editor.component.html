@@ -17,4 +17,9 @@
     <app-code-editor [(code)]="question.codeSnippet.code"></app-code-editor>
   </div>
   <app-function-editor [functionObj]="question.codeSnippet.functionObj"></app-function-editor>
+  <div>
+    <h2>Входные данные</h2>
+    <app-function-declarative-input-editor [functionObj]="question.codeSnippet.functionObj">
+    </app-function-declarative-input-editor>
+  </div>
 </ng-container>

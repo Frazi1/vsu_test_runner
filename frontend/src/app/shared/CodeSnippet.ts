@@ -1,42 +1,31 @@
 import { CodeLanguage } from './CodeLanguage'
-import { JsonObject, JsonProperty } from 'json2typescript'
 import { Function } from './Function'
+import { Type } from 'class-transformer'
 
-@JsonObject('CodeSnippet')
 export class CodeSnippet {
 
-  @JsonProperty('id', Number)
-  public id: number
+  id: number
 
-  @JsonProperty('language', CodeLanguage)
-  public language: CodeLanguage
+  @Type(() => CodeLanguage)
+  language: CodeLanguage
 
-  private _code: string = undefined
+  code: string = undefined
 
-  @JsonProperty('code', [String])
-  get code_array(): string[] {
-    return this._code.split('\n')
-  }
-
-  set code_array(value: string[]) {
-    this._code = value.join('\n')
-  }
-
-  get code(): string {
-    return this._code
-  }
-
-  set code(value: string) {
-    this._code = value
-  }
-
-  @JsonProperty('function', Function)
-  public functionObj: Function
+  @Type(() => Function)
+  functionObj: Function
 
   constructor(id: number = null, language: CodeLanguage = null, code: string[] = [], functionObj: Function) {
     this.id = id
     this.language = language
     this.code_array = code
     this.functionObj = functionObj
+  }
+
+  get code_array(): string[] {
+    return this.code.split('\n')
+  }
+
+  set code_array(value: string[]) {
+    this.code = value.join('\n')
   }
 }

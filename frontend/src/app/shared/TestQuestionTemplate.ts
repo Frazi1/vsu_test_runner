@@ -1,31 +1,18 @@
-import { JsonObject, JsonProperty } from 'json2typescript'
 import { CodeSnippet } from './CodeSnippet'
+import { Type } from 'class-transformer'
 
-@JsonObject('TestQuestionTemplate')
+
 export class TestQuestionTemplate {
-  @JsonProperty('name', String)
-  public name: string
 
-  @JsonProperty('description', String)
-  public description: string
+  name: string
 
-  @JsonProperty('timeLimit', String, true)
-  public timeLimit: number
+  description: string
 
-  @JsonProperty('codeSnippet', CodeSnippet)
-  private _codeSnippet: CodeSnippet
+  timeLimit: number
 
 
-  // region Getters/Setters
-  get codeSnippet(): CodeSnippet {
-    return this._codeSnippet
-  }
-
-  set codeSnippet(value: CodeSnippet) {
-    this._codeSnippet = value
-  }
-
-  // endregion
+  @Type(() => CodeSnippet)
+  codeSnippet: CodeSnippet
 
   constructor(name: string             = '',
               text: string             = '',

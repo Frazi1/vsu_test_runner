@@ -25,4 +25,4 @@ class Function(Base):
     return_type = Column(Enum(ArgumentType))  # type: ArgumentType
     arguments = relationship("FunctionArgument", back_populates="function")  # type: List[FunctionArgument]
     code_snippets = relationship("CodeSnippet", back_populates="function")  # type: List[CodeSnippet]
-    testing_input = relationship("BaseFunctionInput", back_populates="target_function")  # type: BaseFunctionInput
+    testing_input = relationship("BaseFunctionInput", back_populates="target_function", uselist=False)  # type: BaseFunctionInput

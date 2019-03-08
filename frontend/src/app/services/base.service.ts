@@ -29,7 +29,7 @@ export class BaseService {
   protected getOne<T>(id: number, classRef: { new(): T; }): Observable<T> {
     return this.http.get(this.buildUrl(`${id}`))
                .pipe(
-                 map(res => this.json.deserialize(classRef, res))
+                 map(res => this.json.plainToClass(classRef, res as Object))
                )
   }
 

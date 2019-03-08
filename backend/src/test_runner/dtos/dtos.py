@@ -41,12 +41,13 @@ class ArgumentTypeDto(BaseJsonable):
 
 class TestQuestionTemplateDto(BaseDto):
     __exportables__ = {
-        "is_deleted": JsonProperty(bool, dump_name='isDeleted'),
-        "version": JsonProperty(int),
+        "is_deleted": JsonProperty(bool, dump_name='isDeleted', required=False),
+        "version": JsonProperty(int, required=False),
         "time_limit": JsonProperty(int, dump_name='timeLimit', required=False),
         "description": JsonProperty(str),
         "id": JsonProperty(int, required=False),
-        "solution_code_snippet": JsonProperty("CodeSnippetDto", dump_name='solutionCodeSnippet')
+        "solution_code_snippet": JsonProperty("CodeSnippetDto", dump_name='codeSnippet'),
+        "name": JsonProperty(str)
     }
 
     is_deleted = None  # type: bool
@@ -81,9 +82,9 @@ class TestQuestionTemplateDto(BaseDto):
 class TestTemplateDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
-        "questions": JsonProperty([TestQuestionTemplateDto]),
+        "questions": JsonProperty([TestQuestionTemplateDto], dump_name="questionTemplates"),
         "is_deleted": JsonProperty(bool, dump_name="isDeleted", required=False),
-        "time_limit": JsonProperty(int, required=False),
+        "time_limit": JsonProperty(int, dump_name="timeLimit", required=False),
         "name": JsonProperty(str)
     }
 
@@ -248,10 +249,10 @@ class CodeSnippetDto(BaseDto):
 class FunctionDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
-        "return_type": JsonProperty(ArgumentType),
+        "return_type": JsonProperty(ArgumentType, dump_name="returnType"),
         "name": JsonProperty(str),
         "arguments": JsonProperty(["FunctionArgumentDto"]),
-        "testing_input": JsonProperty("FunctionInputDto", dump_name="testingInput")
+        "testing_input": JsonProperty("FunctionInputDto", dump_name="testingInput", required=False)
     }
     testing_input = None
     arguments = None
@@ -281,7 +282,7 @@ class FunctionDto(BaseDto):
 
     def to_entity(self):
         res = Function(self.id, self.name, self.return_type, [x.to_entity() for x in self.arguments],
-                       self.testing_input.to_entity())
+                       self.testing_input.to_entity() if self.testing_input else None)
         return res
 
 
@@ -306,13 +307,13 @@ class FunctionArgumentDto(BaseDto):
         return [FunctionArgumentDto.from_entity(x) for x in e_list]
 
     def to_entity(self):
-        pass
+        return FunctionArgument(id=self.id, type=self.type, name=self.name)
 
 
 class FunctionInputDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
-        "declarative_input": JsonProperty("DeclarativeFunctionInputDto", dump_name="declarativeInput")
+        "declarative_input": JsonProperty("DeclarativeFunctionInputDto", dump_name="declarativeInput", required=False)
     }
     declarative_input = None  # type: DeclarativeFunctionInputDto
     id = None  # type: int

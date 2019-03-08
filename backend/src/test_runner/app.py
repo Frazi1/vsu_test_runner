@@ -52,20 +52,6 @@ class LanguageStrategy(PyJsonStrategy):
         name_ = value["name"]
         return concrete_type[name_]
 
-
-app = Bottle(autojson=False)
-# app.install(JsonPlugin())
-app.install(EnableCors())
-# app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
-app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=True, create_session_by_default=True))
-app.install(BodyParser(encode_with_json_by_default=True))
-app.install(ControllerPlugin())
-app.install(QueryParamParser())
-app.install(PyJsonPlugin(pyjson_converter=PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()])))
-
-app_config = Config()
-
-
 def _init_services():
     logger = ConsoleLogger()
     template_service = TemplateService()
@@ -80,6 +66,22 @@ def _init_services():
                            instance_service,
                            run_service,
                            template_service)
+
+
+_service_resolver = _init_services()
+
+app = Bottle(autojson=False)
+# app.install(JsonPlugin())
+app.install(EnableCors())
+# app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
+app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=True, create_session_by_default=True))
+app.install(BodyParser(encode_with_json_by_default=True))
+app.install(ControllerPlugin())
+app.install(QueryParamParser())
+converter = PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()], logger=_service_resolver.logger)
+app.install(PyJsonPlugin(pyjson_converter=converter))
+
+app_config = Config()
 
 
 def _init_controllers(app, service_resolver):
@@ -107,7 +109,6 @@ def _init_code_runners(code_execution_service):
         code_execution_service.register_runner(r)
 
 
-_service_resolver = _init_services()
 _controllers = _init_controllers(app, _service_resolver)
 _code_executer_service = _service_resolver.code_executer_service
 _init_code_runners(_code_executer_service)
@@ -139,6 +140,8 @@ def cors():
 if __name__ == "__main__":
     code_runner = os.path.join(os.path.dirname(__file__), "coderunner")
     load_modules(code_runner, "coderunner")
+    dtos = os.path.join(os.path.dirname(__file__), "dtos")
+    load_modules(dtos, "dtos")
     run(app,
         host='localhost',
         port=8080,

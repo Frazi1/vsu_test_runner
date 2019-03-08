@@ -6,7 +6,7 @@
   </h3>
 </div>
 
-<ng-container *ngIf="_displayContent">
+<ng-container *ngIf="_displayContent && question">
   <textarea [(ngModel)]="question.description"></textarea>
   <div>
     <h2>Код решения</h2>

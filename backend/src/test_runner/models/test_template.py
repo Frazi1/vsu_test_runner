@@ -14,7 +14,7 @@ class TestTemplate(Base):
         self.questions = questions
         self.time_limit = time_limit
         self.name = name
-        self.id_ = id_
+        self.id = id_
         super(TestTemplate, self).__init__(*args, **kwargs)
 
     id = Column(Integer, primary_key=True)

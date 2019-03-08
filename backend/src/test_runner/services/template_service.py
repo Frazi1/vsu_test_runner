@@ -31,6 +31,7 @@ class TemplateService(BaseService):
     def update_test_template(self, id_, test):
         db_test = self.get_test_template_by_id(id_)
         self._db.merge(test)
+        self._db.commit()
         return db_test
 
     def delete_test_template(self, id_):

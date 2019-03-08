@@ -5,4 +5,7 @@ marshmallow==2.13.1
 PyMySQL==0.9.3
 SQLAlchemy==1.2.7
 gevent==1.2.2
-greenlet=0.4.15
+greenlet==0.4.15
+locust
+typing
+ujson

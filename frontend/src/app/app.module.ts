@@ -8,7 +8,7 @@ import { TestQuestionTemplateEditorComponent } from './components/editor/test-qu
 import { FormsModule } from '@angular/forms'
 import { TestTemplateListComponent } from './components/editor/test-template-list/test-template-list.component'
 import { NavMenuComponent } from './nav-menu/nav-menu.component'
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { TemplatesService } from './services/templates.service'
 import { FunctionEditorComponent } from './components/editor/function-signature-editor/function-editor.component'
 import { CodeTypeSelectorComponent } from './components/editor/code-type-selector/code-type-selector.component'
@@ -25,6 +25,7 @@ import { CodeEditorComponent } from './code-editor/code-editor.component'
 import { LanguageSelectorComponent } from './components/editor/language-selector/language-selector.component'
 import { FunctionDeclarativeInputEditorComponent } from './components/editor/function-declarative-input-editor/function-declarative-input-editor.component'
 import { ClassTransformer } from 'class-transformer'
+import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
 
 @NgModule({
   declarations: [
@@ -58,7 +59,12 @@ import { ClassTransformer } from 'class-transformer'
     {provide: 'ITemplateService', useClass: TemplatesService},
     // {provide: JsonConvert, useValue: jsonConvert},
     {provide: ClassTransformer, useValue: new ClassTransformer()},
-    {provide: ErrorHandler, useClass: GlobalErrorHandler}
+    {provide: ErrorHandler, useClass: GlobalErrorHandler},
+    {
+      provide:  HTTP_INTERCEPTORS,
+      useClass: ContentTypeInterceptor,
+      multi:    true
+    }
   ],
   bootstrap:    [AppComponent]
 })

@@ -39,6 +39,10 @@ export class TestTemplateEditorComponent implements OnInit {
     this.testTemplate.questionTemplates.push(new TestQuestionTemplate())
   }
 
+  private removeQuestion(q: TestQuestionTemplate) {
+    this.testTemplate.questionTemplates = this.testTemplate.questionTemplates.filter(i => i !== q)
+  }
+
   private save(): void {
     if (this.isCreating) {
       this.add()

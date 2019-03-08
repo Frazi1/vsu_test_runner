@@ -2,7 +2,7 @@ from bottle import request
 
 from controllers.base_controller import BaseController
 from dtos.dtos import CodeExecutionRequestDto, CodeExecutionResponseDto
-from dtos.schemas import FunctionScaffoldingDtoSchema, CodeExecutionRequestSchema, CodeExecutionResponseSchema
+from dtos.schemas import FunctionScaffoldingDtoSchema
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
 from services.code_executer_service import CodeExecuterService
@@ -32,8 +32,8 @@ class CodeExecutionController(BaseController):
     def supported_languages(self):
         return [e.name for e in self._code_execution_service.get_supported_languages()]
 
-    @BaseController.post('/code/run', request_body_schema=CodeExecutionRequestSchema(),
-                         response_schema=CodeExecutionResponseSchema())
+    @BaseController.post('/code/run', accepts=CodeExecutionRequestDto,
+                         returns=CodeExecutionResponseDto)
     def execute_code_snippet(self, parsed_body):
         # type: (CodeExecutionRequestDto)-> CodeExecutionResponseDto
 

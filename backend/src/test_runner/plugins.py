@@ -10,6 +10,7 @@ from sqlalchemy.orm.scoping import ScopedSession
 from typing import List
 
 from dtos.validation_exception import ValidationException
+from utils.pyjson.pyjson import PyJsonConverter
 
 
 class JsonPlugin:
@@ -187,7 +188,6 @@ class QueryParamParser(object):
 
             lower_value = value.lower()
             if lower_value == 'true':
-
                 return True
             if lower_value == 'false':
                 return False
@@ -226,3 +226,31 @@ class QueryParam:
 
 class QueryParserException(Exception):
     pass
+
+
+class PyJsonPlugin(object):
+    api = 2
+    name = 'pyjson_plugin'
+    accepts_param = 'accepts'
+    returns_param = 'returns'
+    pyjson_inject_name = 'parsed_body'
+
+    def __init__(self, pyjson_converter=None):
+        self.converter = pyjson_converter or PyJsonConverter()
+
+    def apply(self, callback, context):
+        pyjson_accept_type = getattr(context.config, self.accepts_param)  # type: List[QueryParam]
+        pyjson_returns_type = getattr(context.config, self.returns_param)
+        if not pyjson_accept_type:
+            return callback
+
+        def inner(*a, **kwa):
+            kwa[self.pyjson_inject_name] = self.converter.from_dict(request.json, pyjson_accept_type)
+
+            res = callback(*a, **kwa)
+            if pyjson_returns_type:
+                return self.converter.to_dict(res)
+            else:
+                return res
+
+        return inner

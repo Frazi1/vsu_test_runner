@@ -12,6 +12,25 @@ from models.question_answer import QuestionAnswer
 from models.test_question_template import TestQuestionTemplate
 from models.test_run import TestRun
 from models.test_template import TestTemplate
+from utils.pyjson.pyjson import BaseJsonable, JsonProperty
+
+
+class LanguageDto(BaseJsonable):
+    __exportables__ = {
+        "name": JsonProperty(LanguageEnum)
+    }
+
+    def __init__(self, name=None):
+        self.name = name
+
+
+class ArgumentTypeDto(BaseJsonable):
+    __exportables__ = {
+        "name": JsonProperty(ArgumentType)
+    }
+
+    def __init__(self, name=None):
+        self.name = name
 
 
 class TestTemplateDto(object):
@@ -72,6 +91,12 @@ class TestQuestionTemplateDto(object):
 
 
 class CodeRunResult(object):
+    __exportables__ = {
+        "language": JsonProperty(LanguageEnum),
+        "output": JsonProperty(str),
+        "output_type": JsonProperty(ArgumentType, "outputType"),
+        "error": JsonProperty(str)
+    }
     def __init__(self, language, output, output_type, error=None):
         self.language = language
         self.output = output
@@ -135,19 +160,32 @@ class FunctionScaffoldingDto(object):
         self.code = code
 
 
-class CodeExecutionRequestDto(object):
-    def __init__(self, code, language, is_plain_code, client_id=None, function_id=None, return_type=None):
-        # type: (str, LanguageEnum, str, int, ArgumentType) -> None
+class CodeExecutionRequestDto(BaseJsonable):
+    __exportables__ ={
+        "return_type": JsonProperty(ArgumentType, "returnType"),
+        "function_id": JsonProperty(int, "functionId", required=False),
+        "language": JsonProperty(LanguageEnum),
+        "code": JsonProperty(str),
+        "is_plain_code": JsonProperty(bool, "isPlainCode"),
+        "client_id": JsonProperty(str, "clientId", required=False)
+    }
+
+    def __init__(self, code='', language=None, is_plain_code=None, client_id=None, function_id=None, return_type=None):
+        # type: (str, LanguageEnum, bool, str | None, int, ArgumentType) -> None
 
         self.return_type = return_type  # type: ArgumentType
         self.function_id = function_id  # type: int
         self.language = language  # type: LanguageEnum
         self.code = code  # type: str
         self.is_plain_code = is_plain_code  # type: bool
-        self.client_id = client_id  # type: str
+        self.client_id = client_id  # type: str|None
 
 
 class CodeExecutionResponseDto(object):
+    __exportables__ = {
+        "code_run_result": JsonProperty(CodeRunResult, "codeRunResult"),
+        "client_id": JsonProperty(str, "clientId")
+    }
     def __init__(self, code_run_result, client_id=None):
         # type: (CodeRunResult, str) -> None
 

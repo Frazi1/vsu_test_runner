@@ -15,9 +15,12 @@ from controllers.run_controller import RunController
 from controllers.template_controller import TemplateController
 from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
+from models.argument_type import ArgumentType
+from models.language_enum import LanguageEnum
 from services.function_service import FunctionService
 from services.instance_service import InstanceService
 from services.run_service import RunService
+from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
 
 monkey.patch_all()
 
@@ -25,9 +28,30 @@ from bottle import Bottle, run, response, request
 
 from db_config import ENGINE
 from utils.helpers import load_modules
-from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin, QueryParamParser
+from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin, QueryParamParser, PyJsonPlugin
 from services.code_executer_service import CodeExecuterService
 from services.template_service import TemplateService
+
+
+class ArgumentTypeStrategy(PyJsonStrategy):
+    target_type = ArgumentType
+
+    def to_json(self, value):
+        return {"name": value.name}
+
+    def from_json(self, value, concrete_type=None):
+        return concrete_type[value["name"]]
+
+class LanguageStrategy(PyJsonStrategy):
+    target_type = LanguageEnum
+
+    def to_json(self, value):
+        return {"name": value.name}
+
+    def from_json(self, value, concrete_type=None):
+        name_ = value["name"]
+        return concrete_type[name_]
+
 
 app = Bottle(autojson=False)
 # app.install(JsonPlugin())
@@ -37,6 +61,7 @@ app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=True, create_session_b
 app.install(BodyParser(encode_with_json_by_default=True))
 app.install(ControllerPlugin())
 app.install(QueryParamParser())
+app.install(PyJsonPlugin(pyjson_converter=PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()])))
 
 app_config = Config()
 

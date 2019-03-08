@@ -9,7 +9,7 @@ from models.function_inputs.declarative_input_argument_item import DeclarativeIn
 class DeclarativeInputItem(Base):
     __tablename__ = 'declarative_input_item'
 
-    def __init__(self, id_, argument_items, output_value, *args, **kwargs):
+    def __init__(self, id_=None, argument_items=None, output_value=None, *args, **kwargs):
         self.id = id_
         self.argument_items = argument_items
         self.output_value = output_value

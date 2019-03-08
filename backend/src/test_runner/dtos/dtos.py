@@ -15,6 +15,12 @@ from models.test_template import TestTemplate
 from utils.pyjson.pyjson import BaseJsonable, JsonProperty
 
 
+class BaseDto(BaseJsonable):
+    def __init__(self, **kwargs):
+        for name, value in kwargs.iteritems():
+            setattr(self, name, value)
+
+
 class LanguageDto(BaseJsonable):
     __exportables__ = {
         "name": JsonProperty(LanguageEnum)
@@ -33,50 +39,32 @@ class ArgumentTypeDto(BaseJsonable):
         self.name = name
 
 
-class TestTemplateDto(object):
-    def __init__(self, id_, name, time_limit, question_dtos, is_deleted, *args, **kwargs):
-        super(TestTemplateDto, self).__init__(*args, **kwargs)
+class TestQuestionTemplateDto(BaseDto):
+    __exportables__ = {
+        "is_deleted": JsonProperty(bool, dump_name='isDeleted'),
+        "version": JsonProperty(int),
+        "time_limit": JsonProperty(int, dump_name='timeLimit', required=False),
+        "description": JsonProperty(str),
+        "id": JsonProperty(int, required=False),
+        "solution_code_snippet": JsonProperty("CodeSnippetDto", dump_name='solutionCodeSnippet')
+    }
 
-        self.id = id_  # type: int
-        self.questions = question_dtos  # type: List[TestQuestionTemplateDto]
-        self.is_deleted = is_deleted  # type: bool
-        self.time_limit = time_limit  # type: int
-        self.name = name  # type:str
-
-    @staticmethod
-    def list_of(test_templates):
-        res = [TestTemplateDto.from_entity(x) for x in test_templates]
-        return res
-
-    @classmethod
-    def from_entity(cls, e):
-        # type: (TestTemplate) -> TestTemplateDto
-        res = cls(e.id, e.name, e.time_limit, TestQuestionTemplateDto.from_list(e.questions), e.is_deleted)
-        return res
-
-    def to_entity(self):
-        return TestTemplate(self.id, self.name, self.time_limit, [x.to_entity() for x in self.questions])
-
-
-class TestQuestionTemplateDto(object):
-
-    def __init__(self, id_, name, description, time_limit, solution_code_snippet_dto, version, is_deleted):
-        self.is_deleted = is_deleted  # type: bool
-        self.version = version  # type: int
-        self.time_limit = time_limit  # type: int
-        self.description = description  # type: str
-        self.name = name  # type: str
-        self.id_ = id_  # type: int
-        self.solution_code_snippet = solution_code_snippet_dto  # type: CodeSnippetDto
+    is_deleted = None  # type: bool
+    version = None  # type: int
+    time_limit = None  # type: int
+    description = None  # type: str
+    name = None  # type: str
+    id = None  # type: int
+    solution_code_snippet = None  # type: CodeSnippetDto
 
     @classmethod
     def from_entity(cls, e):
         # type: (TestQuestionTemplate) -> TestQuestionTemplateDto
-        res = cls(e.id, e.name,
-                  e.description,
-                  e.time_limit,
-                  CodeSnippetDto.from_entity(e.solution_code_snippet),
-                  e.version, e.is_deleted)
+        res = cls(id=e.id, name=e.name,
+                  description=e.description,
+                  time_limit=e.time_limit,
+                  solution_code_snippet=CodeSnippetDto.from_entity(e.solution_code_snippet),
+                  version=e.version, is_deleted=e.is_deleted)
         return res
 
     @classmethod
@@ -86,8 +74,39 @@ class TestQuestionTemplateDto(object):
         return res
 
     def to_entity(self):
-        return TestQuestionTemplate(self.id_, self.name, self.description, self.time_limit,
+        return TestQuestionTemplate(self.id, self.name, self.description, self.time_limit,
                                     self.solution_code_snippet.to_entity(), self.version, self.is_deleted)
+
+
+class TestTemplateDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "questions": JsonProperty([TestQuestionTemplateDto]),
+        "is_deleted": JsonProperty(bool, dump_name="isDeleted", required=False),
+        "time_limit": JsonProperty(int, required=False),
+        "name": JsonProperty(str)
+    }
+
+    id = None  # type: int
+    questions = None  # type: List[TestQuestionTemplateDto]
+    is_deleted = None  # type: bool
+    time_limit = None  # type: int
+    name = None  # type:str
+
+    @staticmethod
+    def list_of(test_templates):
+        res = [TestTemplateDto.from_entity(x) for x in test_templates]
+        return res
+
+    @classmethod
+    def from_entity(cls, e):
+        # type: (TestTemplate) -> TestTemplateDto
+        res = cls(id=e.id, name=e.name, time_limit=e.time_limit,
+                  questions=TestQuestionTemplateDto.from_list(e.questions), is_deleted=e.is_deleted)
+        return res
+
+    def to_entity(self):
+        return TestTemplate(self.id, self.name, self.time_limit, [x.to_entity() for x in self.questions])
 
 
 class CodeRunResult(object):
@@ -97,6 +116,7 @@ class CodeRunResult(object):
         "output_type": JsonProperty(ArgumentType, "outputType"),
         "error": JsonProperty(str)
     }
+
     def __init__(self, language, output, output_type, error=None):
         self.language = language
         self.output = output
@@ -161,7 +181,7 @@ class FunctionScaffoldingDto(object):
 
 
 class CodeExecutionRequestDto(BaseJsonable):
-    __exportables__ ={
+    __exportables__ = {
         "return_type": JsonProperty(ArgumentType, "returnType"),
         "function_id": JsonProperty(int, "functionId", required=False),
         "language": JsonProperty(LanguageEnum),
@@ -178,7 +198,7 @@ class CodeExecutionRequestDto(BaseJsonable):
         self.language = language  # type: LanguageEnum
         self.code = code  # type: str
         self.is_plain_code = is_plain_code  # type: bool
-        self.client_id = client_id  # type: str|None
+        self.client_id = client_id  # type: (str|None)
 
 
 class CodeExecutionResponseDto(object):
@@ -186,6 +206,7 @@ class CodeExecutionResponseDto(object):
         "code_run_result": JsonProperty(CodeRunResult, "codeRunResult"),
         "client_id": JsonProperty(str, "clientId")
     }
+
     def __init__(self, code_run_result, client_id=None):
         # type: (CodeRunResult, str) -> None
 
@@ -200,43 +221,62 @@ class CreateFunctionTestingInputRequestDto(object):
         self.declarative_input = declarative_input
 
 
-class CodeSnippetDto(object):
-    def __init__(self, id_, language, code, function_dto, *args, **kwargs):
-        super(CodeSnippetDto, self).__init__(*args, **kwargs)
-        self.id = id_  # type: int
-        self.function = function_dto  # type: FunctionDto
-        self.code = code  # type: str
-        self.language = language  # type: LanguageEnum
+class CodeSnippetDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "function": JsonProperty("FunctionDto"),
+        "code": JsonProperty(str),
+        "language": JsonProperty(LanguageEnum)
+    }
+
+    id = None  # type: int
+    function = None  # type: FunctionDto
+    code = None  # type: str
+    language = None  # type: LanguageEnum
 
     @classmethod
     def from_entity(cls, s):
         # type: (CodeSnippet) -> CodeSnippetDto
-        res = cls(s.id, s.language, s.code, FunctionDto.from_function(s.function))
+        res = cls(id=s.id, language=s.language, code=s.code, function=FunctionDto.from_function(s.function))
         return res
 
     def to_entity(self):
-        res = CodeSnippet(self.id, self.language, self.code, self.function.to_entity())
+        res = CodeSnippet(id=self.id, language=self.language, code=self.code, function=self.function.to_entity())
         return res
 
 
-class FunctionDto(object):
-    def __init__(self, id=None, name=None, return_type=None, argument_dtos=None, function_input_dto=None, *args,
-                 **kwargs):
-        super(FunctionDto, self).__init__(*args, **kwargs)
-        self.testing_input = function_input_dto  # type: FunctionInputDto
-        self.arguments = argument_dtos  # type: List[FunctionArgumentDto]
-        self.return_type = return_type  # type: ArgumentType
-        self.name = name  # type: str
-        self.id = id  # type: int
+class FunctionDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "return_type": JsonProperty(ArgumentType),
+        "name": JsonProperty(str),
+        "arguments": JsonProperty(["FunctionArgumentDto"]),
+        "testing_input": JsonProperty("FunctionInputDto", dump_name="testingInput")
+    }
+    testing_input = None
+    arguments = None
+    return_type = None
+    name = None
+    id = None
+
+    @classmethod
+    def create(cls, id_=None, name=None, return_type=None, argument_dtos=None, function_input_dto=None):
+        res = cls()
+        res.id = id_
+        res.testing_input = function_input_dto  # type: FunctionInputDto
+        res.arguments = argument_dtos  # type: List[FunctionArgumentDto]
+        res.return_type = return_type  # type: ArgumentType
+        res.name = name  # type: str  # type: int
+        return res
 
     @classmethod
     def from_function(cls, function):
         # type: (Function) -> FunctionDto
-        res = cls(function.id,
-                  function.name,
-                  function.return_type,
-                  FunctionArgumentDto.list_of(function.arguments),
-                  FunctionInputDto.from_entity(function.testing_input))
+        res = cls.create(function.id,
+                         function.name,
+                         function.return_type,
+                         FunctionArgumentDto.list_of(function.arguments),
+                         FunctionInputDto.from_entity(function.testing_input))
         return res
 
     def to_entity(self):
@@ -245,17 +285,20 @@ class FunctionDto(object):
         return res
 
 
-class FunctionArgumentDto(object):
-    def __init__(self, id_, type_, name, *args, **kwargs):
-        super(FunctionArgumentDto, self).__init__(*args, **kwargs)
-        self.name = name
-        self.type = type_
-        self.id = id_
+class FunctionArgumentDto(BaseDto):
+    __exportables__ = {
+        "name": JsonProperty(str),
+        "type": JsonProperty(ArgumentType),
+        "id": JsonProperty(int, required=False)
+    }
+    name = None  # type: str
+    type = None  # type: ArgumentType
+    id = None  # type: int
 
     @classmethod
     def from_entity(cls, e):
         # type: (FunctionArgument) -> FunctionArgumentDto
-        res = cls(e.id, e.type, e.name)
+        res = cls(id=e.id, type=e.type, name=e.name)
         return res
 
     @classmethod
@@ -266,10 +309,13 @@ class FunctionArgumentDto(object):
         pass
 
 
-class FunctionInputDto(object):
-    def __init__(self, id_, declarative_input=None):
-        self.declarative_input = declarative_input  # type: DeclarativeFunctionInputDto
-        self.id_ = id_
+class FunctionInputDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "declarative_input": JsonProperty("DeclarativeFunctionInputDto", dump_name="declarativeInput")
+    }
+    declarative_input = None  # type: DeclarativeFunctionInputDto
+    id = None  # type: int
 
     @classmethod
     def from_entity(cls, e):
@@ -277,7 +323,7 @@ class FunctionInputDto(object):
         if not e:
             return None
 
-        res = cls(e.id)
+        res = cls(id=e.id)
         if isinstance(e, DeclarativeFunctionInput):
             res.declarative_input = DeclarativeFunctionInputDto.from_entity(e)
         return res
@@ -287,27 +333,33 @@ class FunctionInputDto(object):
             return DeclarativeFunctionInput(items=[x.to_entity() for x in self.declarative_input.items])
 
 
-class DeclarativeFunctionInputDto(object):
-    def __init__(self, declarative_items_dtos):
-        self.items = declarative_items_dtos  # type: List[DeclarativeInputItemDto]
+class DeclarativeFunctionInputDto(BaseDto):
+    __exportables__ = {
+        "items": JsonProperty(["DeclarativeInputItemDto"])
+    }
+    items = None  # type: List[DeclarativeInputItemDto]
 
     @classmethod
     def from_entity(cls, e):
         # type: (DeclarativeFunctionInput) -> DeclarativeFunctionInputDto
-        res = cls(DeclarativeInputItemDto)
+        res = cls(items=DeclarativeInputItemDto)
         return res
 
 
-class DeclarativeInputItemDto(object):
-    def __init__(self, id_, declarative_argument_item_dtos, output_value):
-        self.id_ = id_  # type: int
-        self.declarative_argument_item_dtos = declarative_argument_item_dtos  # type: List[DeclarativeInputArgumentItemDto]
-        self.output_value = output_value  # type: str
+class DeclarativeInputItemDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int),
+        "declarative_argument_item_dtos": JsonProperty(["DeclarativeInputArgumentItemDto"], dump_name="argumentItems")
+    }
+    id = None  # type: int
+    declarative_argument_item_dtos = None  # type: List[DeclarativeInputArgumentItemDto]
+    output_value = None  # type: str
 
     @classmethod
     def from_entity(cls, e):
         # type: (DeclarativeInputItem) -> DeclarativeInputItemDto
-        res = cls(e.id, DeclarativeInputArgumentItemDto.from_list(e.argument_items), e.output_value)
+        res = cls(id=e.id, declarative_argument_item_dtos=DeclarativeInputArgumentItemDto.from_list(e.argument_items),
+                  output_value=e.output_value)
         return res
 
     @classmethod
@@ -318,22 +370,27 @@ class DeclarativeInputItemDto(object):
 
     def to_entity(self):
         # type: () -> DeclarativeInputItem
-        res = DeclarativeInputItem(self.id_, [x.to_entity() for x in self.declarative_argument_item_dtos],
+        res = DeclarativeInputItem(self.id, [x.to_entity() for x in self.declarative_argument_item_dtos],
                                    self.output_value)
         return res
 
 
-class DeclarativeInputArgumentItemDto(object):
-    def __init__(self, id_, argument_index, input_type, input_value):
-        self.id_ = id_  # type: int
-        self.argument_index = argument_index  # type: int
-        self.input_type = input_type  # type: ArgumentType
-        self.input_value = input_value  # type: str
+class DeclarativeInputArgumentItemDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "argument_index": JsonProperty(int, dump_name="argumentIndex"),
+        "input_type": JsonProperty(ArgumentType, dump_name="argumentIndex"),
+        "input_value": JsonProperty(str, dump_name="inputValue")
+    }
+    id = None  # type: int
+    argument_index = None  # type: int
+    input_type = None  # type: ArgumentType
+    input_value = None  # type: str
 
     @classmethod
     def from_entity(cls, e):
         # type: (DeclarativeInputArgumentItem) -> DeclarativeInputArgumentItemDto
-        res = cls(e.id, e.argument_index, e.input_type, e.input_value)
+        res = cls(id=e.id, argument_index=e.argument_index, input_type=e.input_type, input_value=e.input_value)
         return res
 
     @classmethod
@@ -344,5 +401,5 @@ class DeclarativeInputArgumentItemDto(object):
 
     def to_entity(self):
         # type: ()-> DeclarativeInputArgumentItem
-        res = DeclarativeInputArgumentItem(self.id_, self.argument_index, self.input_type, self.input_value)
+        res = DeclarativeInputArgumentItem(self.id, self.argument_index, self.input_type, self.input_value)
         return res

@@ -45,7 +45,12 @@ class DeclarativeInputItemSchema(Schema):
                           load_from='outputValue',
                           dump_to='outputValue')  # type: str
 
-    argument_items = Nested(DeclarativeInputArgumentItemSchema)  # type: List[DeclarativeInputArgumentItem]
+    argument_items = Nested(DeclarativeInputArgumentItemSchema,
+                            many=True,
+                            allow_none=False,
+                            required=True,
+                            load_from='argumentItems',
+                            dump_to='argumentItems')  # type: List[DeclarativeInputArgumentItem]
 
     @post_load()
     def create_class(self, value):

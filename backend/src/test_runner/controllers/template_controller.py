@@ -16,7 +16,7 @@ class TemplateController(BaseController):
         super(TemplateController, self).__init__(bottle_app, logger)
         self.templates_service = templates_service
 
-    @BaseController.get('/template', response_schema=TestTemplateDtoSchema(many=True),
+    @BaseController.get('/template', returns=[TestTemplateDto],
                         query=[QueryParam('includeDeleted', bool, 'include_deleted')])
     def get_test_templates(self, include_deleted):
         # type: (bool) -> List[TestTemplateDto]

@@ -241,11 +241,10 @@ class PyJsonPlugin(object):
     def apply(self, callback, context):
         pyjson_accept_type = getattr(context.config, self.accepts_param)  # type: List[QueryParam]
         pyjson_returns_type = getattr(context.config, self.returns_param)
-        if not pyjson_accept_type:
-            return callback
 
         def inner(*a, **kwa):
-            kwa[self.pyjson_inject_name] = self.converter.from_dict(request.json, pyjson_accept_type)
+            if pyjson_accept_type:
+                kwa[self.pyjson_inject_name] = self.converter.from_dict(request.json, pyjson_accept_type)
 
             res = callback(*a, **kwa)
             if pyjson_returns_type:

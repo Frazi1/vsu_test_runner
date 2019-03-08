@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load
-from marshmallow.fields import Nested, String, Integer, List, Boolean
+from marshmallow.fields import Nested, String, Integer, Boolean
 
 from dtos import CodeExecutionRequestDto, FunctionDto
 from models.argument_type import ArgumentType
@@ -70,8 +70,7 @@ class CodeSnippetSchema(Schema):
     language = Nested(LanguageSchema,
                       required=False,
                       allow_none=True)
-    code = List(String(),
-                required=False,
+    code = String(required=False,
                 allow_none=True
                 )
     function = Nested(FunctionDtoSchema,
@@ -82,8 +81,6 @@ class CodeSnippetSchema(Schema):
 
     @post_load()
     def create_class(self, value):
-        code_lines = value.get('code') or []
-        value['code'] = "\n".join(code_lines)
         return CodeSnippet(**value)
 
 

@@ -8,7 +8,7 @@ from models.argument_type import ArgumentType
 class DeclarativeInputArgumentItem(Base):
     __tablename__ = 'declarative_input_argument_item'
 
-    def __init__(self, id_, argument_index, input_type, input_value, *args, **kwargs):
+    def __init__(self, id_=None, argument_index=None, input_type=None, input_value=None, *args, **kwargs):
         self.id = id_
         self.argument_index = argument_index
         self.input_type = input_type

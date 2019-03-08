@@ -12,8 +12,8 @@ from models.function_parameter import FunctionArgument
 class Function(Base):
     __tablename__ = "function"
 
-    def __init__(self, id_, name, return_type, arguments, testing_input, *args, **kwargs):
-        self.id = id_
+    def __init__(self, id, name, return_type, arguments, testing_input, *args, **kwargs):
+        self.id = id
         self.name = name
         self.return_type = return_type
         self.arguments = arguments

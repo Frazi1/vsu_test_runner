@@ -4,6 +4,6 @@
   <h3>Code</h3>
   <app-function-editor [functionObj]="_questionRun.answerCodeSnippet.functionObj"
                        [isReadOnly]="true"></app-function-editor>
-  <textarea [(ngModel)]="_code"></textarea>
+  <textarea [(ngModel)]="_questionRun.answerCodeSnippet.code"></textarea>
   <button (click)="runCode()">Запустить код</button>
 </div>

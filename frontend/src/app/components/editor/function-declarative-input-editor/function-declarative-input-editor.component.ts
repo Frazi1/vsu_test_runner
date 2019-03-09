@@ -28,6 +28,7 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   constructor() { }
 
   ngOnInit() {
+    this._input = this.dump(this.functionObj.testingInput.declarativeInput)
     this._parse$.pipe(
       filter(_ => this._input != null),
       tap(_ => {
@@ -48,9 +49,9 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
 
   private parse(text: string): DeclarativeFunctionInput {
     const res = new DeclarativeFunctionInput()
-    res.items = this._input
-                    .split('\n')
-                    .map(i => this.parseDeclarativeItem(i))
+    res.items = text
+      .split('\n')
+      .map(i => this.parseDeclarativeItem(i))
     return res
   }
 
@@ -74,4 +75,15 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
                    })
   }
 
+  private dump(input: DeclarativeFunctionInput): string {
+    return input.items.map(i => this.dumpDeclarativeItem(i)).join('\n')
+  }
+
+  private dumpDeclarativeItem(item: DeclarativeInputItem): string {
+    let res = item.argumentItems.map(a => a.inputValue).join(', ')
+    if (item.outputValue) {
+      res += ` -> ${item.outputValue}`
+    }
+    return res
+  }
 }

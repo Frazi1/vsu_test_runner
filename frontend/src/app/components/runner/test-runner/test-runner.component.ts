@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router'
 import { Subscription } from 'rxjs/index'
 import { TestRun } from '../../../shared/runner/TestRun'
 import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion'
+import { TestRunAnswerUpdate } from '../../../shared/runner/TestRunAnswerUpdate'
 
 @Component({
   selector:    'app-test-runner',
@@ -41,5 +42,11 @@ export class TestRunnerComponent implements OnInit {
     if (this._currentQuestionIndex > 0) {
       this._currentQuestionIndex--
     }
+  }
+
+  private save(): void {
+    const updates = this._testRun.questionAnswers.map(a => new TestRunAnswerUpdate(a.id, a.answerCodeSnippet))
+    this.runService.updateTestRunAnswers(this._testRun.id, updates)
+        .subscribe(res => this._testRun = res)
   }
 }

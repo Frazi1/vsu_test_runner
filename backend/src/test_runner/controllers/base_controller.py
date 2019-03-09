@@ -64,6 +64,7 @@ class BaseController(object):
 
                 if self._route_prefix:
                     result_route = self._route_prefix.rstrip('/') + '/' + result_route
+                    result_route = result_route.rstrip('/')
 
                 kwargs['_controller_instance'] = self
                 router = router_provider(self.app)(result_route, *args, **kwargs)

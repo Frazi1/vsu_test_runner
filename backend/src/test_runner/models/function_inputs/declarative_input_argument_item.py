@@ -18,7 +18,7 @@ class DeclarativeInputArgumentItem(Base):
     id = Column(Integer, primary_key=True)  # type: int
     argument_index = Column(Integer, nullable=false)
     input_type = Column(Enum(ArgumentType), nullable=false)  # type: ArgumentType
-    input_value = Text()  # type: str
+    input_value = Column(Text)  # type: str
 
     declarative_input_item = relationship("DeclarativeInputItem",
                                           back_populates='argument_items')  # type: 'DeclarativeInputItem'

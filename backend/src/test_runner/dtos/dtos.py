@@ -343,14 +343,15 @@ class DeclarativeFunctionInputDto(BaseDto):
     @classmethod
     def from_entity(cls, e):
         # type: (DeclarativeFunctionInput) -> DeclarativeFunctionInputDto
-        res = cls(items=DeclarativeInputItemDto)
+        res = cls(items=[DeclarativeInputItemDto.from_entity(x) for x in e.items])
         return res
 
 
 class DeclarativeInputItemDto(BaseDto):
     __exportables__ = {
-        "id": JsonProperty(int),
-        "declarative_argument_item_dtos": JsonProperty(["DeclarativeInputArgumentItemDto"], dump_name="argumentItems")
+        "id": JsonProperty(int, required=False),
+        "declarative_argument_item_dtos": JsonProperty(["DeclarativeInputArgumentItemDto"], dump_name="argumentItems"),
+        "output_value": JsonProperty(str, dump_name="outputValue")
     }
     id = None  # type: int
     declarative_argument_item_dtos = None  # type: List[DeclarativeInputArgumentItemDto]
@@ -380,7 +381,7 @@ class DeclarativeInputArgumentItemDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
         "argument_index": JsonProperty(int, dump_name="argumentIndex"),
-        "input_type": JsonProperty(ArgumentType, dump_name="argumentIndex"),
+        "input_type": JsonProperty(ArgumentType, dump_name="inputType"),
         "input_value": JsonProperty(str, dump_name="inputValue")
     }
     id = None  # type: int

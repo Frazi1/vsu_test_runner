@@ -24,7 +24,7 @@ class TestTemplate(Base):
     questions = relationship(
         "TestQuestionTemplate",
         secondary=test_template_test_question_template_association,
-    ) # type: List[TestQuestionTemplate]
+    )  # type: List[TestQuestionTemplate]
 
     def __repr__(self):
         return "<TestTemplate(id='{}', name='{}', time_limit='{}', questions={})>" \

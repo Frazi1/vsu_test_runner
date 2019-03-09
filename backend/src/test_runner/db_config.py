@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 dialect = "mysql+pymysql"
 
@@ -19,4 +18,4 @@ print "Connection string: {}".format(connection_string)
 
 
 ENGINE = create_engine(connection_string, echo=True)
-Session = sessionmaker(ENGINE)
+# Session = sessionmaker(ENGINE)

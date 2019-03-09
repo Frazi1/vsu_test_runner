@@ -1,6 +1,9 @@
 import os
 import pkgutil
 
+from sqlalchemy import inspect
+from sqlalchemy.orm.attributes import InstrumentedAttribute
+
 
 class Module:
     def __init__(self, name, loader, ispkg):
@@ -20,3 +23,10 @@ def load_modules(package_path, target_module_name=None):
             __import__(full_module_name, fromlist=list_)
         else:
             load_modules(os.path.join(package_path, mod.name), full_module_name)
+
+
+def is_relationship_loaded(entity, attr):
+    # type:(any, (str|InstrumentedAttribute))-> bool
+    ins = inspect(entity)
+    key = attr if isinstance(attr, str) else attr.key
+    return key not in ins.unloaded

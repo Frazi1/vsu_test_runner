@@ -1,6 +1,9 @@
 from sqlalchemy.orm import joinedload, raiseload, Query
 from typing import List
 
+from dtos.dtos import TestRunAnswerUpdateDto
+from models.code_snippet import CodeSnippet
+from models.function import Function
 from models.question_answer import QuestionAnswer
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
@@ -31,11 +34,13 @@ class RunService(BaseService):
         # type:() -> Query
         return self._db.query(TestRun) \
             .options(
-            joinedload(
-                TestRun.question_answers)
+            joinedload(TestRun.question_answers)
                 .joinedload(QuestionAnswer.question_instance)
                 .joinedload(QuestionInstance.solution_code_snippet),
-            joinedload(TestRun.question_answers).joinedload(QuestionAnswer.code_snippet),
+            joinedload(TestRun.question_answers)
+                .joinedload(QuestionAnswer.code_snippet)
+                .joinedload(CodeSnippet.function)
+                .joinedload(Function.arguments),
             joinedload(TestRun.test_instance),
             raiseload('*'))
 
@@ -50,3 +55,20 @@ class RunService(BaseService):
     def _create_empty_question_answers(self, test_instance, test_run):
         # type: (TestInstance, TestRun) -> List(QuestionAnswer)
         return [QuestionAnswer(test_run=test_run, question_instance=q) for q in test_instance.questions]
+
+    def update_test_run_answers(self, test_run_id, update_dtos):
+        # type: (int, List[TestRunAnswerUpdateDto]) -> TestRun
+
+        db_test_run = self.get_active_test_run(test_run_id)
+        for update in update_dtos:
+            db_answer = next((x for x in db_test_run.question_answers if x.id == update.answer_id), None)
+
+            if not db_answer.code_snippet:
+                db_answer.code_snippet = CodeSnippet()
+                db_answer.code_snippet.function_id = db_answer.question_instance.solution_code_snippet.function_id
+
+            db_answer.code_snippet.code = update.answer_code_snippet.code
+            db_answer.code_snippet.language = update.answer_code_snippet.language
+
+        self._db.commit()
+        return db_test_run

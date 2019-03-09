@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from typing import List
 
 from models.argument_type import ArgumentType
@@ -12,6 +14,7 @@ from models.question_answer import QuestionAnswer
 from models.test_question_template import TestQuestionTemplate
 from models.test_run import TestRun
 from models.test_template import TestTemplate
+from utils.helpers import is_relationship_loaded
 from utils.pyjson.pyjson import BaseJsonable, JsonProperty
 
 
@@ -125,13 +128,21 @@ class CodeRunResult(object):
         self.error = error
 
 
-class TestRunQuestionAnswerDto(object):
-    def __init__(self, id, name, description, answer_code_snippet, function_id):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.answer_code_snippet = answer_code_snippet
-        self.function_id = function_id
+class TestRunQuestionAnswerDto(BaseJsonable):
+    __exportables__ = {
+        "id": JsonProperty(int),
+        "name": JsonProperty(str),
+        "description": JsonProperty(str),
+        "answer_code_snippet": JsonProperty("CodeSnippetDto", dump_name="answerCodeSnippet", required=False),
+        "function_id": JsonProperty(int, dump_name="functionId")
+    }
+
+    def __init__(self, id=None, name=None, description=None, answer_code_snippet=None, function_id=None):
+        self.id = id  # type:int
+        self.name = name  # type:str
+        self.description = description  # type:str
+        self.answer_code_snippet = answer_code_snippet  # type:CodeSnippetDto
+        self.function_id = function_id  # type:int
 
     @classmethod
     def map_from(cls, question_answer):
@@ -139,23 +150,35 @@ class TestRunQuestionAnswerDto(object):
         cls_ = cls(id=question_answer.id,
                    name=question_answer.question_instance.name,
                    description=question_answer.question_instance.description,
-                   answer_code_snippet=question_answer.code_snippet,
+                   answer_code_snippet=CodeSnippetDto.from_entity(
+                       question_answer.code_snippet) if question_answer.code_snippet is not None else None,
                    function_id=question_answer.question_instance.solution_code_snippet.function_id)
         return cls_
 
 
-class TestRunDto(object):
-    def __init__(self, id, name, started_at, ends_at, finished_at, time_limit, question_answers):
-        self.id = id
-        self.name = name
-        self.started_at = started_at
-        self.ends_at = ends_at
-        self.finished_at = finished_at
-        self.time_limit = time_limit
-        self.question_answers = question_answers
+class TestRunDto(BaseJsonable):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "name": JsonProperty(str),
+        "started_at": JsonProperty(datetime, dump_name="startedAt"),
+        "ends_at": JsonProperty(datetime, dump_name="endsAt", required=False),
+        "finished_at": JsonProperty(datetime, dump_name="finishedAt", required=False),
+        "time_limit": JsonProperty(int, dump_name="timeLimit", required=False),
+        "question_answers": JsonProperty([TestRunQuestionAnswerDto], dump_name="questionAnswers")
+    }
+
+    def __init__(self, id=None, name=None, started_at=None, ends_at=None, finished_at=None, time_limit=None,
+                 question_answers=None):
+        self.id = id  # type: int
+        self.name = name  # type: str
+        self.started_at = started_at  # type: datetime
+        self.ends_at = ends_at  # type: datetime
+        self.finished_at = finished_at  # type: datetime
+        self.time_limit = time_limit  # type: int
+        self.question_answers = question_answers  # type: List[TestRunQuestionAnswerDto]
 
     @classmethod
-    def map_from(cls, test_run):
+    def from_entity(cls, test_run):
         # type: (TestRun) -> TestRunDto
         cls_ = cls(id=test_run.id,
                    name=test_run.test_instance.name,
@@ -165,6 +188,15 @@ class TestRunDto(object):
                    time_limit=test_run.test_instance.time_limit,
                    question_answers=[TestRunQuestionAnswerDto.map_from(x) for x in test_run.question_answers])
         return cls_
+
+
+class TestRunAnswerUpdateDto(BaseJsonable):
+    __exportables__ = {
+        "answer_id": JsonProperty(int, dump_name="answerId"),
+        "answer_code_snippet": JsonProperty("CodeSnippetDto", dump_name="answerCodeSnippet")
+    }
+    answer_id = None  # type: int
+    answer_code_snippet = None  # type: CodeSnippetDto
 
 
 class TestInstanceUpdate(object):
@@ -225,7 +257,7 @@ class CreateFunctionTestingInputRequestDto(object):
 class CodeSnippetDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
-        "function": JsonProperty("FunctionDto"),
+        "function": JsonProperty("FunctionDto", required=False),
         "code": JsonProperty(str),
         "language": JsonProperty(LanguageEnum)
     }
@@ -236,9 +268,15 @@ class CodeSnippetDto(BaseDto):
     language = None  # type: LanguageEnum
 
     @classmethod
-    def from_entity(cls, s):
+    def from_entity(cls, e):
         # type: (CodeSnippet) -> CodeSnippetDto
-        res = cls(id=s.id, language=s.language, code=s.code, function=FunctionDto.from_function(s.function))
+        if is_relationship_loaded(e, CodeSnippet.function):
+            function_dto = FunctionDto.from_entity(e.function)
+        else:
+            function_dto = None
+        res = cls(id=e.id, language=e.language, code=e.code,
+                  function=function_dto
+                  )
         return res
 
     def to_entity(self):
@@ -271,13 +309,16 @@ class FunctionDto(BaseDto):
         return res
 
     @classmethod
-    def from_function(cls, function):
+    def from_entity(cls, function):
         # type: (Function) -> FunctionDto
+        function_input_dto = FunctionInputDto.from_entity(function.testing_input) \
+            if is_relationship_loaded(function, Function.testing_input) else None
+
         res = cls.create(function.id,
                          function.name,
                          function.return_type,
                          FunctionArgumentDto.list_of(function.arguments),
-                         FunctionInputDto.from_entity(function.testing_input))
+                         function_input_dto)
         return res
 
     def to_entity(self):

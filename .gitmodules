@@ -1,0 +1,3 @@
+[submodule "backend/src/test_runner/utils/pyjson"]
+	path = backend/src/test_runner/utils/pyjson
+	url = https://github.com/Frazi1/pyjson

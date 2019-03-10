@@ -83,16 +83,17 @@ class RunService(BaseService):
             self.update_test_run_answers(test_run_id, update_dtos)
         db_test_run = self.get_active_test_run(test_run_id)
 
-        for answer in db_test_run.question_answers:
-            results = self._code_executer_service.run_testing_set(answer.code_snippet, answer.code_snippet.function)
+        validation_results = [
+            self._code_executer_service.run_testing_set(answer.code_snippet, answer.code_snippet.function) for
+            answer in db_test_run.question_answers
+        ]
+
+        for index in range(0, len(validation_results)):
+            answer_results_mapping = validation_results[index]
+
+            answer = db_test_run.question_answers[index]
+            answer.is_validated = True
+            answer.validation_passed = all((x[0] for x in answer_results_mapping))
 
         db_test_run.finished_at = datetime.now()
         self._db.commit()
-
-
-
-
-
-
-
-

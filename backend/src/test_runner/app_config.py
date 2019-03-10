@@ -1,6 +1,6 @@
 class Config:
     _tmp_path = "e:\_TMP_"
-    _python_default_template_path = "E:\Projects\\vsu_test_runner\\ackend\src\\test_runner\coderunner\\templates"
+    _python_default_template_path = ".\coderunner\\templates\python_process_template.py"
 
     def __init__(self):
         pass

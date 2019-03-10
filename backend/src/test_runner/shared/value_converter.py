@@ -10,13 +10,15 @@ class ValueConverter:
     @staticmethod
     def from_string(type_, value):
         if type_ is ArgumentType.STRING:
-            return value
+            if value == "":
+                return value
+            return ujson.loads(value)
         elif type_ is ArgumentType.INTEGER:
             return int(value)
         elif type_ is ArgumentType.ARRAY_STRING:
             return ujson.loads(value)
         elif type_ is ArgumentType.ARRAY_INTEGER:
-            return [int(x) for x in ujson.loads(value)]
+            return ujson.loads(value)
         else:
             raise NotImplemented
 

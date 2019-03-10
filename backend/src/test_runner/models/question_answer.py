@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy import Column, Integer, ForeignKey, Boolean, text
 from sqlalchemy.orm import relationship
 
 from models import Base
@@ -14,6 +14,8 @@ class QuestionAnswer(Base):
     test_run = relationship("TestRun", back_populates="question_answers")  # type: TestRun
     question_instance = relationship("QuestionInstance", back_populates="answers")  # type: QuestionInstance
     code_snippet = relationship("CodeSnippet", back_populates="question_answer")  # type: CodeSnippet
+    is_validated = Column(Boolean, server_default=text("FALSE"))
+    validation_passed = Column(Boolean, nullable=True)
 
     test_run_id = Column(Integer, ForeignKey('test_run.id'))
     question_instance_id = Column(Integer, ForeignKey('question_instance.id'))

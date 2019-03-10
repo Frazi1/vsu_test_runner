@@ -2,6 +2,7 @@ from typing import List
 
 from coderunner.base_runner import BaseRunner
 from coderunner.execution_type import ExecutionType
+from coderunner.function_run_plan import FunctionRunPlan
 from dtos.dtos import FunctionScaffoldingDto, CodeRunResult, CodeExecutionRequestDto
 from models.code_snippet import CodeSnippet
 from models.function import Function
@@ -69,8 +70,20 @@ class CodeExecuterService:
         return FunctionScaffoldingDto(code, language, func)
 
     def run_testing_set(self, code_snippet, function_):
-        # type: (CodeSnippet, Function) -> List[CodeRunResult]
+        # type: (CodeSnippet, Function) -> List[(bool,CodeRunResult)]
         plans = self._function_service.get_function_run_plans(function_.id, code_snippet.code, code_snippet.language)
         runner = self._find_runner(code_snippet.language)
-        res = [runner.execute_default_template(plan) for plan in plans]
+        results = [runner.execute_default_template(plan) for plan in plans]
+        validation_results = self.validate_results(results, plans)
+        return validation_results
+
+    def validate_results(self, code_execution_results, plans):
+        # type: (List[CodeRunResult], List[FunctionRunPlan]) -> (bool, CodeRunResult)
+        res = []
+        for index in range(0, len(code_execution_results)):
+            if not code_execution_results[index].error and \
+                    code_execution_results[index].output == plans[index].expected_result:
+                res.append((True, code_execution_results[index]))
+            else:
+                res.append((False, code_execution_results[index]))
         return res

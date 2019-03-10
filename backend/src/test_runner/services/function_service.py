@@ -8,6 +8,7 @@ from models.function import Function
 from models.function_inputs.base_function_input import DeclarativeFunctionInput
 from services.base_service import BaseService
 from services.testing_input_service import TestingInputService
+from shared.value_converter import ValueConverter
 
 
 class FunctionService(BaseService):
@@ -41,7 +42,13 @@ class FunctionService(BaseService):
         function_ = self.get_function_by_id(function_id)
         testing_input = self._testing_input_service.get_testing_input_by_function_id(function_id)
         if isinstance(testing_input, DeclarativeFunctionInput):
-            res = [FunctionRunPlan(language, code, function_, [
-                FunctionRunArgument(arg.input_type, arg.input_value) for arg in input.argument_items
-            ]) for input in testing_input.items]
+            res = [
+                FunctionRunPlan(
+                    language,
+                    code,
+                    function_, [
+                        FunctionRunArgument(arg.input_type, arg.input_value) for arg in input.argument_items
+                    ],
+                    ValueConverter.from_string(function_.return_type, input.output_value)
+                ) for input in testing_input.items]
             return res

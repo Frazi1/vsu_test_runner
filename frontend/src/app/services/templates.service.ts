@@ -38,12 +38,9 @@ export class TemplatesService extends BaseService implements ITemplateService {
     return this.http.post<number>(this.buildUrl(), this.json.serialize(testTemplate))
   }
 
-  updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate> {
+  updateTemplate(testTemplate: TestTemplate): Observable<number> {
     const json = this.json.serialize(testTemplate)
-    return this.http.put(this.buildUrl(testTemplate.id), json)
-               .pipe(
-                 map(jsonValue => this.json.plainToClass(TestTemplate, jsonValue as Object))
-               )
+    return this.http.put<number>(this.buildUrl(testTemplate.id), json)
   }
 
   deleteTemplate(id: number): Observable<any> {

@@ -1,6 +1,7 @@
 import { CodeType } from '../CodeType'
 import { CodeLanguage } from '../CodeLanguage'
-import { Type } from 'class-transformer'
+import { Exclude, Type } from 'class-transformer'
+import { ExecutionType } from '../ExecutionType'
 
 export class CodeExecutionRequest {
   clientId: string = undefined
@@ -16,27 +17,35 @@ export class CodeExecutionRequest {
 
   code: string = undefined
 
-  isPlainCode: boolean = undefined
+  @Exclude()
+  private _executionType: ExecutionType = undefined
 
   private constructor(clientId: string, returnType: CodeType, functionId: number, language: CodeLanguage, code: string,
-                      isPlainCode: boolean) {
+                      executionType: ExecutionType) {
     this.clientId = clientId
     this.returnType = returnType
     this.functionId = functionId
     this.language = language
     this.code = code
-    this.isPlainCode = isPlainCode
+    this.executionType = executionType
   }
 
-
-  public static fromReturnType(language: CodeLanguage, code: string, returnType: CodeType, isPlainCode: boolean,
-                               clientId: string = null): CodeExecutionRequest {
-    return new CodeExecutionRequest(clientId, returnType, null, language, code, isPlainCode)
+  public get executionType(): string {
+    return ExecutionType[this._executionType]
   }
 
-  public static fromFunctionId(language: CodeLanguage, code: string, functionId: number, isPlainCode: boolean,
+  public set executionType(value) {
+    this._executionType = ExecutionType[value]
+  }
+
+  public static fromReturnType(language: CodeLanguage, code: string, returnType: CodeType, executionType: ExecutionType,
                                clientId: string = null): CodeExecutionRequest {
-    return new CodeExecutionRequest(clientId, null, functionId, language, code, isPlainCode)
+    return new CodeExecutionRequest(clientId, returnType, null, language, code, executionType)
+  }
+
+  public static fromFunctionId(language: CodeLanguage, code: string, functionId: number, executionType: ExecutionType,
+                               clientId: string = null): CodeExecutionRequest {
+    return new CodeExecutionRequest(clientId, null, functionId, language, code, executionType)
   }
 
 }

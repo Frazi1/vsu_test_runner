@@ -28,7 +28,9 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   constructor() { }
 
   ngOnInit() {
-    this._input = this.dump(this.functionObj.testingInput.declarativeInput)
+    if (this.functionObj.testingInput) {
+      this._input = this.dump(this.functionObj.testingInput.declarativeInput)
+    }
     this._parse$.pipe(
       filter(_ => this._input != null),
       tap(_ => {

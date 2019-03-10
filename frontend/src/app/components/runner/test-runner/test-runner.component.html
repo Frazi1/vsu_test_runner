@@ -8,6 +8,9 @@
       <button (click)="previousQuestion()">Предыдущий</button>
       <button (click)="nextQuestion()">Следующий</button>
     </div>
-    <button (click)="save()">Сохранить</button>
+    <ng-container *ngIf="!_testRun.isFinished">
+      <button (click)="$save.next()">Сохранить</button>
+      <button (click)="$finish.next()">Завершить</button>
+    </ng-container>
   </div>
 </div>

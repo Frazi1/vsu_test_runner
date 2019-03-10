@@ -1,5 +1,6 @@
 from abc import abstractproperty, abstractmethod
 
+from coderunner.function_run_plan import FunctionRunPlan
 from dtos.dtos import CodeRunResult
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
@@ -37,4 +38,9 @@ class BaseRunner(object):
     @abstractmethod
     def scaffold_function_declaration_text(self, function_):
         # type: (Function, LanguageEnum) -> str
+        pass
+
+    @abstractmethod
+    def execute_default_template(self, function_run_plan):
+        # type: (FunctionRunPlan) -> CodeRunResult
         pass

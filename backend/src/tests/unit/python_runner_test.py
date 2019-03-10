@@ -1,6 +1,6 @@
 import unittest
 
-from coderunner.python_runner import PythonRunner
+from coderunner.python.python_runner import PythonRunner
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function

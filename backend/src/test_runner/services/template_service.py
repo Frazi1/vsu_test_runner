@@ -1,5 +1,8 @@
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, joinedload_all
 
+from models.code_snippet import CodeSnippet
+from models.function import Function
+from models.test_question_template import TestQuestionTemplate
 from models.test_template import TestTemplate
 from services.base_service import BaseService
 
@@ -23,10 +26,14 @@ class TemplateService(BaseService):
 
     def get_test_template_by_id(self, id_):
         # type: (int) -> TestTemplate
-        return self._db.query(TestTemplate) \
-            .options(joinedload(TestTemplate.questions)) \
+        res = self._db.query(TestTemplate).options(
+            joinedload_all(TestTemplate.questions, TestQuestionTemplate.solution_code_snippet, CodeSnippet.function,
+                           Function.arguments),
+            joinedload_all(TestTemplate.questions, TestQuestionTemplate.solution_code_snippet, CodeSnippet.function,
+                           Function.testing_input)) \
             .filter(TestTemplate.id == id_) \
             .first()
+        return res
 
     def update_test_template(self, id_, test):
         db_test = self.get_test_template_by_id(id_)
@@ -37,6 +44,7 @@ class TemplateService(BaseService):
     def delete_test_template(self, id_):
         test_template = self.get_test_template_by_id(id_)
         test_template.is_deleted = True
+        self._db.commit()
 
     def restore(self, id_):
         test_template = self.get_test_template_by_id(id_)

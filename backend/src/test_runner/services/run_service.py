@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import joinedload, raiseload, Query
 from typing import List
 
@@ -9,16 +11,19 @@ from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 from models.test_run import TestRun
 from services.base_service import BaseService
+from services.code_executer_service import CodeExecuterService
 from services.instance_service import InstanceService
 
 
 class RunService(BaseService):
 
     def __init__(self,
-                 instance_service  # type: InstanceService
+                 instance_service,  # type: InstanceService
+                 code_executer_service  # type: CodeExecuterService
                  ):
         super(RunService, self).__init__()
         self._instance_service = instance_service
+        self._code_executer_service = code_executer_service
 
     def get_active_test_run(self, test_run_id):
         # type: (int) -> TestRun
@@ -57,7 +62,7 @@ class RunService(BaseService):
         return [QuestionAnswer(test_run=test_run, question_instance=q) for q in test_instance.questions]
 
     def update_test_run_answers(self, test_run_id, update_dtos):
-        # type: (int, List[TestRunAnswerUpdateDto]) -> TestRun
+        # type: (int, List[TestRunAnswerUpdateDto]) -> None
 
         db_test_run = self.get_active_test_run(test_run_id)
         for update in update_dtos:
@@ -71,4 +76,23 @@ class RunService(BaseService):
             db_answer.code_snippet.language = update.answer_code_snippet.language
 
         self._db.commit()
-        return db_test_run
+
+    def finish_test_run(self, test_run_id, update_dtos):
+        # type: (int, List[TestRunAnswerUpdateDto]) -> None
+        if update_dtos:
+            self.update_test_run_answers(test_run_id, update_dtos)
+        db_test_run = self.get_active_test_run(test_run_id)
+
+        for answer in db_test_run.question_answers:
+            results = self._code_executer_service.run_testing_set(answer.code_snippet, answer.code_snippet.function)
+
+        db_test_run.finished_at = datetime.now()
+        self._db.commit()
+
+
+
+
+
+
+
+

@@ -1,5 +1,10 @@
+from typing import List
+
 from coderunner.base_runner import BaseRunner
+from coderunner.execution_type import ExecutionType
 from dtos.dtos import FunctionScaffoldingDto, CodeRunResult, CodeExecutionRequestDto
+from models.code_snippet import CodeSnippet
+from models.function import Function
 from models.language_enum import LanguageEnum
 from services.function_service import FunctionService
 from utils.business_error import BusinessException
@@ -39,15 +44,17 @@ class CodeExecuterService:
     def execute_code(self, code_execution_request):
         # type: (CodeExecutionRequestDto) -> CodeRunResult
 
+        function_ = self._function_service.get_function_by_id(code_execution_request.function_id)
+
         if code_execution_request.return_type:
             return_type = code_execution_request.return_type
         elif code_execution_request.function_id:
-            return_type = self._function_service.get_function_by_id(code_execution_request.function_id).return_type
+            return_type = function_.return_type
         else:
             raise BusinessException("Return type or Function ID must be specified")
 
         runner = self._find_runner(code_execution_request.language)
-        if code_execution_request.is_plain_code:
+        if code_execution_request.execution_type == ExecutionType.PLAIN_TEXT:
             return runner.execute_plain_code(return_type,
                                              code_execution_request.code)
         else:
@@ -60,3 +67,10 @@ class CodeExecuterService:
         runner = self._find_runner(language)
         code = runner.scaffold_function_declaration_text(func)
         return FunctionScaffoldingDto(code, language, func)
+
+    def run_testing_set(self, code_snippet, function_):
+        # type: (CodeSnippet, Function) -> List[CodeRunResult]
+        plans = self._function_service.get_function_run_plans(function_.id, code_snippet.code, code_snippet.language)
+        runner = self._find_runner(code_snippet.language)
+        res = [runner.execute_default_template(plan) for plan in plans]
+        return res

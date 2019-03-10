@@ -1,6 +1,8 @@
 import os
 
 from app_config import Config
+from coderunner.function_run_plan import FunctionRunPlan
+from coderunner.python.python_code_generator import PythonCodeGenerator
 from coderunner.simple_runner import SimpleRunner
 from dtos.dtos import CodeRunResult
 from models.argument_type import ArgumentType
@@ -15,10 +17,10 @@ class PythonRunner(SimpleRunner):
     _indentation_symbol = " "
 
     supported_languages = [LanguageEnum.PYTHON]
+    code_generator = PythonCodeGenerator()
 
     def __init__(self, config):
         # type: (Config) -> None
-
         super(PythonRunner, self).__init__(config)
 
     def _translate_parameter(self, argument):
@@ -57,6 +59,17 @@ class PythonRunner(SimpleRunner):
         finally:
             os.remove(file_path)
         return result
+
+    def execute_default_template(self, function_run_plan):
+        # type: (FunctionRunPlan) -> CodeRunResult
+        with open(self._config.python_default_template_path, "r") as file_:
+            template_text = file_.read()
+
+        ready_template = template_text \
+            .replace("%FUNC_CALL%", self.code_generator.generate_function_call_text(function_run_plan) + "\n") \
+            .replace("%FUNC_DECLARATION%", function_run_plan.code + "\n")
+
+        return self.execute_plain_code(function_run_plan.function.return_type, ready_template)
 
     def scaffold_function_declaration_text(self, function_):
         # type: (Function, LanguageEnum) -> str

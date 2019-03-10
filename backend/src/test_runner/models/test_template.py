@@ -2,12 +2,12 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from typing import List
 
-from models import Base
+from models import BaseModel
 from models.associations import test_template_test_question_template_association
 from models.test_question_template import TestQuestionTemplate
 
 
-class TestTemplate(Base):
+class TestTemplate(BaseModel):
     __tablename__ = 'test_template'
 
     def __init__(self, id_, name, time_limit, questions, *args, **kwargs):
@@ -31,4 +31,5 @@ class TestTemplate(Base):
             .format(self.id,
                     self.name,
                     self.time_limit,
-                    [str(x) for x in self.questions])
+                    [str(x) for x in self.questions]
+                    )

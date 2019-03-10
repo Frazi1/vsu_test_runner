@@ -24,7 +24,7 @@ class BaseFunctionInput(Base):
 
 class DeclarativeFunctionInput(BaseFunctionInput):
     items = relationship("DeclarativeInputItem",
-                         back_populates='declarative_function_input')  # type: List[DeclarativeInputItem]
+                         back_populates='declarative_function_input', lazy="joined")  # type: List[DeclarativeInputItem]
     __mapper_args__ = {
         'polymorphic_identity': 'declarative'
     }

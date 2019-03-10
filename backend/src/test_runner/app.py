@@ -2,35 +2,34 @@
 import json
 import os
 
-from gevent import monkey
+from bottle import Bottle, run, response, request
 from typing import List
 
 from app_config import Config
-from coderunner.python_runner import PythonRunner
+from coderunner.python.python_runner import PythonRunner
 from controllers.base_controller import BaseController
 from controllers.code_execution_controller import CodeExecutionController
 from controllers.function_testing_controller import FunctionTestingController
 from controllers.instance_controller import InstanceController
 from controllers.run_controller import RunController
 from controllers.template_controller import TemplateController
+from db_config import ENGINE
 from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
+from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin, QueryParamParser, PyJsonPlugin
+from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
 from services.instance_service import InstanceService
 from services.run_service import RunService
+from services.template_service import TemplateService
+from services.testing_input_service import TestingInputService
+from utils.helpers import load_modules
 from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
 
-monkey.patch_all()
 
-from bottle import Bottle, run, response, request
-
-from db_config import ENGINE
-from utils.helpers import load_modules
-from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin, QueryParamParser, PyJsonPlugin
-from services.code_executer_service import CodeExecuterService
-from services.template_service import TemplateService
+# monkey.patch_all()
 
 
 class ArgumentTypeStrategy(PyJsonStrategy):
@@ -42,6 +41,7 @@ class ArgumentTypeStrategy(PyJsonStrategy):
     def from_json(self, value, concrete_type=None):
         return concrete_type[value["name"]]
 
+
 class LanguageStrategy(PyJsonStrategy):
     target_type = LanguageEnum
 
@@ -52,20 +52,23 @@ class LanguageStrategy(PyJsonStrategy):
         name_ = value["name"]
         return concrete_type[name_]
 
+
 def _init_services():
     logger = ConsoleLogger()
     template_service = TemplateService()
     instance_service = InstanceService(template_service)
-    run_service = RunService(instance_service)
-    function_service = FunctionService()
+    testing_input_service = TestingInputService()
+    function_service = FunctionService(testing_input_service)
     code_execution_service = CodeExecuterService(function_service)
+    run_service = RunService(instance_service, code_execution_service)
 
     return ServiceResolver(logger,
                            code_execution_service,
                            function_service,
                            instance_service,
                            run_service,
-                           template_service)
+                           template_service,
+                           testing_input_service)
 
 
 _service_resolver = _init_services()
@@ -74,7 +77,7 @@ app = Bottle(autojson=False)
 # app.install(JsonPlugin())
 app.install(EnableCors())
 # app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
-app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=True, create_session_by_default=True))
+app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True))
 app.install(BodyParser(encode_with_json_by_default=True))
 app.install(ControllerPlugin())
 app.install(QueryParamParser())

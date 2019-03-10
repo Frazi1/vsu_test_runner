@@ -4,7 +4,7 @@ import { DeclarativeInputItem } from '../../../shared/input/DeclarativeInputItem
 import { DeclarativeInputArgumentItem } from '../../../shared/input/DeclarativeInputArgumentItem'
 import { Function } from '../../../shared/Function'
 import { Subject } from 'rxjs/index'
-import { filter, tap } from 'rxjs/internal/operators'
+import { filter, retry, tap } from 'rxjs/internal/operators'
 import { FunctionTestingInputDto } from '../../../shared/input/FunctionInputDto'
 
 @Component({
@@ -32,6 +32,7 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
       this._input = this.dump(this.functionObj.testingInput.declarativeInput)
     }
     this._parse$.pipe(
+      retry(),
       filter(_ => this._input != null),
       tap(_ => {
         if (!this.functionObj.testingInput) {

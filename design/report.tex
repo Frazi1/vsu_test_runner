@@ -415,7 +415,7 @@
             \item Задать набор входных данных
         \end{enumerate}
         \paragraph{}
-        Пользователь вводит наборо тестовых даннных в определенном формате
+        Пользователь вводит набор тестовых даннных в определенном формате
         в соответствующую форму на WEB интерфейсе
         \begin{figure}[H]
             \includegraphics[width=\textwidth, center]
@@ -425,5 +425,215 @@
         \paragraph{}
         Диаграмма кооперации отражает те же объекты и процессы, что и диаграмма
         последовательности.
+    
+    
+    \subsection{Создать тестовое событие}
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Sequence_CreateTestInstance}
+            \caption{Диаграмма последовательности}
+        \end{figure}
+        \paragraph{Объекты:}
+        \begin{enumerate}
+            \item Пользователь
+            \item WEB-интерфейс
+            \item Сервер
+            \item База данных
+        \end{enumerate}
+        \paragraph{Сообщения между объектами:}
+        \begin{enumerate}
+            \item Запросить список шаблонов
+            \item Запросить список шаблонов
+            \item Вернуть список шаблонов
+            \item Вернуть список шаблонов
+            \item Отобразить доступные шаблоны
+            \item Запросить список групп студентов
+            \item Запросить список групп студентов
+            \item Вернуть список групп
+            \item Вернуть список групп
+            \item Отобразить группы студентов
+            \item Выбрать группы для тестирования
+            \item Создать событие
+            \item Сформировать запрос
+            \item Сохранить объект события
+            \item Вернуть ID события
+            \item Вернуть созданного ID события
+        \end{enumerate}
+        \paragraph{}
+        WEB-клиент запрашивает у сервера список доступных шаблонов и группы
+        студентов. После чего пользователь выбирает нужный шаблон из списка,
+        выбирает студентов для прохождения тестирования и создает событие.
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Communication_CreateTestInstance}
+            \caption{Диаграмма кооперации}
+        \end{figure}
+        \paragraph{}
+        Диаграмма кооперации отражает те же объекты и процессы, что и диаграмма
+        последовательности.
+    
+    
+    \subsection{Просмотреть список шаблонов}
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Sequence_ViewTemplatesList}
+            \caption{Диаграмма последовательности}
+        \end{figure}
+        \paragraph{Объекты:}
+        \begin{enumerate}
+            \item Пользователь
+            \item WEB-интерфейс
+            \item Сервер
+            \item База данных
+        \end{enumerate}
+        \paragraph{Сообщения между объектами:}
+        \begin{enumerate}
+            \item Открыть страницу шаблонов
+            \item Запросить список шаблонов
+            \item Вернуть список шаблонов
+            \item Вернуть список шаблонов
+            \item Отобразить список шаблонов
+        \end{enumerate}
+        \paragraph{}
+        WEB-клиент запрашивает у сервера список доступных шаблонов для просмотра.
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Communication_ViewTemplatesList}
+            \caption{Диаграмма кооперации}
+        \end{figure}
+        \paragraph{}
+        Диаграмма кооперации отражает те же объекты и процессы, что и диаграмма
+        последовательности.
+    
+    
+    \subsection{Запустить тестовое событие}
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Sequence_StartTestInstance}
+            \caption{Диаграмма последовательности}
+        \end{figure}
+        \paragraph{Объекты:}
+        \begin{enumerate}
+            \item Пользователь
+            \item WEB-интерфейс
+            \item Сервер
+            \item База данных
+        \end{enumerate}
+        \paragraph{Сообщения между объектами:}
+        \begin{enumerate}
+            \item Нажать кнопку запуска
+            \item Отправить запрос на запуск
+            \item Создать запись в таблцие
+            \item Вернуть ID созданной записи
+            \item Вернуть ID созданного события
+            \item Открыть страницу тестирования
+            \item Запросить список вопросов
+            \item Загрузить список вопросов
+            \item Вернуть список вопросов
+            \item Вернуть список вопросов
+            \item Отобразить вопросы теста
+        \end{enumerate}
+        \paragraph{}
+        Пользователь нажимает на кнопку запуска событие. WEB-клиент посылает
+        соответствующий запрос на сервер и, получив ответ, открывает страницу
+        прохождения тестирования и загружает список вопросов.
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Communication_StartTestInstance}
+            \caption{Диаграмма кооперации}
+        \end{figure}
+        \paragraph{}
+        Диаграмма кооперации отражает те же объекты и процессы, что и диаграмма
+        последовательности.
+    
+    
+    \subsection{Запросить проверку решения}
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Sequence_RequestSolutionValidation}
+            \caption{Диаграмма последовательности}
+        \end{figure}
+        \paragraph{Объекты:}
+        \begin{enumerate}
+            \item Пользователь
+            \item WEB-интерфейс
+            \item Сервер
+            \item База данных
+        \end{enumerate}
+        \paragraph{Сообщения между объектами:}
+        \begin{enumerate}
+            \item Нажать кнопку "Проверить"
+            \item Отравить код на проверку
+            \item Загрузить тестовые данные
+            \item Вернуть тестовые данные
+            \item Выполнить код на тестовых данных
+            \item Вернуть набор результатов
+            \item Сравнить результаты
+            \item Отобразить результат выполнения
+        \end{enumerate}
+        \paragraph{}
+        Пользователь запрашивает проверку своего решения. WEB-клиент отправляет
+        тестируемый код на сервер. Сервер загружает из базы данных набор
+        данных для тестирования и запускает код пользователя со всеми вариантами
+        входных данных на сервере выполнения кода. После чего сравнивает ответы
+        с ожидаемыми и возвращает клиенту.
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Communication_RequestSolutionValidation}
+            \caption{Диаграмма кооперации}
+        \end{figure}
+        \paragraph{}
+        Диаграмма кооперации отражает те же объекты и процессы, что и диаграмма
+        последовательности.
+    
+    
+    \subsection{Просмотреть результаты пройденных тестов}
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Sequence_ViewRunResults}
+            \caption{Диаграмма последовательности}
+        \end{figure}
+        \paragraph{Объекты:}
+        \begin{enumerate}
+            \item Пользователь
+            \item WEB-интерфейс
+            \item Сервер
+            \item База данных
+        \end{enumerate}
+        \paragraph{Сообщения между объектами:}
+        \begin{enumerate}
+            \item Нажать кнопку "Проверить"
+            \item Отравить код на проверку
+            \item Загрузить тестовые данные
+            \item Вернуть тестовые данные
+            \item Выполнить код на тестовых данных
+            \item Вернуть набор результатов
+            \item Сравнить результаты
+            \item Отобразить результат выполнения
+        \end{enumerate}
+        \paragraph{}
+        Пользователь открывает страницу просмотра результатов прохождения
+        тестового события. WEB-клиент запрашивает данные у сервера, который
+        загружает из базы данных и отображает на интерфейсе.
+        \begin{figure}[H]
+            \includegraphics[width=\textwidth, center]
+                {Communication_ViewRunResults}
+            \caption{Диаграмма кооперации}
+        \end{figure}
+        \paragraph{}
+        Диаграмма кооперации отражает те же объекты и процессы, что и диаграмма
+        последовательности.
+    
+    
+    \section{Диаграмма состояний}
+    % TODO
 
+    
+    \section{Диаграмма деятельности}
+    % TODO
+
+
+    \section{Диаграмма компонентов}
+    % TODO
+    
 \end{document}

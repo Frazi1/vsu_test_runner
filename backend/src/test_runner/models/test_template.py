@@ -2,12 +2,12 @@ from sqlalchemy import *
 from sqlalchemy.orm import relationship
 from typing import List
 
-from models import BaseModel
+from models import Base
 from models.associations import test_template_test_question_template_association
 from models.test_question_template import TestQuestionTemplate
 
 
-class TestTemplate(BaseModel):
+class TestTemplate(Base):
     __tablename__ = 'test_template'
 
     def __init__(self, id_, name, time_limit, questions, *args, **kwargs):

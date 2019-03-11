@@ -1,4 +1,9 @@
-import ujson
+try:
+    import ujson
+    json = ujson
+except:
+    import json
+    json = json
 
 from models.argument_type import ArgumentType
 
@@ -12,16 +17,16 @@ class ValueConverter:
         if type_ is ArgumentType.STRING:
             if value == "":
                 return value
-            return ujson.loads(value)
+            return json.loads(value)
         elif type_ is ArgumentType.INTEGER:
             return int(value)
         elif type_ is ArgumentType.ARRAY_STRING:
-            return ujson.loads(value)
+            return json.loads(value)
         elif type_ is ArgumentType.ARRAY_INTEGER:
-            return ujson.loads(value)
+            return json.loads(value)
         else:
             raise NotImplemented
 
     @staticmethod
     def to_string(type_, value):
-        return ujson.dumps(value)
+        return json.dumps(value)

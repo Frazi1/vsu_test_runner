@@ -1,9 +1,9 @@
 # coding=utf-8
 import json
 import os
+from typing import List
 
 from bottle import Bottle, run, response, request
-from typing import List
 
 from app_config import Config
 from coderunner.python.python_runner import PythonRunner
@@ -139,7 +139,7 @@ def strip_path():
 
 @app.route('/<:re:.*>', method='OPTIONS')
 def cors():
-    print 'After request hook.'
+    print('After request hook.')
     response.headers['Access-Control-Allow-Origin'] = '*'
 
 

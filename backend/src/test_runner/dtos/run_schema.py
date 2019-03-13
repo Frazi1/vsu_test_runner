@@ -1,8 +1,8 @@
 from marshmallow import Schema, post_load
 from marshmallow.fields import Integer, String, Nested, List, DateTime
 
-from dtos import TestRunDto, TestRunQuestionAnswerDto
-from schemas import CodeSnippetSchema
+from dtos.dtos import TestRunDto, TestRunQuestionAnswerDto
+from dtos.schemas import CodeSnippetSchema
 
 
 class TestRunQuestionSchema(Schema):

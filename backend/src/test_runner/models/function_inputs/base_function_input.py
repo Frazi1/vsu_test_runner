@@ -1,11 +1,10 @@
+from typing import List
+
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from typing import List
 
 from models import Base
 from models.function_inputs.declarative_input_item import DeclarativeInputItem
-
-print 'IMPORT BaseFunctionInput'
 
 
 class BaseFunctionInput(Base):

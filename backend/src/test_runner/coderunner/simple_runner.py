@@ -33,7 +33,7 @@ class SimpleRunner(BaseRunner):
 
     def save_code_to_file(self, name, extension, code):
         if name is None:
-            name = uuid.uuid4().get_hex()
+            name = uuid.uuid4().hex
         file_path = os.path.join(self._config.tmp_folder_path, name + extension)
         with open(file_path, "w") as file_:
             if isinstance(code, list):

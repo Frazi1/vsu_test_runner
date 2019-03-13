@@ -26,7 +26,7 @@ class CodeExecutionController(BaseController):
 
     @BaseController.get('/code/types')
     def supported_code_types(self):
-        return ArgumentType.__members__.keys()
+        return [e.name for e in ArgumentType]
 
     @BaseController.get('/code/languages')
     def supported_languages(self):

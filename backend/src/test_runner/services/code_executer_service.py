@@ -20,15 +20,15 @@ class CodeExecuterService:
     _runners = {}
 
     def register_runner(self, cls_):
-        print "TYPE: {}".format(type(cls_))
+        print("TYPE: {}".format(type(cls_)))
         try:
             languages = cls_.supported_languages
             for lang in languages:
                 if lang not in self._runners:
-                    print "REGISTER:{}, language:{}".format(cls_, lang)
+                    print("REGISTER:{}, language:{}".format(cls_, lang))
                     self._runners[lang] = cls_
-        except Exception, e:
-            print e.message
+        except Exception as e:
+            print(e)
 
     def _find_runner(self, language):
         # type: (LanguageEnum) -> BaseRunner

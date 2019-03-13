@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from typing import List
 
 from coderunner.execution_type import ExecutionType
@@ -21,7 +20,7 @@ from utils.pyjson.pyjson import BaseJsonable, JsonProperty
 
 class BaseDto(BaseJsonable):
     def __init__(self, **kwargs):
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             setattr(self, name, value)
 
 
@@ -140,7 +139,7 @@ class TestRunQuestionAnswerDto(BaseJsonable):
         "answer_code_snippet": JsonProperty("CodeSnippetDto", dump_name="answerCodeSnippet", required=False),
         "function_id": JsonProperty(int, dump_name="functionId"),
         "is_validated": JsonProperty(bool, "isValidated"),
-        "validation_passed": JsonProperty(bool, "validationPassed")
+        "validation_passed": JsonProperty(bool, "validationPassed", required=False)
     }
 
     def __init__(self, id=None, name=None, description=None, answer_code_snippet=None, function_id=None,

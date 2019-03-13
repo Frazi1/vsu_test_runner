@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from logger import ILogger
+from logger.logger import ILogger
 
 
 class ConsoleLogger(ILogger):
@@ -9,7 +9,7 @@ class ConsoleLogger(ILogger):
                                            severity=severity)
 
     def info(self, message):
-        print self._get_template("[INF]") + message
+        print(self._get_template("[INF]") + message)
 
     def error(self, message, exception):
-        print self._get_template("[ERROR]") + message + "\n" + str(exception)
+        print(self._get_template("[ERROR]") + message + "\n" + str(exception))

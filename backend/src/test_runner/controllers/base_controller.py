@@ -23,7 +23,7 @@ class BaseController(object):
             try:
                 name_method[1](self)
                 self.logger.info("Controller: '{}', register endpoint: '{}'".format(ctrl_name, name_method[0]))
-            except Exception, e:
+            except Exception as e:
                 self.logger.error("Tried to execute:{}".format(name_method[0]), e)
         self.logger.info("======================================================\n")
 

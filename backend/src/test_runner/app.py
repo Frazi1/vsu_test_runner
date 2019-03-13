@@ -9,6 +9,7 @@ from app_config import Config
 from coderunner.python_runner import PythonRunner
 from controllers.base_controller import BaseController
 from controllers.code_execution_controller import CodeExecutionController
+from controllers.finished_run_controller import FinishedRunController
 from controllers.function_testing_controller import FunctionTestingController
 from controllers.instance_controller import InstanceController
 from controllers.run_controller import RunController
@@ -100,7 +101,9 @@ def _init_controllers(app, service_resolver):
 
     function_testing_ctrl = FunctionTestingController(app, service_resolver)
 
-    return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl, function_testing_ctrl]
+    finished_run_controller = FinishedRunController(app, service_resolver)
+
+    return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl, function_testing_ctrl, finished_run_controller]
 
 
 def _init_code_runners(code_execution_service):

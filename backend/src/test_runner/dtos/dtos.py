@@ -134,15 +134,21 @@ class TestRunQuestionAnswerDto(BaseJsonable):
         "name": JsonProperty(str),
         "description": JsonProperty(str),
         "answer_code_snippet": JsonProperty("CodeSnippetDto", dump_name="answerCodeSnippet", required=False),
-        "function_id": JsonProperty(int, dump_name="functionId")
+        "function_id": JsonProperty(int, dump_name="functionId"),
+        "is_validated": JsonProperty(bool, "isValidated"),
+        "validation_passed": JsonProperty(bool, "validationPassed")
     }
 
-    def __init__(self, id=None, name=None, description=None, answer_code_snippet=None, function_id=None):
+    def __init__(self, id=None, name=None, description=None, answer_code_snippet=None, function_id=None,
+                 is_validated=None,
+                 validation_passed=None):
         self.id = id  # type:int
         self.name = name  # type:str
         self.description = description  # type:str
         self.answer_code_snippet = answer_code_snippet  # type:CodeSnippetDto
         self.function_id = function_id  # type:int
+        self.validation_passed = validation_passed  # type: bool
+        self.is_validated = is_validated  # type: bool
 
     @classmethod
     def map_from(cls, question_answer):
@@ -152,7 +158,9 @@ class TestRunQuestionAnswerDto(BaseJsonable):
                    description=question_answer.question_instance.description,
                    answer_code_snippet=CodeSnippetDto.from_entity(
                        question_answer.code_snippet) if question_answer.code_snippet is not None else None,
-                   function_id=question_answer.question_instance.solution_code_snippet.function_id)
+                   function_id=question_answer.question_instance.solution_code_snippet.function_id,
+                   validation_passed=question_answer.validation_passed,
+                   is_validated=question_answer.is_validated)
         return cls_
 
 
@@ -188,6 +196,11 @@ class TestRunDto(BaseJsonable):
                    time_limit=test_run.test_instance.time_limit,
                    question_answers=[TestRunQuestionAnswerDto.map_from(x) for x in test_run.question_answers])
         return cls_
+
+    @classmethod
+    def from_entity_list(cls, test_runs):
+        # type:(List[TestRun])->List[TestRunDto]
+        return [TestRunDto.from_entity(e) for e in test_runs]
 
 
 class TestRunAnswerUpdateDto(BaseJsonable):
@@ -446,3 +459,16 @@ class DeclarativeInputArgumentItemDto(BaseDto):
         # type: ()-> DeclarativeInputArgumentItem
         res = DeclarativeInputArgumentItem(self.id, self.argument_index, self.input_type, self.input_value)
         return res
+
+
+class FinishedTestRunResultsDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int),
+        "answer_results": JsonProperty([TestRunQuestionAnswerDto]),
+        "finished_at": JsonProperty(datetime, "finishedAt")
+    }
+
+    id = None  # type: int
+    name = None  # type: str
+    answer_results = None  # type: List[TestRunQuestionAnswerDto]
+    finished_at = None  # type: datetime

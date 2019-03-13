@@ -30,8 +30,14 @@ class RunController(BaseController):
     def start_test_run(self, test_instance_id):
         return self._run_service.start_run_from_instance(test_instance_id)
 
-    @BaseController.put('<test_run_id:int>', accepts=[TestRunAnswerUpdateDto], returns=TestRunDto)
+    @BaseController.put('<test_run_id:int>', accepts=[TestRunAnswerUpdateDto])
     def update_run_answers(self, test_run_id, parsed_body):
-        # type: (int, List[TestRunAnswerUpdateDto]) -> TestRunDto
-        db_test_run = self._run_service.update_test_run_answers(test_run_id, parsed_body)
-        return TestRunDto.from_entity(db_test_run)
+        # type: (int, List[TestRunAnswerUpdateDto]) -> int
+        self._run_service.update_test_run_answers(test_run_id, parsed_body)
+        return test_run_id
+
+    @BaseController.put('finish/<test_run_id:int>', accepts=[TestRunAnswerUpdateDto])
+    def finish_test_run(self, test_run_id, parsed_body):
+        # type: (int, List[TestRunAnswerUpdateDto]) -> int
+        self._run_service.finish_test_run(test_run_id, parsed_body)
+        return test_run_id

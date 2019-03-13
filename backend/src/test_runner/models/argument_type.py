@@ -2,8 +2,9 @@ import enum
 
 
 class ArgumentType(enum.Enum):
-    VOID = 0
-    INTEGER = 1
-    STRING = 2
-    ARRAY_INTEGER = 3
-    ARRAY_STRING = 4
+    Unset = 0
+    VOID = 1
+    INTEGER = 2
+    STRING = 3
+    ARRAY_INTEGER = 4
+    ARRAY_STRING = 5

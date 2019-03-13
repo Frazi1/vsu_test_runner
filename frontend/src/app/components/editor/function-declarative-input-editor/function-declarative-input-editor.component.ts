@@ -3,8 +3,8 @@ import { DeclarativeFunctionInput } from '../../../shared/input/DeclarativeFunct
 import { DeclarativeInputItem } from '../../../shared/input/DeclarativeInputItem'
 import { DeclarativeInputArgumentItem } from '../../../shared/input/DeclarativeInputArgumentItem'
 import { Function } from '../../../shared/Function'
-import { Subject } from 'rxjs/index'
-import { filter, tap } from 'rxjs/internal/operators'
+import { Subject } from 'rxjs'
+import { filter, retry, tap } from 'rxjs/internal/operators'
 import { FunctionTestingInputDto } from '../../../shared/input/FunctionInputDto'
 
 @Component({
@@ -25,11 +25,14 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   private _input: string
   private _parse$ = new Subject<void>()
 
-  constructor() { }
+  private ARGUMENT_SEPARATOR_SYMBOL = ';'
 
   ngOnInit() {
-    this._input = this.dump(this.functionObj.testingInput.declarativeInput)
+    if (this.functionObj.testingInput) {
+      this._input = this.dump(this.functionObj.testingInput.declarativeInput)
+    }
     this._parse$.pipe(
+      retry(),
       filter(_ => this._input != null),
       tap(_ => {
         if (!this.functionObj.testingInput) {
@@ -64,7 +67,7 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   }
 
   private parseArguments(argsLine: string): DeclarativeInputArgumentItem[] {
-    return argsLine.split(',')
+    return argsLine.split(this.ARGUMENT_SEPARATOR_SYMBOL)
                    .map(s => s.trim())
                    .map((s, index) => {
                      let arg = new DeclarativeInputArgumentItem()
@@ -80,7 +83,7 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   }
 
   private dumpDeclarativeItem(item: DeclarativeInputItem): string {
-    let res = item.argumentItems.map(a => a.inputValue).join(', ')
+    let res = item.argumentItems.map(a => a.inputValue).join(this.ARGUMENT_SEPARATOR_SYMBOL + ' ')
     if (item.outputValue) {
       res += ` -> ${item.outputValue}`
     }

@@ -8,7 +8,7 @@ export interface ITemplateService {
 
   addTemplate(testTemplate: TestTemplate): Observable<number>
 
-  updateTemplate(testTemplate: TestTemplate): Observable<TestTemplate>
+  updateTemplate(testTemplate: TestTemplate): Observable<number>
 
   deleteTemplate(id: number): Observable<any>
 

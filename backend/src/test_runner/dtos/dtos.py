@@ -2,6 +2,7 @@ from datetime import datetime
 
 from typing import List
 
+from coderunner.execution_type import ExecutionType
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
@@ -105,8 +106,11 @@ class TestTemplateDto(BaseDto):
     @classmethod
     def from_entity(cls, e):
         # type: (TestTemplate) -> TestTemplateDto
-        res = cls(id=e.id, name=e.name, time_limit=e.time_limit,
-                  questions=TestQuestionTemplateDto.from_list(e.questions), is_deleted=e.is_deleted)
+        res = cls(id=e.id,
+                  name=e.name,
+                  time_limit=e.time_limit,
+                  questions=TestQuestionTemplateDto.from_list(e.questions),
+                  is_deleted=e.is_deleted)
         return res
 
     def to_entity(self):
@@ -232,18 +236,18 @@ class CodeExecutionRequestDto(BaseJsonable):
         "function_id": JsonProperty(int, "functionId", required=False),
         "language": JsonProperty(LanguageEnum),
         "code": JsonProperty(str),
-        "is_plain_code": JsonProperty(bool, "isPlainCode"),
+        "execution_type": JsonProperty(ExecutionType, "executionType"),
         "client_id": JsonProperty(str, "clientId", required=False)
     }
 
-    def __init__(self, code='', language=None, is_plain_code=None, client_id=None, function_id=None, return_type=None):
+    def __init__(self, code='', language=None, execution_type=None, client_id=None, function_id=None, return_type=None):
         # type: (str, LanguageEnum, bool, str | None, int, ArgumentType) -> None
 
         self.return_type = return_type  # type: ArgumentType
         self.function_id = function_id  # type: int
         self.language = language  # type: LanguageEnum
         self.code = code  # type: str
-        self.is_plain_code = is_plain_code  # type: bool
+        self.execution_type = execution_type  # type: ExecutionType
         self.client_id = client_id  # type: (str|None)
 
 
@@ -306,7 +310,7 @@ class FunctionDto(BaseDto):
         "testing_input": JsonProperty("FunctionInputDto", dump_name="testingInput", required=False)
     }
     testing_input = None
-    arguments = None
+    arguments = None  # type: List[FunctionArgumentDto]
     return_type = None
     name = None
     id = None

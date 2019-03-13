@@ -4,6 +4,7 @@ import { CodeService } from '../../../services/code.service'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
+import { ExecutionType } from '../../../shared/ExecutionType'
 
 @Component({
   selector:    'app-question-runner',
@@ -30,12 +31,6 @@ export class QuestionRunnerComponent implements OnInit {
     // });
   }
 
-  async ngOnInit() {
-    this._codeLanguages = await this.codeService.languages().toPromise()
-    this._isReady = true
-    await this.update()
-  }
-
   get questionRun(): TestRunQuestion {
     return this._questionRun
   }
@@ -46,6 +41,12 @@ export class QuestionRunnerComponent implements OnInit {
     if (this._isReady) {
       this.update()
     }
+  }
+
+  async ngOnInit() {
+    this._codeLanguages = await this.codeService.languages().toPromise()
+    this._isReady = true
+    await this.update()
   }
 
   private async update() {
@@ -63,7 +64,11 @@ export class QuestionRunnerComponent implements OnInit {
 
   private async runCode() {
     const snippet = this._questionRun.answerCodeSnippet
-    const req = CodeExecutionRequest.fromReturnType(snippet.language, this._code, snippet.functionObj.returnType, true)
+    const req = CodeExecutionRequest.fromReturnType(snippet.language,
+      this._code,
+      snippet.functionObj.returnType,
+      ExecutionType.PLAIN_TEXT
+    )
     const res = await this.codeService.runCode(req).toPromise()
     console.log(res.codeRunResult)
   }

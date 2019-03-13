@@ -78,7 +78,8 @@ class BodyParser(object):
         self._set_resp_content_type(response_)
 
         def wrapped(*a, **ka):
-            return json.dumps(callback(*a, **ka))
+            obj = callback(*a, **ka)
+            return json.dumps(obj)
 
         return wrapped
 
@@ -142,6 +143,7 @@ class SQLAlchemySessionPlugin(object):
             if should_create_session is False:
                 return callback(*a, **kwa)
             session = self.session_maker(bind=self.engine)
+            # session.rollback()
             request.environ['db'] = session
             try:
                 rv = callback(*a, **kwa)
@@ -248,7 +250,8 @@ class PyJsonPlugin(object):
 
             res = callback(*a, **kwa)
             if pyjson_returns_type:
-                return self.converter.to_dict(res)
+                dict = self.converter.to_dict(res)
+                return dict
             else:
                 return res
 

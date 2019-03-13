@@ -31,4 +31,5 @@ class TestTemplate(Base):
             .format(self.id,
                     self.name,
                     self.time_limit,
-                    [str(x) for x in self.questions])
+                    [str(x) for x in self.questions]
+                    )

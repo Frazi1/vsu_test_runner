@@ -38,13 +38,12 @@ class TemplateController(BaseController):
         dto = TestTemplateDto.from_entity(template)
         return dto
 
-    @BaseController.put('/template/<id:int>', accepts=TestTemplateDto,
-                        returns=TestTemplateDto)
+    @BaseController.put('/template/<id:int>', accepts=TestTemplateDto)
     def update_test_template(self, id, parsed_body):
-        # type: (int, TestTemplateDto) -> TestTemplateDto
+        # type: (int, TestTemplateDto) -> int
         template = parsed_body.to_entity()
         updated_template = self.templates_service.update_test_template(id, template)
-        return TestTemplateDto.from_entity(updated_template)
+        return id
 
     @BaseController.delete('/template/<id:int>')
     def delete_test_template(self, id):

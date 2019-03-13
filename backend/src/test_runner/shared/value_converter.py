@@ -13,8 +13,10 @@ class ValueConverter:
         pass
 
     @staticmethod
-    def from_string(type_, value):
+    def from_string(type_, value, parse_str=True):
         if type_ is ArgumentType.STRING:
+            if not parse_str:
+                return value
             if value == "":
                 return value
             return json.loads(value)

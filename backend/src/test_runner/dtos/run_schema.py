@@ -1,7 +1,7 @@
 from marshmallow import Schema, post_load
 from marshmallow.fields import Integer, String, Nested, List, DateTime
 
-from dtos.dtos import TestRunDto, TestRunQuestionAnswerDto
+from dtos.dtos import TestRunDto, QuestionAnswerDto
 from dtos.schemas import CodeSnippetSchema
 
 
@@ -19,7 +19,7 @@ class TestRunQuestionSchema(Schema):
 
     @post_load()
     def create_class(self, value):
-        return TestRunQuestionAnswerDto(**value)
+        return QuestionAnswerDto(**value)
 
 
 class TestRunSchema(Schema):

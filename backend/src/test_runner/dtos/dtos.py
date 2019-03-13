@@ -131,7 +131,7 @@ class CodeRunResult(object):
         self.error = error
 
 
-class TestRunQuestionAnswerDto(BaseJsonable):
+class QuestionAnswerDto(BaseJsonable):
     __exportables__ = {
         "id": JsonProperty(int),
         "name": JsonProperty(str),
@@ -155,7 +155,7 @@ class TestRunQuestionAnswerDto(BaseJsonable):
 
     @classmethod
     def map_from(cls, question_answer):
-        # type: (QuestionAnswer) -> TestRunQuestionAnswerDto
+        # type: (QuestionAnswer) -> QuestionAnswerDto
         cls_ = cls(id=question_answer.id,
                    name=question_answer.question_instance.name,
                    description=question_answer.question_instance.description,
@@ -175,7 +175,7 @@ class TestRunDto(BaseJsonable):
         "ends_at": JsonProperty(datetime, dump_name="endsAt", required=False),
         "finished_at": JsonProperty(datetime, dump_name="finishedAt", required=False),
         "time_limit": JsonProperty(int, dump_name="timeLimit", required=False),
-        "question_answers": JsonProperty([TestRunQuestionAnswerDto], dump_name="questionAnswers")
+        "question_answers": JsonProperty([QuestionAnswerDto], dump_name="questionAnswers")
     }
 
     def __init__(self, id=None, name=None, started_at=None, ends_at=None, finished_at=None, time_limit=None,
@@ -186,7 +186,7 @@ class TestRunDto(BaseJsonable):
         self.ends_at = ends_at  # type: datetime
         self.finished_at = finished_at  # type: datetime
         self.time_limit = time_limit  # type: int
-        self.question_answers = question_answers  # type: List[TestRunQuestionAnswerDto]
+        self.question_answers = question_answers  # type: List[QuestionAnswerDto]
 
     @classmethod
     def from_entity(cls, test_run):
@@ -197,7 +197,7 @@ class TestRunDto(BaseJsonable):
                    ends_at=test_run.ends_at,
                    finished_at=test_run.finished_at,
                    time_limit=test_run.test_instance.time_limit,
-                   question_answers=[TestRunQuestionAnswerDto.map_from(x) for x in test_run.question_answers])
+                   question_answers=[QuestionAnswerDto.map_from(x) for x in test_run.question_answers])
         return cls_
 
     @classmethod
@@ -467,11 +467,11 @@ class DeclarativeInputArgumentItemDto(BaseDto):
 class FinishedTestRunResultsDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int),
-        "answer_results": JsonProperty([TestRunQuestionAnswerDto]),
+        "answer_results": JsonProperty([QuestionAnswerDto]),
         "finished_at": JsonProperty(datetime, "finishedAt")
     }
 
     id = None  # type: int
     name = None  # type: str
-    answer_results = None  # type: List[TestRunQuestionAnswerDto]
+    answer_results = None  # type: List[QuestionAnswerDto]
     finished_at = None  # type: datetime

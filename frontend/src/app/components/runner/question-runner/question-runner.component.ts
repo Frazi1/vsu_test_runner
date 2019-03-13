@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion'
+import { QuestionAnswer } from '../../../shared/runner/QuestionAnswer'
 import { CodeService } from '../../../services/code.service'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
@@ -12,7 +12,7 @@ import { ExecutionType } from '../../../shared/ExecutionType'
   styleUrls:   ['./question-runner.component.less']
 })
 export class QuestionRunnerComponent implements OnInit {
-  private _questionRun: TestRunQuestion
+  private _questionRun: QuestionAnswer
   private _code: string
   private _codeLanguages: CodeLanguage[]
   private _isReady = false
@@ -31,12 +31,12 @@ export class QuestionRunnerComponent implements OnInit {
     // });
   }
 
-  get questionRun(): TestRunQuestion {
+  get questionRun(): QuestionAnswer {
     return this._questionRun
   }
 
   @Input()
-  set questionRun(value: TestRunQuestion) {
+  set questionRun(value: QuestionAnswer) {
     this._questionRun = value
     if (this._isReady) {
       this.update()

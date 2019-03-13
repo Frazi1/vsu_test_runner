@@ -26,6 +26,9 @@ import { LanguageSelectorComponent } from './components/editor/language-selector
 import { FunctionDeclarativeInputEditorComponent } from './components/editor/function-declarative-input-editor/function-declarative-input-editor.component'
 import { ClassTransformer } from 'class-transformer'
 import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
+import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
+import { QuestionAnswerResultViewerComponent } from './components/test-result/answer-result-viewer/question-answer-result-viewer.component'
+import { QuestionLinkComponent } from './components/editor/question-link/question-link.component'
 
 @NgModule({
   declarations: [
@@ -43,7 +46,10 @@ import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
     TestRunsListComponent,
     CodeEditorComponent,
     LanguageSelectorComponent,
-    FunctionDeclarativeInputEditorComponent
+    FunctionDeclarativeInputEditorComponent,
+    TestResultViewerComponent,
+    QuestionAnswerResultViewerComponent,
+    QuestionLinkComponent
   ],
   imports:      [
     BrowserModule,

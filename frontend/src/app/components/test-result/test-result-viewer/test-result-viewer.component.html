@@ -1,0 +1,14 @@
+<ng-container *ngIf="testRun">
+  <div class="answer-links-container g--flex-row">
+    <div *ngFor="let answer of testRun.questionAnswers; index as i">
+      <app-question-link [index]="i"
+                         [state]="answer.validationPassed?QuestionState.PASSED:QuestionState.FAILED"
+                         (click)="$answerLink.next(i)">
+      </app-question-link>
+    </div>
+  </div>
+  <h1>Название:{{testRun.name}}</h1>
+  <h2>Ответы:</h2>
+  <app-question-answer-result-viewer
+    [questionAnswer]="testRun.questionAnswers[currentQuestionIndex]"></app-question-answer-result-viewer>
+</ng-container>

@@ -1,0 +1,11 @@
+<ng-container *ngIf="questionAnswer">
+  <h1>Название</h1>
+  <span>{{questionAnswer.name}}</span>
+  <h2>Вопрос</h2>
+  <span>{{questionAnswer.description}}</span>
+  <app-function-editor [functionObj]="questionAnswer.answerCodeSnippet.functionObj"
+                       [isReadOnly]="true"></app-function-editor>
+  <app-code-editor [(code)]="questionAnswer.answerCodeSnippet.code"></app-code-editor>
+  <br>
+  <span>Результат:{{questionAnswer.validationPassed ? "Верно" : "Неверно"}}</span>
+</ng-container>

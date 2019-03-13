@@ -2,8 +2,8 @@
   <h1>{{_questionRun.name}}</h1>
   <h2>{{_questionRun.description}}</h2>
   <h3>Code</h3>
-  <app-function-editor [functionObj]="_questionRun.answerCodeSnippet.functionObj"
+  <app-function-editor *ngIf="questionRun.answerCodeSnippet" [functionObj]="_questionRun.answerCodeSnippet.functionObj"
                        [isReadOnly]="true"></app-function-editor>
-  <textarea [(ngModel)]="_questionRun.answerCodeSnippet.code"></textarea>
+  <textarea *ngIf="questionRun.answerCodeSnippet" [(ngModel)]="_questionRun.answerCodeSnippet.code"></textarea>
   <button (click)="runCode()">Запустить код</button>
 </div>

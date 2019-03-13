@@ -14,6 +14,9 @@ export class CodeEditorComponent implements OnInit {
   @Output()
   private codeChange = new EventEmitter<String>()
 
+  @Input()
+  private isReadOnly = false
+
   constructor() {
   }
 

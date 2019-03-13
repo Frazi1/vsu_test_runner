@@ -1,6 +1,8 @@
 import os
 
 from app_config import Config
+from coderunner.function_run_plan import FunctionRunPlan
+from coderunner.python.python_code_generator import PythonCodeGenerator
 from coderunner.simple_runner import SimpleRunner
 from dtos.dtos import CodeRunResult
 from models.argument_type import ArgumentType
@@ -15,10 +17,10 @@ class PythonRunner(SimpleRunner):
     _indentation_symbol = " "
 
     supported_languages = [LanguageEnum.PYTHON]
+    code_generator = PythonCodeGenerator()
 
     def __init__(self, config):
         # type: (Config) -> None
-
         super(PythonRunner, self).__init__(config)
 
     def _translate_parameter(self, argument):
@@ -37,6 +39,13 @@ class PythonRunner(SimpleRunner):
         if last is not True:
             res += "\n"
         return res
+
+    def _add_indent(self, code, level):
+        #type:(str, int) -> str
+        lines = code.split("\n")
+        for index in range(0, len(lines)):
+            lines[index] = self._get_indent() * level + lines[index]
+        return "\n".join(lines)
 
     def translate_code(self, function_signature, code_snippet):
         parameters = [self._translate_parameter(x) for x in function_signature.parameters]
@@ -57,6 +66,21 @@ class PythonRunner(SimpleRunner):
         finally:
             os.remove(file_path)
         return result
+
+    def execute_default_template(self, function_run_plan):
+        # type: (FunctionRunPlan) -> CodeRunResult
+        with open(self._config.python_default_template_path, "r") as file_:
+            template_text = file_.read()
+
+        function_call_code = self.code_generator.generate_function_call_text(function_run_plan)
+        function_call_code_indented = self._add_indent(function_call_code, 1)
+        ready_template = template_text.replace("%FUNC_CALL%", function_call_code_indented)
+
+        function_declaration_indented = self._add_indent(function_run_plan.code, 1)
+        ready_template = ready_template.replace("%FUNC_DECLARATION%", function_declaration_indented)
+
+        return self.execute_plain_code(function_run_plan.function.return_type, ready_template)
+
 
     def scaffold_function_declaration_text(self, function_):
         # type: (Function, LanguageEnum) -> str

@@ -28,7 +28,7 @@ class SimpleRunner(BaseRunner):
         # 'print' in python adds '\n' after its output. So remove it.
         if len(out) > 0 and return_type is ArgumentType.STRING and out[-1] == "\n":
             out = out[:-1]
-        typed_result = ValueConverter.from_string(return_type, out)
+        typed_result = ValueConverter.from_string(return_type, out, parse_str=False)
         return CodeRunResult(language, typed_result, return_type)
 
     def save_code_to_file(self, name, extension, code):

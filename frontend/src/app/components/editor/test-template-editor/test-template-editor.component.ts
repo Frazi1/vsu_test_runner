@@ -58,7 +58,7 @@ export class TestTemplateEditorComponent implements OnInit {
 
   private update(): void {
     this.templatesService.updateTemplate(this.testTemplate)
-        .subscribe(res => this.testTemplate = res)
+        .subscribe(id => this.templatesService.getTemplate(+id).subscribe(res => this.testTemplate = res))
   }
 
   private deleteTemplate(): void {

@@ -13,6 +13,13 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
 
   private _editingName = false
   private _displayContent = true
+  @Input()
+  private question: TestQuestionTemplate
+
+  constructor(private codeService: CodeService) {
+  }
+
+  // endregion
 
   // region Getters/Setters
   get editingName(): boolean {
@@ -23,17 +30,13 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
     this._editingName = value
   }
 
-  // endregion
-
-  @Input()
-  private question: TestQuestionTemplate
-
-  constructor(private codeService: CodeService) {
-  }
-
   ngOnInit() {
     if (this.question.codeSnippet == null) {
       this.question.codeSnippet = new CodeSnippet(null, null, [], new Function())
+    }
+
+    if (this.question.codeSnippet.functionObj == null) {
+      this.question.codeSnippet.functionObj = new Function()
     }
 
     console.log(this.question)

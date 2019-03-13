@@ -35,7 +35,11 @@ export class RunService extends BaseService {
                )
   }
 
-  public updateTestRunAnswers(testRunId: number, updates: TestRunAnswerUpdate[]): Observable<TestRun> {
-    return this.put(this.buildUrl(testRunId), updates, TestRun)
+  public updateTestRunAnswers(testRunId: number, updates: TestRunAnswerUpdate[]): Observable<number> {
+    return this.http.put<number>(this.buildUrl(testRunId), updates)
+  }
+
+  public finishTestRun(testRunId: number, updates: TestRunAnswerUpdate[]): Observable<number> {
+    return this.http.put<number>(this.buildUrl('finish', testRunId), updates)
   }
 }

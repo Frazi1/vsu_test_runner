@@ -1,5 +1,5 @@
 def run():
-%FUNC_DECLARATION%
+    %FUNC_DECLARATION%
 
-%FUNC_CALL%
+    %FUNC_CALL%
 run()

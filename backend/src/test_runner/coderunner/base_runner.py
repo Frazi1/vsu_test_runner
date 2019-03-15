@@ -1,4 +1,5 @@
 from abc import abstractproperty, abstractmethod
+from typing import List
 
 from coderunner.function_run_plan import FunctionRunPlan
 from dtos.dtos import CodeRunResult
@@ -41,5 +42,6 @@ class BaseRunner(object):
         pass
 
     @abstractmethod
-    def execute_default_template(self, function_run_plan: FunctionRunPlan) -> CodeRunResult:
+    def execute_default_template(self, function_declaration_code: str,
+                                 function_run_plans: List[FunctionRunPlan]) -> List[CodeRunResult]:
         pass

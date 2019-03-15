@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from app_config import Config
 from coderunner.function_run_plan import FunctionRunPlan
@@ -22,6 +23,8 @@ class PythonRunner(SimpleRunner):
     def __init__(self, config):
         # type: (Config) -> None
         super(PythonRunner, self).__init__(config)
+        self.FUNC_DECLARATION_MARKER = "%FUNC_DECLARATION%"
+        self.FUNC_CALL_MARKER = "%FUNC_CALL%"
 
     def _translate_parameter(self, argument):
         # type: (FunctionArgument) -> str
@@ -40,11 +43,17 @@ class PythonRunner(SimpleRunner):
             res += "\n"
         return res
 
-    def _add_indent(self, code, level):
-        #type:(str, int) -> str
+    def _add_fixed_indent(self, code, level):
+        # type:(str, int) -> str
         lines = code.split("\n")
         for index in range(0, len(lines)):
             lines[index] = self._get_indent() * level + lines[index]
+        return "\n".join(lines)
+
+    def _add_indent(self, code: str, spaces: int) -> str:
+        lines = [x for x in code.split("\n") if x != ""]
+        for index in range(0, len(lines)):
+            lines[index] = self._indentation_symbol * spaces + lines[index]
         return "\n".join(lines)
 
     def translate_code(self, function_signature, code_snippet):
@@ -57,9 +66,7 @@ class PythonRunner(SimpleRunner):
             [(self._indent_line(x, index == len(code_lines) - 1)) for index, x in enumerate(code_lines)])
         return signature + formatted_code
 
-    def execute_plain_code(self, return_type, code):
-        # type: (ArgumentType, str) -> CodeRunResult
-
+    def execute_plain_code(self, return_type: ArgumentType, code: str) -> List[CodeRunResult]:
         file_path = self.save_code_to_file(None, self.__file_ext__, code)
         try:
             result = self.run_file("python", self.supported_languages[0], file_path, return_type)
@@ -67,20 +74,25 @@ class PythonRunner(SimpleRunner):
             os.remove(file_path)
         return result
 
-    def execute_default_template(self, function_run_plan):
-        # type: (FunctionRunPlan) -> CodeRunResult
+    def execute_default_template(self,
+                                 function_declaration_code: str,
+                                 function_run_plans: List[FunctionRunPlan]) -> List[CodeRunResult]:
         with open(self._config.python_default_template_path, "r") as file_:
             template_text = file_.read()
 
-        function_call_code = self.code_generator.generate_function_call_text(function_run_plan)
-        function_call_code_indented = self._add_indent(function_call_code, 1)
-        ready_template = template_text.replace("%FUNC_CALL%", function_call_code_indented)
+        indent = next(line for line in template_text.split("\n") if self.FUNC_CALL_MARKER in line).index(
+            self.FUNC_CALL_MARKER[0])
 
-        function_declaration_indented = self._add_indent(function_run_plan.code, 1)
-        ready_template = ready_template.replace("%FUNC_DECLARATION%", function_declaration_indented)
+        function_calls_code = [self.code_generator.generate_function_call_text(plan) for plan in function_run_plans]
+        function_calls_code_indented = [self._add_indent(call_code, indent) for call_code in function_calls_code]
+        ready_template = template_text.replace(indent * self._indentation_symbol + self.FUNC_CALL_MARKER,
+                                               "\n".join(function_calls_code_indented))
 
-        return self.execute_plain_code(function_run_plan.function.return_type, ready_template)
+        function_declaration_indented = self._add_indent(function_declaration_code, indent)
+        ready_template = ready_template.replace(indent * self._indentation_symbol + self.FUNC_DECLARATION_MARKER,
+                                                function_declaration_indented)
 
+        return self.execute_plain_code(function_run_plans[0].function.return_type, ready_template)
 
     def scaffold_function_declaration_text(self, function_):
         # type: (Function, LanguageEnum) -> str

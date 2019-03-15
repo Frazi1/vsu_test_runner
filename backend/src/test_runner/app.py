@@ -125,8 +125,8 @@ def error(err):
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     response.headers['Access-Control-Allow-Origin'] = '*'
     message_ = {"code": err.status_code,
-                "exception": str(err.exception.message),
-                "message": str(err.exception.message),
+                "exception": str(err.exception),
+                "message": str(err.exception),
                 "trace": err.traceback}
     dump = json.dumps(message_)
     return dump

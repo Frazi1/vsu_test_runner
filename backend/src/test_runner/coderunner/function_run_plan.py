@@ -6,9 +6,8 @@ from models.language_enum import LanguageEnum
 
 
 class FunctionRunPlan(object):
-    def __init__(self, language, code, function_, arguments, expected_result):
-        # type:(LanguageEnum, str, Function, List[FunctionRunArgument]) -> None
-        self.code = code  # type: str
+    def __init__(self, language: LanguageEnum, function_: Function, arguments: List[FunctionRunArgument],
+                 expected_result: str) -> None:
         self.language = language  # type: LanguageEnum
         self.arguments = arguments  # type: List[FunctionRunArgument]
         self.function = function_  # type: Function

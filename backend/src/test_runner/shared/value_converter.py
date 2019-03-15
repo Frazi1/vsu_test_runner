@@ -14,6 +14,9 @@ class ValueConverter:
 
     @staticmethod
     def from_string(type_, value, parse_str=True):
+        if value is None:
+            return None
+
         if type_ is ArgumentType.STRING:
             if not parse_str:
                 return value

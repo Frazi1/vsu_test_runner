@@ -41,6 +41,5 @@ class BaseRunner(object):
         pass
 
     @abstractmethod
-    def execute_default_template(self, function_run_plan):
-        # type: (FunctionRunPlan) -> CodeRunResult
+    def execute_default_template(self, function_run_plan: FunctionRunPlan) -> CodeRunResult:
         pass

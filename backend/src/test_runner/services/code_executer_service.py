@@ -69,10 +69,19 @@ class CodeExecuterService:
         code = runner.scaffold_function_declaration_text(func)
         return FunctionScaffoldingDto(code, language, func)
 
+    def _execute_plans_for_valid_results(self, runner: BaseRunner, plans: List[FunctionRunPlan]) -> None:
+        for plan in plans:
+            if plan.expected_result is not None and plan.expected_result != "": continue
+
+            execution_result = runner.execute_default_template(plan)
+            plan.expected_result = execution_result.output
+
     def run_testing_set(self, code_snippet, function_):
         # type: (CodeSnippet, Function) -> List[(bool,CodeRunResult)]
         plans = self._function_service.get_function_run_plans(function_.id, code_snippet.code, code_snippet.language)
         runner = self._find_runner(code_snippet.language)
+        self._execute_plans_for_valid_results(runner, plans)
+
         results = [runner.execute_default_template(plan) for plan in plans]
         validation_results = self.validate_results(results, plans)
         return validation_results

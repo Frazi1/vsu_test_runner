@@ -408,7 +408,7 @@ class DeclarativeInputItemDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
         "declarative_argument_item_dtos": JsonProperty(["DeclarativeInputArgumentItemDto"], dump_name="argumentItems"),
-        "output_value": JsonProperty(str, dump_name="outputValue")
+        "output_value": JsonProperty(str, dump_name="outputValue", required=False)
     }
     id = None  # type: int
     declarative_argument_item_dtos = None  # type: List[DeclarativeInputArgumentItemDto]

@@ -1,7 +1,6 @@
 from sqlalchemy.orm import joinedload
 
 from dtos.dtos import TestInstanceUpdate
-from models.helpers.helper import clone_code_snippet
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 from services.base_service import BaseService
@@ -21,7 +20,7 @@ class InstanceService(BaseService):
                                                description=x.description,
                                                parent_id=x.id,
                                                parent_version=x.version,
-                                               solution_code_snippet=clone_code_snippet(x.solution_code_snippet))
+                                               solution_code_snippet=x.solution_code_snippet)
                               for x in test_template.questions]
         test_instance = TestInstance(name=test_template.name,
                                      time_limit=test_template.time_limit,

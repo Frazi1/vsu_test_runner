@@ -21,6 +21,7 @@ class SimpleRunner(BaseRunner):
         p = subprocess.Popen('{} {} 1'.format(utility_name,
                                               file_path), stdout=subprocess.PIPE)
         out, err = p.communicate()
+        out = out.decode("utf-8")
 
         if err is not None:
             return CodeRunResult(language, None, return_type, err)
@@ -28,6 +29,8 @@ class SimpleRunner(BaseRunner):
         # 'print' in python adds '\n' after its output. So remove it.
         if len(out) > 0 and return_type is ArgumentType.STRING and out[-1] == "\n":
             out = out[:-1]
+            if out[-1] == "\r":
+                out = out[:-1]
         typed_result = ValueConverter.from_string(return_type, out, parse_str=False)
         return CodeRunResult(language, typed_result, return_type)
 

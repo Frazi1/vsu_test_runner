@@ -22,7 +22,7 @@ class CodeExecuterService:
     def register_runner(self, cls_):
         print("TYPE: {}".format(type(cls_)))
         try:
-            languages = cls_.supported_languages
+            languages = [cls_.supported_language]
             for lang in languages:
                 if lang not in self._runners:
                     print("REGISTER:{}, language:{}".format(cls_, lang))
@@ -42,8 +42,7 @@ class CodeExecuterService:
         runner = self._find_runner(code_snippet.language)
         return runner.execute_snippet(function_signature, code_snippet)
 
-    def execute_code(self, code_execution_request):
-        # type: (CodeExecutionRequestDto) -> CodeRunResult
+    def execute_code(self, code_execution_request: CodeExecutionRequestDto) -> CodeRunResult:
 
         function_ = self._function_service.get_function_by_id(code_execution_request.function_id)
 
@@ -57,7 +56,7 @@ class CodeExecuterService:
         runner = self._find_runner(code_execution_request.language)
         if code_execution_request.execution_type == ExecutionType.PLAIN_TEXT:
             return runner.execute_plain_code(return_type,
-                                             code_execution_request.code)
+                                             code_execution_request.code)[0]
         else:
             raise NotImplementedError("Comprehensive function execution is not implemented yet!")
 

@@ -1,4 +1,5 @@
 import os
+import re
 from typing import List
 
 from app_config import Config
@@ -10,6 +11,7 @@ from models.argument_type import ArgumentType
 from models.function import Function
 from models.function_parameter import FunctionArgument
 from models.language_enum import LanguageEnum
+from shared.value_converter import ValueConverter
 
 
 class PythonRunner(SimpleRunner):
@@ -17,7 +19,10 @@ class PythonRunner(SimpleRunner):
     _indentation = 4
     _indentation_symbol = " "
 
-    supported_languages = [LanguageEnum.PYTHON]
+    @property
+    def supported_language(self):
+        return LanguageEnum.PYTHON
+
     code_generator = PythonCodeGenerator()
 
     def __init__(self, config):
@@ -66,13 +71,24 @@ class PythonRunner(SimpleRunner):
             [(self._indent_line(x, index == len(code_lines) - 1)) for index, x in enumerate(code_lines)])
         return signature + formatted_code
 
+    def _parse_out_file(self, out: str, language: LanguageEnum, return_type: ArgumentType) -> List[CodeRunResult]:
+        regex = re.compile(
+            r'<StartIteration>{line_splitter}(.*?){line_splitter}<EndIteration>'.format(line_splitter=os.linesep),
+            re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
+        raw_results = regex.findall(out)
+        typed_results = [CodeRunResult(language, ValueConverter.from_string(return_type, res, parse_str=False),
+                                       return_type) for res in raw_results]
+        return typed_results
+
     def execute_plain_code(self, return_type: ArgumentType, code: str) -> List[CodeRunResult]:
         file_path = self.save_code_to_file(None, self.__file_ext__, code)
         try:
-            result = self.run_file("python", self.supported_languages[0], file_path, return_type)
+            result = self.run_file("python", file_path)
+            typed_results = self._parse_out_file(result, self.supported_language, return_type)
         finally:
             os.remove(file_path)
-        return result
+
+        return typed_results
 
     def execute_default_template(self,
                                  function_declaration_code: str,
@@ -88,15 +104,16 @@ class PythonRunner(SimpleRunner):
         ready_template = template_text.replace(indent * self._indentation_symbol + self.FUNC_CALL_MARKER,
                                                "\n".join(function_calls_code_indented))
 
-        function_declaration_indented = self._add_indent(function_declaration_code, indent)
+        result_function_declaration = self.code_generator.add_decorator(function_declaration_code,
+                                                                        "__notify_iteration", [])
+        result_function_declaration = self._add_indent(result_function_declaration, indent)
+
         ready_template = ready_template.replace(indent * self._indentation_symbol + self.FUNC_DECLARATION_MARKER,
-                                                function_declaration_indented)
+                                                result_function_declaration)
 
         return self.execute_plain_code(function_run_plans[0].function.return_type, ready_template)
 
-    def scaffold_function_declaration_text(self, function_):
-        # type: (Function, LanguageEnum) -> str
-
+    def scaffold_function_declaration_text(self, function_: Function) -> str:
         args = [self._translate_parameter(x) for x in function_.arguments]
         res = "def {name}({args}):\n".format(name=function_.name,
                                              args=", ".join(args))

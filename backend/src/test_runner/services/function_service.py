@@ -42,8 +42,8 @@ class FunctionService(BaseService):
         function_ = self.get_function_by_id(function_id)
         testing_input = self._testing_input_service.get_testing_input_by_function_id(function_id)
         if isinstance(testing_input, DeclarativeFunctionInput):
-            res = [FunctionRunPlan(language, function_, [FunctionRunArgument(arg.input_type, arg.input_value) for arg in
-                                                         input.argument_items],
+            res = [FunctionRunPlan(function_, [FunctionRunArgument(arg.input_type, arg.input_value) for arg in
+                                               input.argument_items],
                                    ValueConverter.from_string(function_.return_type, input.output_value)) for input in
                    testing_input.items]
             return res

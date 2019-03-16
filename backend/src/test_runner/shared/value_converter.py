@@ -29,6 +29,8 @@ class ValueConverter:
             return json.loads(value)
         elif type_ is ArgumentType.ARRAY_INTEGER:
             return json.loads(value)
+        elif type_ is ArgumentType.VOID:
+            return value
         else:
             raise NotImplemented
 

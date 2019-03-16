@@ -3,7 +3,7 @@ import { RunService } from '../../../services/run.service'
 import { ActivatedRoute } from '@angular/router'
 import { merge, Observable, Subject, Subscription } from 'rxjs'
 import { TestRun } from '../../../shared/runner/TestRun'
-import { TestRunQuestion } from '../../../shared/runner/TestRunQuestion'
+import { QuestionAnswer } from '../../../shared/runner/QuestionAnswer'
 import { TestRunAnswerUpdate } from '../../../shared/runner/TestRunAnswerUpdate'
 import { map, mergeMap, retry, tap } from 'rxjs/internal/operators'
 
@@ -25,7 +25,7 @@ export class TestRunnerComponent implements OnInit {
               private activatedRoute: ActivatedRoute) {
   }
 
-  get currentQuestion(): TestRunQuestion {
+  get currentQuestion(): QuestionAnswer {
     return this._testRun.questionAnswers[this._currentQuestionIndex]
   }
 
@@ -35,10 +35,10 @@ export class TestRunnerComponent implements OnInit {
       tap(route => console.log(`ROUTE: ${route}`))
     )
     const $reload: Observable<number> = this.$save.pipe(
-      mergeMap(_ => this.save())
+      mergeMap(() => this.save())
     )
 
-    this.subscription = merge($params, $reload, this.$finish.pipe(mergeMap(_ => this.finish())))
+    this.subscription = merge($params, $reload, this.$finish.pipe(mergeMap(() => this.finish())))
       .pipe(
         retry(),
         mergeMap(id => this.runService.getTestRun(id)),

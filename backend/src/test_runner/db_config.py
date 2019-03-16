@@ -14,8 +14,7 @@ connection_string = "{dialect}://{login}:{password}@{host}/{db_name}{options}".f
                                                                                       host=host,
                                                                                       db_name=db_name,
                                                                                       options=options)
-print "Connection string: {}".format(connection_string)
-
+print("Connection string: {}".format(connection_string))
 
 ENGINE = create_engine(connection_string, echo=False, echo_pool=True, pool_recycle=1000)
 # Session = sessionmaker(ENGINE)

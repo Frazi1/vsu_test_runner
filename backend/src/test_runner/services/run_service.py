@@ -1,7 +1,7 @@
 from datetime import datetime
+from typing import List
 
 from sqlalchemy.orm import joinedload, raiseload, Query
-from typing import List
 
 from dtos.dtos import TestRunAnswerUpdateDto
 from models.code_snippet import CodeSnippet
@@ -104,3 +104,9 @@ class RunService(BaseService):
         if user_id is not None:
             pass  # Todo: filter by user id
         return query.all()
+
+    def get_finished_run_by_id(self, run_id: int, user_id: int = None) -> TestRun:
+        query = self._test_run_query().filter(TestRun.id == run_id)
+        if user_id is not None:
+            pass  # Todo: filter by user id
+        return query.first()

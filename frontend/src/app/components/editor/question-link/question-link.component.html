@@ -1,0 +1,4 @@
+<div class="link g--cursor-pointer"
+     [class.passed]="state === QuestionState.PASSED"
+     [class.failed]="state === QuestionState.FAILED"
+     [class.creation]="state===QuestionState.CREATION">{{index + 1}}</div>

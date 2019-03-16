@@ -1,4 +1,4 @@
-import { TestRunQuestion } from './TestRunQuestion'
+import { QuestionAnswer } from './QuestionAnswer'
 import { Exclude, Type } from 'class-transformer'
 
 export class TestRun {
@@ -7,8 +7,8 @@ export class TestRun {
   timeLimit: number = undefined
   startedAt: Date = undefined
   endsAt: Date = undefined
-  @Type(() => TestRunQuestion)
-  questionAnswers: TestRunQuestion[] = undefined
+  @Type(() => QuestionAnswer)
+  questionAnswers: QuestionAnswer[] = undefined
   private _finishedAt: Date = undefined
 
   @Exclude()

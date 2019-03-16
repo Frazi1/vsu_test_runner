@@ -14,6 +14,9 @@ class ValueConverter:
 
     @staticmethod
     def from_string(type_, value, parse_str=True):
+        if value is None:
+            return None
+
         if type_ is ArgumentType.STRING:
             if not parse_str:
                 return value
@@ -26,6 +29,8 @@ class ValueConverter:
             return json.loads(value)
         elif type_ is ArgumentType.ARRAY_INTEGER:
             return json.loads(value)
+        elif type_ is ArgumentType.VOID:
+            return value
         else:
             raise NotImplemented
 

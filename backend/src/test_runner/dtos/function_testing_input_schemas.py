@@ -1,12 +1,13 @@
-from marshmallow import Schema, post_load
-from marshmallow.fields import Integer, Nested, String
 from typing import List
 
+from marshmallow import Schema, post_load
+from marshmallow.fields import Integer, Nested, String
+
+from dtos.schemas import ArgumentTypeSchema
 from models.argument_type import ArgumentType
 from models.function_inputs.base_function_input import DeclarativeFunctionInput
 from models.function_inputs.declarative_input_argument_item import DeclarativeInputArgumentItem
 from models.function_inputs.declarative_input_item import DeclarativeInputItem
-from schemas import ArgumentTypeSchema
 
 
 class DeclarativeInputArgumentItemSchema(Schema):

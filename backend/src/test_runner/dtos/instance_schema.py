@@ -1,7 +1,7 @@
 from marshmallow import Schema, post_load
 from marshmallow.fields import *
 
-from dtos import TestInstanceUpdate
+from dtos.dtos import TestInstanceUpdate
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
 

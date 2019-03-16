@@ -1,6 +1,7 @@
+from typing import List
+
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from typing import List
 
 from models import Base
 from models.argument_type import ArgumentType
@@ -23,5 +24,5 @@ class Function(Base):
     name = Column(String(100))  # type: str
     return_type = Column(Enum(ArgumentType))  # type: ArgumentType
     arguments = relationship("FunctionArgument", back_populates="function")  # type: List[FunctionArgument]
-    code_snippets = relationship("CodeSnippet", back_populates="function")  # type: List[CodeSnippet]
+    code_snippets: List["CodeSnippet"] = relationship("CodeSnippet", back_populates="function")
     testing_input = relationship("BaseFunctionInput", back_populates="target_function", uselist=False)  # type: BaseFunctionInput

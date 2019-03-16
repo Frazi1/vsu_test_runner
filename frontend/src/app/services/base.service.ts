@@ -1,7 +1,7 @@
 import { ClassTransformer } from 'class-transformer'
 import { Config } from '../shared/Config'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs/index'
+import { Observable } from 'rxjs'
 import { map } from 'rxjs/internal/operators'
 
 export class BaseService {
@@ -41,6 +41,14 @@ export class BaseService {
                .pipe(
                  map(res => this.json.plainToClass(classRef, res as Object))
                )
+  }
 
+  protected get<TResult>(url: string,
+                         classRef: { new(): TResult },
+                         options?: { params?: HttpParams, headers?: HttpHeaders }): Observable<TResult> {
+    return this.http.get(url, options)
+               .pipe(
+                 map(res => this.json.plainToClass(classRef, res as Object))
+               )
   }
 }

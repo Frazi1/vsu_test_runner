@@ -20,15 +20,15 @@ class CodeExecuterService:
     _runners = {}
 
     def register_runner(self, cls_):
-        print "TYPE: {}".format(type(cls_))
+        print("TYPE: {}".format(type(cls_)))
         try:
-            languages = cls_.supported_languages
+            languages = [cls_.supported_language]
             for lang in languages:
                 if lang not in self._runners:
-                    print "REGISTER:{}, language:{}".format(cls_, lang)
+                    print("REGISTER:{}, language:{}".format(cls_, lang))
                     self._runners[lang] = cls_
-        except Exception, e:
-            print e.message
+        except Exception as e:
+            print(e)
 
     def _find_runner(self, language):
         # type: (LanguageEnum) -> BaseRunner
@@ -42,8 +42,7 @@ class CodeExecuterService:
         runner = self._find_runner(code_snippet.language)
         return runner.execute_snippet(function_signature, code_snippet)
 
-    def execute_code(self, code_execution_request):
-        # type: (CodeExecutionRequestDto) -> CodeRunResult
+    def execute_code(self, code_execution_request: CodeExecutionRequestDto) -> CodeRunResult:
 
         function_ = self._function_service.get_function_by_id(code_execution_request.function_id)
 
@@ -57,7 +56,7 @@ class CodeExecuterService:
         runner = self._find_runner(code_execution_request.language)
         if code_execution_request.execution_type == ExecutionType.PLAIN_TEXT:
             return runner.execute_plain_code(return_type,
-                                             code_execution_request.code)
+                                             code_execution_request.code)[0]
         else:
             raise NotImplementedError("Comprehensive function execution is not implemented yet!")
 
@@ -69,11 +68,23 @@ class CodeExecuterService:
         code = runner.scaffold_function_declaration_text(func)
         return FunctionScaffoldingDto(code, language, func)
 
+    def _execute_plans_for_valid_results(self, function_declaration_code: str, runner: BaseRunner,
+                                         plans: List[FunctionRunPlan]) -> None:
+        execution_results = runner.execute_default_template(function_declaration_code, plans)
+        for index in range(0, len(plans)):
+            plan = plans[index]
+            execution_result = execution_results[index]
+
+            if plan.expected_result is not None and plan.expected_result != "": continue
+            plan.expected_result = execution_result.output
+
     def run_testing_set(self, code_snippet, function_):
         # type: (CodeSnippet, Function) -> List[(bool,CodeRunResult)]
-        plans = self._function_service.get_function_run_plans(function_.id, code_snippet.code, code_snippet.language)
+        plans = self._function_service.get_function_run_plans(function_.id, code_snippet.language)
         runner = self._find_runner(code_snippet.language)
-        results = [runner.execute_default_template(plan) for plan in plans]
+        self._execute_plans_for_valid_results(function_.code_snippets[0].code, runner, plans)
+
+        results = runner.execute_default_template(code_snippet.code, plans)
         validation_results = self.validate_results(results, plans)
         return validation_results
 

@@ -3,7 +3,7 @@ import { TestRun } from '../../../shared/runner/TestRun'
 import { FinishedRunService } from '../../../services/finished-run.service'
 import { Subject, Subscription } from 'rxjs'
 import { map, mergeMap, tap } from 'rxjs/operators'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { QuestionState } from '../../../shared/question-state.enum'
 
 @Component({
@@ -22,7 +22,8 @@ export class TestResultViewerComponent implements OnInit, OnDestroy {
   private currentQuestionIndex = 0
 
   constructor(private finishedRunService: FinishedRunService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute,
+              private router: Router) { }
 
   ngOnInit() {
     this.$answerLink.pipe(

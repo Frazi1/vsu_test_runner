@@ -1,7 +1,8 @@
 <div *ngIf="_testRun">
   <h1>{{_testRun.name}}</h1>
   <span>Заканчивается в: {{_testRun.endsAt || "Не указано"}}</span>
-
+  <span (click)="router.navigate(['/result', _testRun.id])" class="g--cursor-pointer g--display-block">Просмотреть
+    результаты</span>
   <div>
     <app-question-runner [questionRun]="currentQuestion"></app-question-runner>
     <div>

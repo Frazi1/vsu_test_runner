@@ -8,4 +8,7 @@
   <app-code-editor [(code)]="questionAnswer.answerCodeSnippet.code"></app-code-editor>
   <br>
   <span>Результат:{{questionAnswer.validationPassed ? "Верно" : "Неверно"}}</span>
+  <br>
+  <app-answer-iterations-viewer [iterations]="questionAnswer.iterations"></app-answer-iterations-viewer>
+
 </ng-container>

@@ -28,7 +28,8 @@ import { ClassTransformer } from 'class-transformer'
 import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
 import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
 import { QuestionAnswerResultViewerComponent } from './components/test-result/answer-result-viewer/question-answer-result-viewer.component'
-import { QuestionLinkComponent } from './components/editor/question-link/question-link.component'
+import { QuestionLinkComponent } from './components/editor/question-link/question-link.component';
+import { AnswerIterationsViewerComponent } from './components/test-result/answer-iterations-viewer/answer-iterations-viewer.component'
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { QuestionLinkComponent } from './components/editor/question-link/questio
     FunctionDeclarativeInputEditorComponent,
     TestResultViewerComponent,
     QuestionAnswerResultViewerComponent,
-    QuestionLinkComponent
+    QuestionLinkComponent,
+    AnswerIterationsViewerComponent
   ],
   imports:      [
     BrowserModule,

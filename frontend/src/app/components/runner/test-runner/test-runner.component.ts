@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { RunService } from '../../../services/run.service'
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { merge, Observable, Subject, Subscription } from 'rxjs'
 import { TestRun } from '../../../shared/runner/TestRun'
 import { QuestionAnswer } from '../../../shared/runner/QuestionAnswer'
@@ -22,7 +22,8 @@ export class TestRunnerComponent implements OnInit {
   private _currentQuestionIndex = 0
 
   constructor(private runService: RunService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
   }
 
   get currentQuestion(): QuestionAnswer {

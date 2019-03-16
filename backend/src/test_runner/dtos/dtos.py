@@ -6,6 +6,7 @@ from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
 from models.function_inputs.base_function_input import DeclarativeFunctionInput, BaseFunctionInput
+from models.function_inputs.code_run_iteration import CodeRunIteration
 from models.function_inputs.declarative_input_argument_item import DeclarativeInputArgumentItem
 from models.function_inputs.declarative_input_item import DeclarativeInputItem
 from models.function_parameter import FunctionArgument
@@ -131,6 +132,28 @@ class CodeRunResult(object):
         self.error = error
 
 
+class CodeRunIterationDto(BaseJsonable):
+    __exportables__ = {
+        "actual_output": JsonProperty(str, "actualOutput"),
+        "expected_output": JsonProperty(str, "expectedOutput")
+    }
+    actual_output: str = None
+    expected_output: str = None
+
+    def __init__(self, actual_output: str = None, expected_output: str = None):
+        self.actual_output = actual_output
+        self.expected_output = expected_output
+
+    @classmethod
+    def from_entity(cls, code_run_iteration: CodeRunIteration) -> "CodeRunIterationDto":
+        return CodeRunIterationDto(actual_output=code_run_iteration.actual_output,
+                                   expected_output=code_run_iteration.iteration_template.output_value)
+
+    @classmethod
+    def from_entity_list(cls, entities: List[CodeRunIteration]) -> List["CodeRunIterationDto"]:
+        return [CodeRunIterationDto.from_entity(x) for x in entities]
+
+
 class QuestionAnswerDto(BaseJsonable):
     __exportables__ = {
         "id": JsonProperty(int),
@@ -139,12 +162,12 @@ class QuestionAnswerDto(BaseJsonable):
         "answer_code_snippet": JsonProperty("CodeSnippetDto", dump_name="answerCodeSnippet", required=False),
         "function_id": JsonProperty(int, dump_name="functionId"),
         "is_validated": JsonProperty(bool, "isValidated"),
-        "validation_passed": JsonProperty(bool, "validationPassed", required=False)
+        "validation_passed": JsonProperty(bool, "validationPassed", required=False),
+        "iterations": JsonProperty([CodeRunIterationDto])
     }
 
     def __init__(self, id=None, name=None, description=None, answer_code_snippet=None, function_id=None,
-                 is_validated=None,
-                 validation_passed=None):
+                 is_validated=None, validation_passed=None, iterations: List[CodeRunIterationDto] = None):
         self.id = id  # type:int
         self.name = name  # type:str
         self.description = description  # type:str
@@ -152,6 +175,7 @@ class QuestionAnswerDto(BaseJsonable):
         self.function_id = function_id  # type:int
         self.validation_passed = validation_passed  # type: bool
         self.is_validated = is_validated  # type: bool
+        self.iterations = iterations
 
     @classmethod
     def map_from(cls, question_answer):
@@ -163,7 +187,8 @@ class QuestionAnswerDto(BaseJsonable):
                        question_answer.code_snippet) if question_answer.code_snippet is not None else None,
                    function_id=question_answer.question_instance.solution_code_snippet.function_id,
                    validation_passed=question_answer.validation_passed,
-                   is_validated=question_answer.is_validated)
+                   is_validated=question_answer.is_validated,
+                   iterations=CodeRunIterationDto.from_entity_list(question_answer.answer_iteration_results))
         return cls_
 
 

@@ -76,7 +76,10 @@ class PythonRunner(SimpleRunner):
             r'<StartIteration>{line_splitter}(.*?){line_splitter}<EndIteration>'.format(line_splitter=os.linesep),
             re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
         raw_results = regex.findall(out)
-        typed_results = [CodeRunResult(language, ValueConverter.from_string(return_type, res, parse_str=False),
+        typed_results = [CodeRunResult(language,
+                                       ValueConverter.to_string(return_type,
+                                                                ValueConverter.from_string(return_type, res,
+                                                                                           parse_str=False)),
                                        return_type) for res in raw_results]
         return typed_results
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from coderunner.base_runner import BaseRunner
 from coderunner.execution_type import ExecutionType
@@ -78,9 +78,8 @@ class CodeExecuterService:
             if plan.expected_result is not None and plan.expected_result != "": continue
             plan.expected_result = execution_result.output
 
-    def run_testing_set(self, code_snippet, function_):
-        # type: (CodeSnippet, Function) -> List[(bool,CodeRunResult)]
-        plans = self._function_service.get_function_run_plans(function_.id, code_snippet.language)
+    def run_testing_set(self, code_snippet: CodeSnippet, function_: Function) -> List[Tuple[bool, CodeRunResult, int]]:
+        plans = self._function_service.get_function_run_plans(function_.id)
         runner = self._find_runner(code_snippet.language)
         self._execute_plans_for_valid_results(function_.code_snippets[0].code, runner, plans)
 
@@ -88,13 +87,13 @@ class CodeExecuterService:
         validation_results = self.validate_results(results, plans)
         return validation_results
 
-    def validate_results(self, code_execution_results, plans):
-        # type: (List[CodeRunResult], List[FunctionRunPlan]) -> (bool, CodeRunResult)
+    def validate_results(self, code_execution_results: List[CodeRunResult], plans: List[FunctionRunPlan]) -> List[
+        Tuple[bool, CodeRunResult, int]]:
         res = []
         for index in range(0, len(code_execution_results)):
             if not code_execution_results[index].error and \
                     code_execution_results[index].output == plans[index].expected_result:
-                res.append((True, code_execution_results[index]))
+                res.append((True, code_execution_results[index], plans[index].declarative_input_item_id))
             else:
-                res.append((False, code_execution_results[index]))
+                res.append((False, code_execution_results[index], plans[index].declarative_input_item_id))
         return res

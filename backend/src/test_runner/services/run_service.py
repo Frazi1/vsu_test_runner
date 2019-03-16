@@ -1,11 +1,12 @@
 from datetime import datetime
-from typing import List
+from typing import List, Tuple
 
 from sqlalchemy.orm import joinedload, raiseload, Query
 
-from dtos.dtos import TestRunAnswerUpdateDto
+from dtos.dtos import TestRunAnswerUpdateDto, CodeRunResult
 from models.code_snippet import CodeSnippet
 from models.function import Function
+from models.function_inputs.code_run_iteration import CodeRunIteration
 from models.question_answer import QuestionAnswer
 from models.question_instance import QuestionInstance
 from models.test_instance import TestInstance
@@ -46,6 +47,12 @@ class RunService(BaseService):
                 .joinedload(QuestionAnswer.code_snippet)
                 .joinedload(CodeSnippet.function)
                 .joinedload(Function.arguments),
+            joinedload(TestRun.question_answers)
+                .joinedload(QuestionAnswer.answer_iteration_results)
+                .joinedload(CodeRunIteration.iteration_template),
+            joinedload(TestRun.question_answers)
+                .joinedload(QuestionAnswer.answer_iteration_results)
+                .joinedload(CodeRunIteration.question_answer),
             joinedload(TestRun.test_instance),
             raiseload('*'))
 
@@ -92,11 +99,22 @@ class RunService(BaseService):
             answer_results_mapping = validation_results[index]
 
             answer = db_test_run.question_answers[index]
+            self.append_iteration_results(answer, answer_results_mapping)
             answer.is_validated = True
             answer.validation_passed = all((x[0] for x in answer_results_mapping))
 
         db_test_run.finished_at = datetime.now()
         self._db.commit()
+
+    def append_iteration_results(self, answer: QuestionAnswer,
+                                 answer_results_mapping: List[Tuple[bool, CodeRunResult, int]]):
+        answer.answer_iteration_results.clear()
+        res = []
+        for answer_result in answer_results_mapping:
+            iteration = CodeRunIteration(actual_output=answer_result[1].output, iteration_template_id=answer_result[2],
+                                         question_answer=answer, question_answer_id=answer.id)
+            res.append(iteration)
+        self._db.add_all(res)
 
     def get_finished_test_runs(self, user_id=None):
         # type:(int|None)-> List[TestRun]

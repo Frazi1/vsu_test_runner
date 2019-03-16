@@ -7,7 +7,6 @@ from coderunner.function_run_plan import FunctionRunPlan
 from dtos.function_testing_input_schemas import FunctionTestingInputDtoSchema
 from models.function import Function
 from models.function_inputs.base_function_input import DeclarativeFunctionInput
-from models.language_enum import LanguageEnum
 from services.base_service import BaseService
 from services.testing_input_service import TestingInputService
 from shared.value_converter import ValueConverter
@@ -38,12 +37,16 @@ class FunctionService(BaseService):
         function_object.testing_input = testing_input.declarative_input
         self._db.commit()
 
-    def get_function_run_plans(self, function_id: int, language: LanguageEnum) -> List[FunctionRunPlan]:
+    def get_function_run_plans(self, function_id: int) -> List[FunctionRunPlan]:
         function_ = self.get_function_by_id(function_id)
         testing_input = self._testing_input_service.get_testing_input_by_function_id(function_id)
         if isinstance(testing_input, DeclarativeFunctionInput):
-            res = [FunctionRunPlan(function_, [FunctionRunArgument(arg.input_type, arg.input_value) for arg in
-                                               input.argument_items],
-                                   ValueConverter.from_string(function_.return_type, input.output_value)) for input in
-                   testing_input.items]
+            res = [FunctionRunPlan(function_,
+                                   [
+                                       FunctionRunArgument(arg.input_type, arg.input_value) for arg in
+                                       input.argument_items
+                                   ],
+                                   ValueConverter.from_string(function_.return_type, input.output_value),
+                                   input.id)
+                   for input in testing_input.items]
             return res

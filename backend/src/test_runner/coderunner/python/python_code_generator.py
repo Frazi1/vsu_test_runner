@@ -24,7 +24,7 @@ class PythonCodeGenerator():
         elif argument_type == ArgumentType.INTEGER:
             return function_run_argument.argument_value
         elif argument_type == ArgumentType.ARRAY_INTEGER:
-            res = '{values}'
+            res = '[{values}]'
             return res.format(
                 values=", ".join([str(x) for x in (ValueConverter.from_string(argument_type, argument_value))]))
         elif argument_type == ArgumentType.ARRAY_STRING:

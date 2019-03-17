@@ -1,0 +1,5 @@
+<div>
+  <span class="g--display-block" [class.passed]="isPassed(iter)" [class.failed]="!isPassed(iter)"
+        *ngFor="let iter of iterations">Expected:{{iter.expectedOutput}} - Actual:{{iter.actualOutput}}
+  </span>
+</div>

@@ -71,7 +71,162 @@
     \item declarative\_input\_argument\_item
 \end{enumerate}
 
-\section{Сгенерированный код}
+\paragraph{Связи между сущностями}
+\begin{enumerate}
+	\item Тестовый шаблон может иметь несколько тестовых вопросов
+	\item Тестоый вопрос может принадлежать к нескольким тестам
+	\item Вопрос тестового события принадлежит к одному шаблону вопроса
+	\item Тестовое событие содержит несколько вопросов
+	\item Ответ на вопрос принаджежит только к одному событию
+	\item Функция может иметь сколько угодно аргументов,
+	реализаций и тестирующих данных
+\end{enumerate}
+
+Были определены слудующие домены
+\begin{figure}[H]
+	\includegraphics[center]{domains.png}
+	\caption{Определенные домены}
+\end{figure}
+\section{Модель данных, основанная на ключах}
+\begin{figure}[H]
+\includegraphics[width=\textwidth, center]{key_based.png}
+\caption{Модель данных, основанная на ключах}
+\end{figure}
+На данной схеме связи типа многие-ко-многим между парами
+сущностей test\_template и test\_question\_template, test\_instance и
+question\_instance были заменены двумя связями, выраженными
+с помощью промежуточных таблиц test\_template\_question\_template\_association
+и test\_instance\_to\_question\_instance\_association.
+
+\section{Полная аттрибутивная модель}
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{attr_based.png}
+	\caption{Полная аттрибутивная модель}
+\end{figure}
+
+На данной модели были добавлены аттрибуты к сущностям.
+\paragraph{Аттрибуты сущности test\_template}
+\begin{enumerate}
+	\item name - Название
+	\item time\_limit - Ограничение по времени
+	\item is\_deleted - Маркер удаления
+\end{enumerate}
+
+\paragraph{Аттрибуты test\_qustion\_template}
+\begin{enumerate}
+	\item name - Название
+	\item time\_limit - Ограничение по времени
+	\item is\_deleted - Маркер удаления
+	\item description - Описание вопроса
+	\item version - Версия вопроса
+	\item solution\_code\_snippet\_id - Первичный ключа
+	сущности solution\_code\_snippet  
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности test\_template\_test\_question\_template\_association}
+\begin{enumerate}
+	\item test\_template\_id - Первичный ключ сущности
+	test\_template
+	\item test\_question\_template\_id - Первичный ключ сущности
+	test\_question\_template
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности code\_snippet}
+\begin{enumerate}
+	\item language - Язык программирования
+	\item code - Код решения
+	\item function\_id - Первичный ключ сущности function
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности function}
+\begin{enumerate}
+	\item name - Название
+	\item return\_type - Тип возвращаемого значения
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности function\_argument}
+\begin{enumerate}
+	\item type - Типа аргумента
+	\item name - Название
+	\item function\_id - Первичный ключ сущности
+	function
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности function\_input}
+\begin{enumerate}
+	\item type - Дискриминатор объекта (для наследования)
+	\item target\_function\_id - Первичный ключ
+	сущности function
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности declarative\_input\_item}
+\begin{enumerate}
+	\item output\_value - Ожидаемое возвращемое значение
+	\item declarative\_function\_input\_id - Первичный ключ
+	сущности function\_input
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности declarative\_input\_argument\_item}
+\begin{enumerate}
+	\item argument\_index - Индекс аргумента
+	\item input\_type - Тип входного параметра
+	\item input\_value Входное значение
+	\item declarative\_input\_item\_id - Первичный ключ сущности
+	declarative\_input\_item
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности question\_instance}
+\begin{enumerate}
+	\item name - Название
+	\item time\_limit - Ограничение по времени
+	\item description - Описание вопроса
+	\item parent\_version - Версия вопроса
+	\item parent\_id - Первичный ключ сущности
+	test\_question\_template
+	\item solution\_code\_snippet\_id - Первичный ключа
+	сущности solution\_code\_snippet  
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности test\_instance}
+\begin{enumerate}
+	\item name - Название
+	\item time\_limit - Ограничение по времени
+	\item is\_active - Маркер доступности
+	\item created\_at - Дата и время создания
+	\item available\_after - Дата, после которой событие
+	станет доступным для прохождение
+	\item disabled\_after - Дата, после которой событие
+	будет завершено
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности test\_run}
+\begin{enumerate}
+	\item started\_at - Дата и время начала прохождения теста
+	\item finished\_at - Дата и время фактического завершения теста
+	\item ends\_at - Дата и время ожидаемого завершения теста
+	\item test\_instance\_id - Первичный ключ сущности test\_instance
+\end{enumerate}
+
+\paragraph{Аттрибуты сущности question\_answer}
+\begin{enumerate}
+	\item is\_validated - Был ли ответ проверен
+	\item validation\_passed - Прошел ли ответ проверку
+	\item test\_run\_id - Первичный ключ сущности test\_run
+	\item question\_instance\_id - Первчиный ключ сущности question\_instance 
+	\item code\_snippet\_id - Первичный ключ сущности code\_snipept
+\end{enumerate}
+
+
+\section{Трансформационная модель}
+Трансформационная модель полностью соответствует полной
+аттрибутивнйо модели, поэтому не будет представлена.
+
+
+\section{Модель СУБД}
+В качестве СУБД была использована MySQL.
+
+Для генерации созданной модели данны был получен
+следующий скрипт:
 \begin{lstlisting}
     
 CREATE TABLE code_snippet
@@ -82,14 +237,9 @@ CREATE TABLE code_snippet
 	function_id  integer NULL
 )
 ;
-
-
-
 ALTER TABLE code_snippet
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE declarative_input_argument_item
 (
@@ -101,13 +251,9 @@ CREATE TABLE declarative_input_argument_item
 )
 ;
 
-
-
 ALTER TABLE declarative_input_argument_item
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE declarative_input_item
 (
@@ -117,13 +263,9 @@ CREATE TABLE declarative_input_item
 )
 ;
 
-
-
 ALTER TABLE declarative_input_item
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE function
 (
@@ -133,13 +275,9 @@ CREATE TABLE function
 )
 ;
 
-
-
 ALTER TABLE function
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE function_argument
 (
@@ -150,13 +288,9 @@ CREATE TABLE function_argument
 )
 ;
 
-
-
 ALTER TABLE function_argument
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE function_input
 (
@@ -166,13 +300,9 @@ CREATE TABLE function_input
 )
 ;
 
-
-
 ALTER TABLE function_input
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE question_answer
 (
@@ -185,13 +315,9 @@ CREATE TABLE question_answer
 )
 ;
 
-
-
 ALTER TABLE question_answer
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE question_instance
 (
@@ -205,13 +331,9 @@ CREATE TABLE question_instance
 )
 ;
 
-
-
 ALTER TABLE question_instance
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE test_instance
 (
@@ -225,13 +347,9 @@ CREATE TABLE test_instance
 )
 ;
 
-
-
 ALTER TABLE test_instance
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE test_instance_to_question_instance_association
 (
@@ -239,8 +357,6 @@ CREATE TABLE test_instance_to_question_instance_association
 	question_instance_id  integer NULL
 )
 ;
-
-
 
 CREATE TABLE test_question_template
 (
@@ -254,13 +370,9 @@ CREATE TABLE test_question_template
 )
 ;
 
-
-
 ALTER TABLE test_question_template
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE test_run
 (
@@ -272,13 +384,9 @@ CREATE TABLE test_run
 )
 ;
 
-
-
 ALTER TABLE test_run
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE test_template
 (
@@ -289,13 +397,9 @@ CREATE TABLE test_template
 )
 ;
 
-
-
 ALTER TABLE test_template
 	ADD  PRIMARY KEY (id)
 ;
-
-
 
 CREATE TABLE test_template_test_question_template_association
 (
@@ -304,93 +408,61 @@ CREATE TABLE test_template_test_question_template_association
 )
 ;
 
-
-
 ALTER TABLE code_snippet
 	ADD FOREIGN KEY code_snippet_ibfk_1 (function_id) REFERENCES function(id)
 ;
-
-
 
 ALTER TABLE declarative_input_argument_item
 	ADD FOREIGN KEY declarative_input_argument_item_ibfk_1 (declarative_input_item_id) REFERENCES declarative_input_item(id)
 ;
 
-
-
 ALTER TABLE declarative_input_item
 	ADD FOREIGN KEY declarative_input_item_ibfk_1 (declarative_function_input_id) REFERENCES function_input(id)
 ;
-
-
 
 ALTER TABLE function_argument
 	ADD FOREIGN KEY function_argument_ibfk_1 (function_id) REFERENCES function(id)
 ;
 
-
-
 ALTER TABLE function_input
 	ADD FOREIGN KEY function_input_ibfk_1 (target_function_id) REFERENCES function(id)
 ;
 
-
-
 ALTER TABLE question_answer
 	ADD FOREIGN KEY question_answer_ibfk_3 (code_snippet_id) REFERENCES code_snippet(id)
 ;
-
-
 ALTER TABLE question_answer
 	ADD FOREIGN KEY question_answer_ibfk_2 (question_instance_id) REFERENCES question_instance(id)
 ;
-
-
 ALTER TABLE question_answer
 	ADD FOREIGN KEY question_answer_ibfk_1 (test_run_id) REFERENCES test_run(id)
 ;
 
-
-
 ALTER TABLE question_instance
 	ADD FOREIGN KEY question_instance_ibfk_2 (parent_id) REFERENCES test_question_template(id)
 ;
-
-
 ALTER TABLE question_instance
 	ADD FOREIGN KEY question_instance_ibfk_1 (solution_code_snippet_id) REFERENCES code_snippet(id)
 ;
 
-
-
 ALTER TABLE test_instance_to_question_instance_association
 	ADD FOREIGN KEY test_instance_to_question_instance_association_ibfk_2 (question_instance_id) REFERENCES question_instance(id)
 ;
-
-
 ALTER TABLE test_instance_to_question_instance_association
 	ADD FOREIGN KEY test_instance_to_question_instance_association_ibfk_1 (test_instance_id) REFERENCES test_instance(id)
 ;
-
-
 
 ALTER TABLE test_question_template
 	ADD FOREIGN KEY test_question_template_ibfk_1 (solution_code_snippet_id) REFERENCES code_snippet(id)
 ;
 
-
-
 ALTER TABLE test_run
 	ADD FOREIGN KEY test_run_ibfk_1 (test_instance_id) REFERENCES test_instance(id)
 ;
 
-
-
 ALTER TABLE test_template_test_question_template_association
 	ADD FOREIGN KEY test_template_test_question_template_association_ibfk_2 (test_question_template_id) REFERENCES test_question_template(id)
 ;
-
-
 ALTER TABLE test_template_test_question_template_association
 	ADD FOREIGN KEY test_template_test_question_template_association_ibfk_1 (test_template_id) REFERENCES test_template(id)
 ;

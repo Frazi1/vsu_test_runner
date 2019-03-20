@@ -19,11 +19,9 @@ class PythonRunner(SimpleRunner):
     def supported_language(self):
         return LanguageEnum.PYTHON
 
-    code_generator = PythonCodeGenerator()
-
-    def __init__(self, config):
-        # type: (Config) -> None
-        super(PythonRunner, self).__init__(config)
+    def __init__(self, config: Config):
+        self.code_generator = PythonCodeGenerator()
+        super(PythonRunner, self).__init__(config, self.code_generator)
 
     def _parse_out_file(self, out: str, language: LanguageEnum, return_type: ArgumentType) -> List[CodeRunResult]:
         regex = re.compile(

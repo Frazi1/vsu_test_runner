@@ -3,15 +3,15 @@ import subprocess
 import uuid
 
 from app_config import Config
+from coderunner.base_code_generator import BaseCodeGenerator
 from coderunner.base_runner import BaseRunner
 
 
 class SimpleRunner(BaseRunner):
 
-    def __init__(self, config):
-        # type: (Config)-> None
+    def __init__(self, config: Config, code_generator: BaseCodeGenerator):
 
-        super(SimpleRunner, self).__init__()
+        super(SimpleRunner, self).__init__(code_generator)
         self._config = config
 
     def run_file(self, utility_name: str, file_path: str) -> str:

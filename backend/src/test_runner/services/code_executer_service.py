@@ -65,7 +65,7 @@ class CodeExecuterService:
 
         func = self._function_service.get_function_by_id(function_id)
         runner = self._find_runner(language)
-        code = runner.scaffold_function_declaration_text(func)
+        code = runner.code_generator.scaffold_function_declaration_text(func)
         return FunctionScaffoldingDto(code, language, func)
 
     def _execute_plans_for_valid_results(self, function_declaration_code: str, runner: BaseRunner,

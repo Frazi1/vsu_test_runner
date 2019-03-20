@@ -1,5 +1,6 @@
 from typing import List
 
+from coderunner.base_code_generator import BaseCodeGenerator
 from coderunner.function_run_argument import FunctionRunArgument
 from coderunner.function_run_plan import FunctionRunPlan
 from models.argument_type import ArgumentType
@@ -10,7 +11,7 @@ from shared.value_converter import ValueConverter
 from utils.business_error import BusinessException
 
 
-class PythonCodeGenerator():
+class PythonCodeGenerator(BaseCodeGenerator):
     _indentation = 4
     _indentation_symbol = " "
 

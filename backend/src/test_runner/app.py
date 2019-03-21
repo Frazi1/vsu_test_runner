@@ -6,6 +6,7 @@ from typing import List
 from bottle import Bottle, run, response, request
 
 from app_config import Config
+from coderunner.csharp.csharp_runner import CSharpRunner
 from coderunner.python.python_runner import PythonRunner
 from controllers.base_controller import BaseController
 from controllers.code_execution_controller import CodeExecutionController
@@ -110,7 +111,10 @@ def _init_controllers(app, service_resolver):
 
 
 def _init_code_runners(code_execution_service):
-    runners = [PythonRunner(app_config)]
+    runners = [
+        PythonRunner(app_config),
+        CSharpRunner(app_config)
+    ]
     for r in runners:
         code_execution_service.register_runner(r)
 

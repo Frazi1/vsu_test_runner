@@ -38,7 +38,7 @@ class PythonRunner(SimpleRunner):
     def execute_plain_code(self, return_type: ArgumentType, code: str) -> List[CodeRunResult]:
         file_path = self.save_code_to_file(None, self.__file_ext__, code)
         try:
-            result = self.run_file("python", file_path)
+            result = self._run_file("python", file_path)
             typed_results = self._parse_out_file(result, self.supported_language, return_type)
         finally:
             os.remove(file_path)
@@ -48,7 +48,7 @@ class PythonRunner(SimpleRunner):
     def execute_default_template(self,
                                  function_declaration_code: str,
                                  function_run_plans: List[FunctionRunPlan]) -> List[CodeRunResult]:
-        with open(self._config.python_default_template_path, "r") as file_:
+        with open(self.config.python_default_template_path, "r") as file_:
             template_text = file_.read()
 
         ready_template = self.code_generator.prepare_code_from_template(template_text,

@@ -25,22 +25,21 @@ class CSharpRunner(SimpleRunner):
     def supported_language(self):
         return LanguageEnum.CSHARP
 
-    def _compile_file(self, file_path: str) -> str:
-        p = subprocess.Popen('{} {} 1'.format(self.config.csharp_compiler_path,
-                                              file_path), stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        out = out.decode("utf-8")
-        out = out[:-len(os.linesep)]  # remove last line break, because it contains no information
+    def _compile_file(self, cs_file_path: str, out_exe_file_path) -> str:
+        return self._run_process('{csc} -out:{exe_file} {cs_file}'.format(csc=self.config.csharp_compiler_path,
+                                                                          exe_file=out_exe_file_path,
+                                                                          cs_file=cs_file_path))
 
-        return out
+    def _execute_file(self, exe_file_path):
+        return self._run_process(exe_file_path)
 
     def execute_plain_code(self, return_type: ArgumentType, code: str) -> List[CodeRunResult]:
         file_name = uuid.uuid4().hex
         cs_file_path = self.save_code_to_file(file_name, self.__cs_file_ext__, code)
-        exe_file_path = file_name + self.__exe_file_ext__
+        exe_file_path = os.path.splitext(cs_file_path)[0] + self.__exe_file_ext__
         try:
-            self._compile_file(cs_file_path)
-            out = self._run_file("", exe_file_path)
+            self._compile_file(cs_file_path, exe_file_path)
+            out = self._execute_file(exe_file_path)
             return []
         except Exception as e:
             os.remove(cs_file_path)

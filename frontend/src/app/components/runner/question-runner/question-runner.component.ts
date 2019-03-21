@@ -65,7 +65,7 @@ export class QuestionRunnerComponent implements OnInit {
   private async runCode() {
     const snippet = this._questionRun.answerCodeSnippet
     const req = CodeExecutionRequest.fromReturnType(snippet.language,
-      this._code,
+      this.questionRun.answerCodeSnippet.code,
       snippet.functionObj.returnType,
       ExecutionType.PLAIN_TEXT
     )

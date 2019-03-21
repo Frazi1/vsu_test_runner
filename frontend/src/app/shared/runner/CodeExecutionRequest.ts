@@ -1,6 +1,6 @@
 import { CodeType } from '../CodeType'
 import { CodeLanguage } from '../CodeLanguage'
-import { Exclude, Type } from 'class-transformer'
+import { Exclude, Expose, Type } from 'class-transformer'
 import { ExecutionType } from '../ExecutionType'
 
 export class CodeExecutionRequest {
@@ -30,6 +30,7 @@ export class CodeExecutionRequest {
     this.executionType = executionType
   }
 
+  @Expose()
   public get executionType(): string {
     return ExecutionType[this._executionType]
   }

@@ -24,7 +24,7 @@ class RunController(BaseController):
     def get_test_runs(self):
         runs = self._run_service.get_all_active_test_runs()
         dtos = [TestRunDto.from_entity(x) for x in runs]
-        return dtos
+        return sorted(dtos, key=lambda x: x.id)
 
     @BaseController.post('<test_instance_id:int>')
     def start_test_run(self, test_instance_id):

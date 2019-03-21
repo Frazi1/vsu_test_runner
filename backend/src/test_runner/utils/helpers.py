@@ -27,6 +27,8 @@ def load_modules(package_path, target_module_name=None):
 
 def is_relationship_loaded(entity, attr):
     # type:(any, (str|InstrumentedAttribute))-> bool
+    if not entity: return False
+
     ins = inspect(entity)
     key = attr if isinstance(attr, str) else attr.key
     return key not in ins.unloaded

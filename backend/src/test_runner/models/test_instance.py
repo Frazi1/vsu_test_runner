@@ -1,3 +1,5 @@
+from typing import List
+
 from sqlalchemy import Column, String, Integer, DateTime, func, Boolean, text
 from sqlalchemy.orm import relationship
 
@@ -15,7 +17,7 @@ class TestInstance(Base):
     disabled_after = Column(DateTime, nullable=True)
     time_limit = Column(Integer, nullable=True)
     is_active = Column(Boolean, server_default=text('TRUE'))
-    questions = relationship(
+    questions: List["QuestionInstance"] = relationship(
         "QuestionInstance",
         secondary=test_instance_to_question_instance_association,
         back_populates="tests"

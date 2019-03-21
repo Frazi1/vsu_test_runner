@@ -299,7 +299,7 @@ class CodeSnippetDto(BaseDto):
     __exportables__ = {
         "id": JsonProperty(int, required=False),
         "function": JsonProperty("FunctionDto", required=False),
-        "code": JsonProperty(str),
+        "code": JsonProperty(str, required=False),
         "language": JsonProperty(LanguageEnum)
     }
 
@@ -311,7 +311,7 @@ class CodeSnippetDto(BaseDto):
     @classmethod
     def from_entity(cls, e):
         # type: (CodeSnippet) -> CodeSnippetDto
-        if is_relationship_loaded(e, CodeSnippet.function):
+        if is_relationship_loaded(e, CodeSnippet.function) and e.function:
             function_dto = FunctionDto.from_entity(e.function)
         else:
             function_dto = None

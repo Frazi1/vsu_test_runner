@@ -24,7 +24,7 @@ class QuestionInstance(Base):
 
     parent_version = Column(BigInteger, nullable=False)  # type: int
     answers = relationship("QuestionAnswer", back_populates="question_instance")  # type: List["QuestionAnswer"]
-    solution_code_snippet = relationship("CodeSnippet", uselist=False)  # type: CodeSnippet
+    solution_code_snippet: CodeSnippet = relationship("CodeSnippet", uselist=False)
 
     solution_code_snippet_id = Column(Integer, ForeignKey("code_snippet.id"), nullable=False)  # type: int
     parent_id = Column(Integer, ForeignKey('test_question_template.id'), nullable=False)  # type: int

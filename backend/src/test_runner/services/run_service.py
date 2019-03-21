@@ -64,9 +64,16 @@ class RunService(BaseService):
         self._db.commit()
         return test_run.id
 
-    def _create_empty_question_answers(self, test_instance, test_run):
-        # type: (TestInstance, TestRun) -> List(QuestionAnswer)
-        return [QuestionAnswer(test_run=test_run, question_instance=q) for q in test_instance.questions]
+    def _create_empty_question_answers(self, test_instance: TestInstance, test_run: TestRun) -> List[QuestionAnswer]:
+        return [
+            QuestionAnswer(test_run=test_run,
+                           question_instance=q,
+                           code_snippet=CodeSnippet(
+                               language=q.solution_code_snippet.language,
+                               function=q.solution_code_snippet.function)
+                           )
+            for q in test_instance.questions
+        ]
 
     def update_test_run_answers(self, test_run_id, update_dtos):
         # type: (int, List[TestRunAnswerUpdateDto]) -> None

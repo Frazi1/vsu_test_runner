@@ -8,7 +8,7 @@
 \usepackage{indentfirst}
 \usepackage{listings}
 
-
+\lstset{linewidth=\textwidth}
 % \graphicspath{ {./img_fixed/} }
 
 \geometry{verbose,a4paper,tmargin=2cm,bmargin=2cm,lmargin=2.5cm,rmargin=1.5cm}
@@ -33,7 +33,7 @@
 \hfill \break
 \hfill \break
 \large{Отчет по предмету Архитектура информационных систем
-\\1 лабораторная работа
+\\2 лабораторная работа
 \\Приложение для автоматизированного проведения тестирования}\\
 \end{center}
 
@@ -227,7 +227,10 @@ question\_instance были заменены двумя связями, выра
 
 Для генерации созданной модели данны был получен
 следующий скрипт:
+
+\lstset{breaklines=true}
 \begin{lstlisting}
+
     
 CREATE TABLE code_snippet
 (
@@ -467,4 +470,40 @@ ALTER TABLE test_template_test_question_template_association
 	ADD FOREIGN KEY test_template_test_question_template_association_ibfk_1 (test_template_id) REFERENCES test_template(id)
 ;
 \end{lstlisting}
+
+
+\section{Автодокументация}
+В данном разделе будут представлены отчеты, автоматически сгенерированные
+с помощью ERWin.
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{TableDefinitions.png}
+	\caption{Отчет о созданных таблицах базы данных}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{ColumnReport_Part1.png}
+	\caption{Отчет о созданных столбцах базы данных, часть 1}	
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{ColumnReport_Part2.png}
+	\caption{Отчет о созданных столбцах базы данных, часть 2}	
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{DefinedDomains.png}
+	\caption{Отчет об определенных доменах}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{DateTimeDomain.png}
+	\caption{Колонки, определенные на домене DateTime}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth, center]{NumberDomain.png}
+	\caption{Колонки, определенные на домене Number}
+\end{figure}
+
 \end{document}

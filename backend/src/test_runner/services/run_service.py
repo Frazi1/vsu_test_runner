@@ -1,9 +1,9 @@
 from datetime import datetime
-from typing import List, Tuple
+from typing import List
 
 from sqlalchemy.orm import joinedload, raiseload, Query
 
-from dtos.dtos import TestRunAnswerUpdateDto, CodeRunResult
+from dtos.dtos import TestRunAnswerUpdateDto
 from models.code_snippet import CodeSnippet
 from models.function import Function
 from models.function_inputs.code_run_iteration import CodeRunIteration
@@ -14,6 +14,7 @@ from models.test_run import TestRun
 from services.base_service import BaseService
 from services.code_executer_service import CodeExecuterService
 from services.instance_service import InstanceService
+from services.models.code_run_validation_result import CodeRunValidationResult
 
 
 class RunService(BaseService):
@@ -91,8 +92,7 @@ class RunService(BaseService):
 
         self._db.commit()
 
-    def finish_test_run(self, test_run_id, update_dtos):
-        # type: (int, List[TestRunAnswerUpdateDto]) -> None
+    def finish_test_run(self, test_run_id: int, update_dtos: List[TestRunAnswerUpdateDto]) -> None:
         if update_dtos:
             self.update_test_run_answers(test_run_id, update_dtos)
         db_test_run = self.get_active_test_run(test_run_id)
@@ -103,22 +103,23 @@ class RunService(BaseService):
         ]
 
         for index in range(0, len(validation_results)):
-            answer_results_mapping = validation_results[index]
+            validation_result = validation_results[index]
 
             answer = db_test_run.question_answers[index]
-            self.append_iteration_results(answer, answer_results_mapping)
+            self.append_iteration_results(answer, validation_result)
             answer.is_validated = True
-            answer.validation_passed = all((x[0] for x in answer_results_mapping))
+            answer.validation_passed = all((x.is_valid for x in validation_result))
 
         db_test_run.finished_at = datetime.now()
         self._db.commit()
 
     def append_iteration_results(self, answer: QuestionAnswer,
-                                 answer_results_mapping: List[Tuple[bool, CodeRunResult, int]]):
+                                 validation_results: List[CodeRunValidationResult]):
         answer.answer_iteration_results.clear()
         res = []
-        for answer_result in answer_results_mapping:
-            iteration = CodeRunIteration(actual_output=answer_result[1].output, iteration_template_id=answer_result[2],
+        for answer_result in validation_results:
+            iteration = CodeRunIteration(actual_output=answer_result.code_run_result.file_run_result.output,
+                                         iteration_template_id=answer_result.code_run_result.run_plan.declarative_input_item_id,
                                          question_answer=answer, question_answer_id=answer.id)
             res.append(iteration)
         self._db.add_all(res)

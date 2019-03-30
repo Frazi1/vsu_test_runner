@@ -117,15 +117,17 @@ class TestTemplateDto(BaseDto):
         return TestTemplate(self.id, self.name, self.time_limit, [x.to_entity() for x in self.questions])
 
 
-class CodeRunResult(object):
+class CodeRunResultDto(object):
     __exportables__ = {
         "language": JsonProperty(LanguageEnum),
         "output": JsonProperty(str),
+        "input": JsonProperty(str),
         "output_type": JsonProperty(ArgumentType, "outputType"),
         "error": JsonProperty(str)
     }
 
-    def __init__(self, language, output, output_type, error=None):
+    def __init__(self, language, input: str, output, output_type, error=None):
+        self.input = input
         self.language = language
         self.output = output
         self.output_type = output_type
@@ -264,28 +266,28 @@ class CodeExecutionRequestDto(BaseJsonable):
         "client_id": JsonProperty(str, "clientId", required=False)
     }
 
-    def __init__(self, code='', language=None, execution_type=None, client_id=None, function_id=None, return_type=None):
-        # type: (str, LanguageEnum, bool, str | None, int, ArgumentType) -> None
+    def __init__(self, code: str = '', language: LanguageEnum = None, execution_type: ExecutionType = None,
+                 function_id: int = None, return_type: ArgumentType = None, client_id: str = None):
+        self.return_type = return_type
+        self.function_id = function_id
+        self.language = language
+        self.code = code
+        self.execution_type = execution_type
+        self.client_id = client_id
 
-        self.return_type = return_type  # type: ArgumentType
-        self.function_id = function_id  # type: int
-        self.language = language  # type: LanguageEnum
-        self.code = code  # type: str
-        self.execution_type = execution_type  # type: ExecutionType
-        self.client_id = client_id  # type: (str|None)
 
-
-class CodeExecutionResponseDto(object):
+class CodeExecutionResponseDto(BaseDto):
     __exportables__ = {
-        "code_run_result": JsonProperty(CodeRunResult, "codeRunResult"),
-        "client_id": JsonProperty(str, "clientId")
+        "is_valid": JsonProperty(bool, "isValid", required=False),
+        "actual_input": JsonProperty(str, "actualInput"),
+        "actual_output": JsonProperty(str, "actualOutput")
     }
 
-    def __init__(self, code_run_result, client_id=None):
-        # type: (CodeRunResult, str) -> None
-
-        self.code_run_result = code_run_result
-        self.client_id = client_id
+    def __init__(self, actual_input: str, actual_output: str, is_valid: bool = None, **kwargs):
+        super().__init__(**kwargs)
+        self.actual_input = actual_input
+        self.actual_output = actual_output
+        self.is_valid = is_valid
 
 
 class CreateFunctionTestingInputRequestDto(object):

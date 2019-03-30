@@ -2,4 +2,5 @@ export enum ExecutionType {
   PLAIN_TEXT       = 'PLAIN_TEXT',
   DEFAULT_TEMPLATE = 'DEFAULT_TEMPLATE',
   CUSTOM_TEMPLATE  = 'CUSTOM_TEMPLATE',
+  ONE_BY_ONE       = 'ONE_BY_ONE'
 }

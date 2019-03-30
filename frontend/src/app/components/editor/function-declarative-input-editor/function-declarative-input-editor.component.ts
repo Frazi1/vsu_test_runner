@@ -67,15 +67,17 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   }
 
   private parseArguments(argsLine: string): DeclarativeInputArgumentItem[] {
-    return argsLine.split(this.ARGUMENT_SEPARATOR_SYMBOL)
-                   .map(s => s.trim())
-                   .map((s, index) => {
-                     let arg = new DeclarativeInputArgumentItem()
-                     arg.argumentIndex = index + 1
-                     arg.inputType = this.functionObj.arguments[index].type
-                     arg.inputValue = s
-                     return arg
-                   })
+    const args_text_value = argsLine.split(this.ARGUMENT_SEPARATOR_SYMBOL)
+                                  .map(s => s.trim())
+    return this.functionObj.arguments
+               .map(a => a.type)
+               .map((type, index) => {
+                 let arg = new DeclarativeInputArgumentItem()
+                 arg.argumentIndex = index + 1
+                 arg.inputType = type
+                 arg.inputValue = args_text_value[index]
+                 return arg
+               })
   }
 
   private dump(input: DeclarativeFunctionInput): string {

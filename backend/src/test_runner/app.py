@@ -27,6 +27,7 @@ from services.instance_service import InstanceService
 from services.run_service import RunService
 from services.template_service import TemplateService
 from services.testing_input_service import TestingInputService
+from utils.business_error import BusinessException
 from utils.helpers import load_modules
 from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
 
@@ -128,10 +129,15 @@ _init_code_runners(_code_executer_service)
 def error(err):
     response.headers['Content-Type'] = 'application/json; charset=utf-8'
     response.headers['Access-Control-Allow-Origin'] = '*'
-    message_ = {"code": err.status_code,
-                "exception": str(err.exception),
-                "message": str(err.exception),
-                "trace": err.traceback}
+    if err is BusinessException:
+        message_ = {"error": str(err)}
+        response.status = 400
+    else:
+        message_ = {"code": err.status_code,
+                    "exception": str(err.exception),
+                    "message": str(err.exception),
+                    "trace": err.traceback}
+
     dump = json.dumps(message_)
     return dump
 

@@ -14,16 +14,18 @@ class SimpleRunner(BaseRunner):
         super(SimpleRunner, self).__init__(code_generator)
         self.config = config
 
-    def _run_process(self, command: str) -> str:
-        p = subprocess.Popen(command, stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        out = out.decode("utf-8")
-        out = out[:-len(os.linesep)]  # remove last line break, because it contains no information
+    def _run_process(self, command: str, input_data: str = None) -> (str, str):
+        p = subprocess.run(command,
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE,
+                           input=input_data,
+                           encoding="utf-8")
+        out = p.stdout
+        out = out[:-1]  # remove last line break, because it contains no information
+        return out, p.stderr
 
-        return out
-
-    def _run_file(self, utility_name: str, file_path: str) -> str:
-        return self._run_process('{} {} 1'.format(utility_name, file_path))
+    def _run_file(self, utility_name: str, file_path: str, input: str) -> (str, str):
+        return self._run_process('{} {} 1'.format(utility_name, file_path), input)
 
     def save_code_to_file(self, name, extension, code):
         if name is None:

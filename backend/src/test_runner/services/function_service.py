@@ -46,7 +46,8 @@ class FunctionService(BaseService):
                                        FunctionRunArgument(arg.input_type, arg.input_value) for arg in
                                        input.argument_items
                                    ],
-                                   ValueConverter.from_string(function_.return_type, input.output_value),
+                                   ValueConverter.from_string(function_.return_type, input.output_value,
+                                                              parse_str=False),
                                    input.id)
                    for input in testing_input.items]
             return res

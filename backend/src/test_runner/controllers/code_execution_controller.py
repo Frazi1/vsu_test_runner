@@ -1,3 +1,5 @@
+from typing import List
+
 from bottle import request
 
 from controllers.base_controller import BaseController
@@ -34,8 +36,11 @@ class CodeExecutionController(BaseController):
 
     @BaseController.post('/code/run', accepts=CodeExecutionRequestDto,
                          returns=CodeExecutionResponseDto)
-    def execute_code_snippet(self, parsed_body):
-        # type: (CodeExecutionRequestDto)-> CodeExecutionResponseDto
+    def execute_code_snippet(self, parsed_body: CodeExecutionRequestDto) -> List[CodeExecutionResponseDto]:
+        results = self._code_execution_service.execute_code(parsed_body)
+        return CodeExecutionResponseDto(results, parsed_body.client_id)
 
-        code_run_result = self._code_execution_service.execute_code(parsed_body)
-        return CodeExecutionResponseDto(code_run_result, parsed_body.client_id)
+    @BaseController.post("/code/run_tests", accepts=CodeExecutionRequestDto, returns=[CodeExecutionResponseDto])
+    def run_tests(self, parsed_body: CodeExecutionRequestDto) -> List[CodeExecutionResponseDto]:
+        results = self._code_execution_service.execute_tests(parsed_body)
+        return results

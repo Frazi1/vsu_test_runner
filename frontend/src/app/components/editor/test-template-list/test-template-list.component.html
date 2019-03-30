@@ -2,14 +2,19 @@
 <label>
   <span>Удаленные</span>
   <input type="checkbox" [(ngModel)]="_includeDeleted"
-         (change)="_includeDeleted$.next(_includeDeleted);console.log('Checkbox click')">
+         (change)="_includeDeleted$.next(_includeDeleted)">
 </label>
-<div *ngFor="let t of testTemplates">
-  <div [routerLink]="['/template', t.id]">
-    <span>{{t.id}}. Название: {{t.name}}  Вопросов: {{t.questionTemplates.length}}</span>
-    <button *ngIf="!t.isDeleted" (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить</button>
-    <button #restoreBtn *ngIf="t.isDeleted"
-            (click)="_restore$.next(t.id);$event.stopPropagation()">Восстановить
-    </button>
+<ng-container *ngIf="_testTemplates$ | async as testTemplates; else loading">
+  <div *ngFor="let t of testTemplates">
+    <div [routerLink]="['/template', t.id]">
+      <span>{{t.id}}. Название: {{t.name}}  Вопросов: {{t.questionTemplates.length}}</span>
+      <button *ngIf="!t.isDeleted" (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить</button>
+      <button #restoreBtn *ngIf="t.isDeleted"
+              (click)="_restore$.next(t.id);$event.stopPropagation()">Восстановить
+      </button>
+    </div>
   </div>
-</div>
+</ng-container>
+<ng-template #loading>
+  <div>LOADING...</div>
+</ng-template>

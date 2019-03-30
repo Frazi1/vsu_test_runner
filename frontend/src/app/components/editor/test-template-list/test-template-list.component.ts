@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
 import { TestTemplate } from '../../../shared/TestTemplate'
 import { ITemplateService } from '../../../services/interfaces'
 import { InstanceService } from '../../../services/instance.service'
-import { mergeMap, startWith, switchMap, tap } from 'rxjs/internal/operators'
+import { mergeMap, retry, startWith, takeUntil, tap } from 'rxjs/internal/operators'
 import { Observable, Subject } from 'rxjs/index'
 
 @Component({
@@ -13,8 +13,9 @@ import { Observable, Subject } from 'rxjs/index'
 export class TestTemplateListComponent implements OnInit, OnDestroy {
   private _restore$ = new Subject<number>()
   private _includeDeleted$ = new Subject<boolean>()
+  private _unsubscribe$ = new Subject()
 
-  private testTemplates: TestTemplate[]
+  private _testTemplates$: Observable<TestTemplate[]>
   private _includeDeleted = false
 
 
@@ -24,33 +25,31 @@ export class TestTemplateListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscribeToRestore()
-    this.subscribeToIncludeDeleted()
+    this.subscribeToLoadTemplates()
   }
 
   public ngOnDestroy(): void {
-    this._restore$.unsubscribe()
-    this._includeDeleted$.unsubscribe()
+    this._unsubscribe$.next()
   }
 
-  private subscribeToIncludeDeleted() {
-    // noinspection TypeScriptValidateTypes
+  private subscribeToLoadTemplates(): void {
     this._includeDeleted$.pipe(
+      takeUntil(this._unsubscribe$),
       startWith(this._includeDeleted),
       tap(v => console.log(`Include change: ${v}`)),
-      mergeMap(v => this.loadTemplates(v)),
-      tap(res => this.testTemplates = res)
+      tap(v => this._testTemplates$ = this.loadTemplates(v)),
+      retry(),
     ).subscribe()
   }
 
   private subscribeToRestore() {
     this._restore$.pipe(
+      takeUntil(this._unsubscribe$),
       tap(id => console.log(`Restoring: ${id}`)),
       mergeMap(id => this.templatesService.restore(id)),
-      switchMap(id => this.loadTemplates(this._includeDeleted)),
-      tap(res => this.testTemplates = res)
+      tap(_ => this._testTemplates$ = this.loadTemplates(this._includeDeleted)),
     ).subscribe()
   }
-
 
   private loadTemplates(includeDeleted: boolean): Observable<TestTemplate[]> {
     return this.templatesService.getTemplates(includeDeleted)

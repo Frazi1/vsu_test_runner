@@ -165,7 +165,7 @@ class CodeExecutionRequestSchema(Schema):
 
     @post_load
     def create_class(self, value):
-        return CodeExecutionRequestDto(**value)
+        return CodeExecutionRequestDto()
 
 
 class CodeRunResultSchema(Schema):

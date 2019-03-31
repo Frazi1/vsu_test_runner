@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List
 
 from coderunner.execution_type import ExecutionType
+from coderunner.scaffolding_type import ScaffoldingType
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
@@ -249,11 +250,19 @@ class TestInstanceUpdate(object):
         self.time_limit = time_limit
 
 
-class FunctionScaffoldingDto(object):
-    def __init__(self, code, language, function):
+class FunctionScaffoldingDto(BaseJsonable):
+    __exportables__ = {
+        # "function": JsonProperty(Function),
+        "language":JsonProperty(LanguageEnum),
+        "code": JsonProperty(str),
+        "scaffolding_type":JsonProperty(ScaffoldingType, "scaffoldingType")
+    }
+
+    def __init__(self, code: str, language: LanguageEnum, function: Function, scaffolding_type:ScaffoldingType):
         self.function = function
         self.language = language
         self.code = code
+        self.scaffolding_type = scaffolding_type
 
 
 class CodeExecutionRequestDto(BaseJsonable):

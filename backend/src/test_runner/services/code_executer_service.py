@@ -4,6 +4,7 @@ from coderunner.base_runner import BaseRunner
 from coderunner.execution_type import ExecutionType
 from coderunner.file_run_result import FileRunResult
 from coderunner.function_run_plan import FunctionRunPlan
+from coderunner.scaffolding_type import ScaffoldingType
 from dtos.dtos import FunctionScaffoldingDto, CodeExecutionRequestDto
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
@@ -43,13 +44,13 @@ class CodeExecuterService:
     def get_supported_languages(self):
         return self._runners.keys()
 
-    def scaffold_function(self, function_id, language):
-        # type: (int, LanguageEnum) -> FunctionScaffoldingDto
+    def scaffold_function(self, function_id: int, language: LanguageEnum,
+                          scaffolding_type: ScaffoldingType) -> FunctionScaffoldingDto:
 
         func = self._function_service.get_function_by_id(function_id)
         runner = self._find_runner(language)
-        code = runner.code_generator.scaffold_function_declaration_text(func)
-        return FunctionScaffoldingDto(code, language, func)
+        code = runner.code_generator.scaffold_function_declaration_text(func, scaffolding_type)
+        return FunctionScaffoldingDto(code, language, func, scaffolding_type)
 
     def execute_code(self, code_execution_request: CodeExecutionRequestDto,
                      run_plans: Optional[List[FunctionRunPlan]]) -> List[CodeRunResult]:

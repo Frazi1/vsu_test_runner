@@ -1,6 +1,7 @@
 import { Function } from '../Function'
 import { CodeLanguage } from '../CodeLanguage'
-import { Expose, Type } from 'class-transformer'
+import { Exclude, Expose, Type } from 'class-transformer'
+import { ScaffoldingType } from '../ScaffoldingType'
 
 
 export class FunctionScaffoldingDto {
@@ -14,5 +15,14 @@ export class FunctionScaffoldingDto {
 
   code: string = undefined
 
-  // endregion
+  @Exclude() private _scaffoldingType: ScaffoldingType
+
+  @Expose()
+  public get scaffoldingType(): string {
+    return ScaffoldingType[this._scaffoldingType]
+  }
+
+  public set scaffoldingType(value: string) {
+    this._scaffoldingType = ScaffoldingType[value]
+  }
 }

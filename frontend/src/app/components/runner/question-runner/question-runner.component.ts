@@ -5,6 +5,7 @@ import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { ExecutionType } from '../../../shared/ExecutionType'
+import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 
 @Component({
   selector:    'app-question-runner',
@@ -52,7 +53,10 @@ export class QuestionRunnerComponent implements OnInit {
   private async update() {
     if (this.questionRun.answerCodeSnippet == null) {
       const codeLanguage = this._codeLanguages[0]
-      const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId, codeLanguage).toPromise()
+      const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId,
+        codeLanguage,
+        ScaffoldingType.FUNCTION_ONLY
+      ).toPromise()
       this.questionRun.answerCodeSnippet = new CodeSnippet(null,
         codeLanguage,
         scaffold.code.split('\n'),

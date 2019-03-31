@@ -1,13 +1,13 @@
 # import ujson as json
 import json as json
 from functools import wraps
+from typing import List
 
 import bottle
 from bottle import response, request
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.scoping import ScopedSession
-from typing import List
 
 from dtos.validation_exception import ValidationException
 from utils.pyjson.pyjson import PyJsonConverter
@@ -179,9 +179,11 @@ class QueryParamParser(object):
         self.init_parsers()
 
     def init_parsers(self):
-        self.type_parsers[str] = lambda x: str(x)
-        self.type_parsers[int] = lambda x: int(x)
-        self.type_parsers[bool] = lambda x: bool_parser(x)
+        self.type_parsers[str] = lambda x, type_: str(x)
+        self.type_parsers[int] = lambda x, type_: int(x)
+        self.type_parsers[bool] = lambda x, type_: bool_parser(x)
+        self.type_parsers[Enum] = lambda x, type_: enum_parser(x, type_)
+        self.type_parsers[EnumMeta] = lambda x, type_: enum_parser(x, type_)
 
         def bool_parser(value):
             # type: (str | None) -> bool
@@ -196,6 +198,16 @@ class QueryParamParser(object):
 
             raise QueryParserException("Value: '{}' is not supported.".format(value))
 
+        def enum_parser(x, type_):
+            return type_[x]
+
+    def get_parser(self, type_: type) -> callable:
+        res = self.type_parsers.get(type_)
+        if not res:
+            key = next((key for key in self.type_parsers.keys() if isinstance(type_, key)), None)
+            res = self.type_parsers.get(key)
+        return res
+
     def apply(self, callback, context):
         queries = getattr(context.config, self.route_arg_name)  # type: List[QueryParam]
 
@@ -205,10 +217,10 @@ class QueryParamParser(object):
         def wrapper(*a, **kwa):
             for query in queries:
                 value = request.query.get(query.name)
-                parser = self.type_parsers.get(query.type)
+                parser = self.get_parser(query.type)
                 if parser is None:
                     raise QueryParserException("Parser for type '{}' is not defined.".format(str(query.type)))
-                parsed_value = parser(value)
+                parsed_value = parser(value, query.type)
 
                 if kwa.get(query.inject_name) is not None:
                     raise QueryParserException("Parameter '{}' cannot be injected because it already exists.".format(query.inject_name))

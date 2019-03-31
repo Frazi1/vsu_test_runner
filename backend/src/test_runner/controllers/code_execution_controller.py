@@ -1,12 +1,11 @@
 from typing import List
 
-from bottle import request
-
+from coderunner.scaffolding_type import ScaffoldingType
 from controllers.base_controller import BaseController
-from dtos.dtos import CodeExecutionRequestDto, CodeExecutionResponseDto
-from dtos.schemas import FunctionScaffoldingDtoSchema
+from dtos.dtos import CodeExecutionRequestDto, CodeExecutionResponseDto, FunctionScaffoldingDto
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
+from plugins import QueryParam
 from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
 
@@ -20,10 +19,12 @@ class CodeExecutionController(BaseController):
         self._function_service = function_service
         self._code_execution_service = code_execution_service
 
-    @BaseController.get('/code/scaffold/<function_id:int>', response_schema=FunctionScaffoldingDtoSchema())
-    def scaffold_function(self, function_id):
-        language = request.query['language']
-        scaffold_function = self._code_execution_service.scaffold_function(function_id, LanguageEnum[language])
+    @BaseController.get('/code/scaffold/<function_id:int>',
+                        returns=FunctionScaffoldingDto,
+                        query=[QueryParam("language", LanguageEnum),
+                               QueryParam("scaffoldingType", ScaffoldingType, "scaffolding_type")])
+    def scaffold_function(self, function_id, language: LanguageEnum, scaffolding_type: ScaffoldingType):
+        scaffold_function = self._code_execution_service.scaffold_function(function_id, language, scaffolding_type)
         return scaffold_function
 
     @BaseController.get('/code/types')

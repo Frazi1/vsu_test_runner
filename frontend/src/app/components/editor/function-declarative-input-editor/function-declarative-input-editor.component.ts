@@ -28,7 +28,7 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
   private ARGUMENT_SEPARATOR_SYMBOL = ';'
 
   ngOnInit() {
-    if (this.functionObj.testingInput) {
+    if (this.functionObj.testingInput && this.functionObj.testingInput.declarativeInput) {
       this._input = this.dump(this.functionObj.testingInput.declarativeInput)
     }
     this._parse$.pipe(

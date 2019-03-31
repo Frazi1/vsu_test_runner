@@ -10,6 +10,7 @@ import { CodeLanguage } from '../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../shared/runner/CodeExecutionRequest'
 import { CodeExecutionResponse } from '../shared/runner/CodeExecutionResponse'
 import { ClassTransformer } from 'class-transformer'
+import { ScaffoldingType } from '../shared/ScaffoldingType'
 
 @Injectable({
   providedIn: 'root'
@@ -58,8 +59,11 @@ export class CodeService extends BaseService {
     return this._languageCache$
   }
 
-  public scaffoldFunction(functionId: number, codeLanguage: CodeLanguage): Observable<FunctionScaffoldingDto> {
+  public scaffoldFunction(functionId: number,
+                          codeLanguage: CodeLanguage,
+                          scaffoldingType: ScaffoldingType): Observable<FunctionScaffoldingDto> {
     const opt = new HttpParams().append('language', codeLanguage.name)
+                                .append('scaffoldingType', ScaffoldingType[scaffoldingType])
     return this.http.get(this.buildUrl('scaffold', functionId), {params: opt})
                .pipe(
                  map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))

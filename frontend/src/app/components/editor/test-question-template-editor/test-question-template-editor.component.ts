@@ -3,6 +3,7 @@ import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { Function } from '../../../shared/Function'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
+import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -45,7 +46,10 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
   private async scaffoldSolutionFunction(): Promise<void> {
     const functionId = this.question.codeSnippet.functionObj.id
     const language = this.question.codeSnippet.language
-    const functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId, language).toPromise()
+    const functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId,
+      language,
+      ScaffoldingType.FUNCTION_ONLY
+    ).toPromise()
     this.question.codeSnippet.code = functionScaffoldingDto.code
   }
 

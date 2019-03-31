@@ -3,6 +3,7 @@ from typing import List
 from coderunner.base_code_generator import BaseCodeGenerator
 from coderunner.function_run_argument import FunctionRunArgument
 from coderunner.function_run_plan import FunctionRunPlan
+from coderunner.scaffolding_type import ScaffoldingType
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
@@ -49,7 +50,7 @@ class PythonCodeGenerator(BaseCodeGenerator):
         decorator_call = self._generate_function_call_inner("@" + decorator_name, decorator_params)
         return decorator_call + func_declaration_code
 
-    def scaffold_function_declaration_text(self, function_: Function) -> str:
+    def scaffold_function_declaration_text(self, function_: Function, scaffolding_type: ScaffoldingType) -> str:
         args = [self._translate_parameter(x) for x in function_.arguments]
         res = "def {name}({args}):\n".format(name=function_.name,
                                              args=", ".join(args))

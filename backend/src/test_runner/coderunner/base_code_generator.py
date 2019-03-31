@@ -7,7 +7,7 @@ from models.function import Function
 
 class BaseCodeGenerator(object):
     @abstractmethod
-    def scaffold_function_declaration_text(self, function_: Function, scaffolding_type: ScaffoldingType) -> str:
+    def scaffold_code(self, function_: Function, scaffolding_type: ScaffoldingType) -> str:
         pass
 
     def _translate_parameter(self, function_parameter):
@@ -16,3 +16,7 @@ class BaseCodeGenerator(object):
     @abstractmethod
     def translate_code(self, function_signature: Function, code_snippet: CodeSnippet) -> str:
         pass
+
+    @abstractmethod
+    def prepare_execution_code_from_function_declaration(self, function_declaration: str, function: Function):
+        raise NotImplementedError()

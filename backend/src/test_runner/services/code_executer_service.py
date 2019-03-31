@@ -49,7 +49,7 @@ class CodeExecuterService:
 
         func = self._function_service.get_function_by_id(function_id)
         runner = self._find_runner(language)
-        code = runner.code_generator.scaffold_function_declaration_text(func, scaffolding_type)
+        code = runner.code_generator.scaffold_code(func, scaffolding_type)
         return FunctionScaffoldingDto(code, language, func, scaffolding_type)
 
     def execute_code(self, code_execution_request: CodeExecutionRequestDto,
@@ -67,15 +67,13 @@ class CodeExecuterService:
         runner = self._find_runner(code_execution_request.language)
         testing_inputs = [self._generate_input_from_plan(plan) for plan in run_plans] if run_plans else [None]
 
-        if code_execution_request.execution_type == ExecutionType.PLAIN_TEXT:
-            run_results = runner.execute_plain_code(code_execution_request.code, testing_inputs)
-        elif code_execution_request.execution_type == ExecutionType.ONE_BY_ONE:
-            run_results = self.execute_tests_one_by_one(code_execution_request.language,
-                                                        code_execution_request.code,
-                                                        testing_inputs,
-                                                        return_type)
-        else:
-            raise NotImplementedError("Comprehensive function execution is not implemented yet!")
+        code_for_execution = code_execution_request.code
+        if code_execution_request.scaffolding_type == ScaffoldingType.FUNCTION_ONLY:
+            code_for_execution = runner.code_generator.prepare_execution_code_from_function_declaration(
+                code_for_execution, function_)
+
+        run_results = runner.execute_plain_code(code_for_execution, testing_inputs)
+
         return [CodeRunResult(result, plan) for result, plan in
                 (zip(run_results, run_plans or [None] * len(run_results)))]
 
@@ -91,7 +89,7 @@ class CodeExecuterService:
         plans = self._function_service.get_function_run_plans(function_.id)
         code_execution_request_for_valid_results = CodeExecutionRequestDto(function_.code_snippets[0].code,
                                                                            code_snippet.language,
-                                                                           ExecutionType.ONE_BY_ONE,
+                                                                           ScaffoldingType.FULL_TEMPLATE,
                                                                            function_.id,
                                                                            function_.return_type,
                                                                            client_id=None)
@@ -99,7 +97,7 @@ class CodeExecuterService:
 
         code_execution_request = CodeExecutionRequestDto(code_snippet.code,
                                                          code_snippet.language,
-                                                         ExecutionType.ONE_BY_ONE,
+                                                         ScaffoldingType.FUNCTION_ONLY,
                                                          function_.id,
                                                          function_.return_type,
                                                          client_id=None)
@@ -113,21 +111,12 @@ class CodeExecuterService:
             res.append(CodeRunValidationResult(run_result, is_valid))
         return res
 
-    def execute_tests_one_by_one(self,
-                                 language: LanguageEnum,
-                                 code: str,
-                                 inputs: List[str],
-                                 return_type: ArgumentType) -> List[FileRunResult]:
-        runner = self._find_runner(language)
-        outputs = runner.execute_plain_code(code, inputs)
-        return outputs
-
     def _generate_input_from_plan(self, plan: FunctionRunPlan) -> str:
         res = ""
         for arg in plan.arguments:
             parsed_value = ValueConverter.from_string(arg.argument_type, arg.argument_value)
             if arg.argument_type == ArgumentType.INTEGER or arg.argument_type == ArgumentType.STRING:
-                res += str(arg.argument_value)
+                res += str(parsed_value)
             elif arg.argument_type == ArgumentType.ARRAY_INTEGER or arg.argument_type == ArgumentType.ARRAY_STRING:
                 res += ", ".join([str(x) for x in parsed_value])
 

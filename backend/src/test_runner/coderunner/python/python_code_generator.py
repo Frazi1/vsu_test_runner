@@ -50,7 +50,7 @@ class PythonCodeGenerator(BaseCodeGenerator):
         decorator_call = self._generate_function_call_inner("@" + decorator_name, decorator_params)
         return decorator_call + func_declaration_code
 
-    def scaffold_function_declaration_text(self, function_: Function, scaffolding_type: ScaffoldingType) -> str:
+    def scaffold_code(self, function_: Function, scaffolding_type: ScaffoldingType) -> str:
         args = [self._translate_parameter(x) for x in function_.arguments]
         res = "def {name}({args}):\n".format(name=function_.name,
                                              args=", ".join(args))

@@ -271,17 +271,17 @@ class CodeExecutionRequestDto(BaseJsonable):
         "function_id": JsonProperty(int, "functionId", required=False),
         "language": JsonProperty(LanguageEnum),
         "code": JsonProperty(str),
-        "execution_type": JsonProperty(ExecutionType, "executionType"),
+        "scaffolding_type": JsonProperty(ScaffoldingType, "scaffoldingType"),
         "client_id": JsonProperty(str, "clientId", required=False)
     }
 
-    def __init__(self, code: str = '', language: LanguageEnum = None, execution_type: ExecutionType = None,
+    def __init__(self, code: str = '', language: LanguageEnum = None, scaffolding_type: ScaffoldingType = None,
                  function_id: int = None, return_type: ArgumentType = None, client_id: str = None):
         self.return_type = return_type
         self.function_id = function_id
         self.language = language
         self.code = code
-        self.execution_type = execution_type
+        self.scaffolding_type = scaffolding_type
         self.client_id = client_id
 
 

@@ -16,10 +16,12 @@ class SimpleRunner(BaseRunner):
         self.config = config
 
     def _run_process(self, command: str, input_data: Optional[str] = None) -> (str, str):
+        if input_data:
+            command = [command, input_data]
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE,
-                           input=input_data,
+                           # input=input_data,
                            encoding="utf-8")
         out = p.stdout
         out = out[:-1]  # remove last line break, because it contains no information

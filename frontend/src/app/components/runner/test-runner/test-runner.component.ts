@@ -5,7 +5,9 @@ import { merge, Observable, Subject, Subscription } from 'rxjs'
 import { TestRun } from '../../../shared/runner/TestRun'
 import { QuestionAnswer } from '../../../shared/runner/QuestionAnswer'
 import { TestRunAnswerUpdate } from '../../../shared/runner/TestRunAnswerUpdate'
-import { map, mergeMap, retry, tap } from 'rxjs/internal/operators'
+import { filter, map, mergeMap, retry, tap, } from 'rxjs/internal/operators'
+import { CodeService } from '../../../services/code.service'
+import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 
 @Component({
   selector:    'app-test-runner',
@@ -23,7 +25,8 @@ export class TestRunnerComponent implements OnInit {
 
   constructor(private runService: RunService,
               private activatedRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private codeService: CodeService) {
   }
 
   get currentQuestion(): QuestionAnswer {
@@ -43,7 +46,14 @@ export class TestRunnerComponent implements OnInit {
       .pipe(
         retry(),
         mergeMap(id => this.runService.getTestRun(id)),
-        tap(res => this._testRun = res)
+        tap(res => this._testRun = res),
+        filter(
+          _ => this.currentQuestion.answerCodeSnippet.code === '' || this.currentQuestion.answerCodeSnippet.code == null),
+        mergeMap(_ => this.codeService.scaffoldFunction(this.currentQuestion.functionId,
+          this.currentQuestion.answerCodeSnippet.language, ScaffoldingType.FUNCTION_ONLY
+          )
+        ),
+        tap(functionScaffolding => this.currentQuestion.answerCodeSnippet.code = functionScaffolding.code)
       ).subscribe()
   }
 

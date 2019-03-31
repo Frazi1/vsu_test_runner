@@ -48,7 +48,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
     const language = this.question.codeSnippet.language
     const functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId,
       language,
-      ScaffoldingType.FUNCTION_ONLY
+      ScaffoldingType.FULL_TEMPLATE
     ).toPromise()
     this.question.codeSnippet.code = functionScaffoldingDto.code
   }

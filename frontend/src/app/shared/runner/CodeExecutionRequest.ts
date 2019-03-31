@@ -2,6 +2,7 @@ import { CodeType } from '../CodeType'
 import { CodeLanguage } from '../CodeLanguage'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { ExecutionType } from '../ExecutionType'
+import { ScaffoldingType } from '../ScaffoldingType'
 
 export class CodeExecutionRequest {
   clientId: string = undefined
@@ -18,35 +19,41 @@ export class CodeExecutionRequest {
   code: string = undefined
 
   @Exclude()
-  private _executionType: ExecutionType = undefined
+  private _scaffoldingType: ScaffoldingType
 
   private constructor(clientId: string, returnType: CodeType, functionId: number, language: CodeLanguage, code: string,
-                      executionType: ExecutionType) {
+                      scaffoldingType: ScaffoldingType) {
     this.clientId = clientId
     this.returnType = returnType
     this.functionId = functionId
     this.language = language
     this.code = code
-    this.executionType = executionType
+    this.scaffoldingType = scaffoldingType
   }
 
   @Expose()
-  public get executionType(): string {
-    return ExecutionType[this._executionType]
+  public get scaffoldingType(): string {
+    return ScaffoldingType[this._scaffoldingType]
   }
 
-  public set executionType(value) {
-    this._executionType = ExecutionType[value]
+  public set scaffoldingType(value) {
+    this._scaffoldingType = ExecutionType[value]
   }
 
-  public static fromReturnType(language: CodeLanguage, code: string, returnType: CodeType, executionType: ExecutionType,
+  public static fromReturnType(language: CodeLanguage,
+                               code: string,
+                               returnType: CodeType,
+                               scaffoldingType: ScaffoldingType,
                                clientId: string = null): CodeExecutionRequest {
-    return new CodeExecutionRequest(clientId, returnType, null, language, code, executionType)
+    return new CodeExecutionRequest(clientId, returnType, null, language, code, scaffoldingType)
   }
 
-  public static fromFunctionId(language: CodeLanguage, code: string, functionId: number, executionType: ExecutionType,
+  public static fromFunctionId(language: CodeLanguage,
+                               code: string,
+                               functionId: number,
+                               scaffoldingType: ScaffoldingType,
                                clientId: string = null): CodeExecutionRequest {
-    return new CodeExecutionRequest(clientId, null, functionId, language, code, executionType)
+    return new CodeExecutionRequest(clientId, null, functionId, language, code, scaffoldingType)
   }
 
 }

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from coderunner.base_runner import BaseRunner
 from coderunner.execution_type import ExecutionType
@@ -51,8 +51,8 @@ class CodeExecuterService:
         code = runner.code_generator.scaffold_function_declaration_text(func)
         return FunctionScaffoldingDto(code, language, func)
 
-    def execute_code(self, code_execution_request: CodeExecutionRequestDto, run_plans: List[FunctionRunPlan]) \
-            -> List[CodeRunResult]:
+    def execute_code(self, code_execution_request: CodeExecutionRequestDto,
+                     run_plans: Optional[List[FunctionRunPlan]]) -> List[CodeRunResult]:
 
         function_ = self._function_service.get_function_by_id(code_execution_request.function_id)
 
@@ -64,7 +64,7 @@ class CodeExecuterService:
             raise BusinessException("Return type or Function ID must be specified")
 
         runner = self._find_runner(code_execution_request.language)
-        testing_inputs = [self._generate_input_from_plan(plan) for plan in run_plans]
+        testing_inputs = [self._generate_input_from_plan(plan) for plan in run_plans] if run_plans else [None]
 
         if code_execution_request.execution_type == ExecutionType.PLAIN_TEXT:
             run_results = runner.execute_plain_code(code_execution_request.code, testing_inputs)
@@ -75,7 +75,8 @@ class CodeExecuterService:
                                                         return_type)
         else:
             raise NotImplementedError("Comprehensive function execution is not implemented yet!")
-        return [CodeRunResult(result, plan) for result, plan in zip(run_results, run_plans)]
+        return [CodeRunResult(result, plan) for result, plan in
+                (zip(run_results, run_plans or [None] * len(run_results)))]
 
     def _execute_plans_for_valid_results(self, code_execution_request: CodeExecutionRequestDto,
                                          plans: List[FunctionRunPlan]) -> None:

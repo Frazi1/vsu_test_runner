@@ -1,6 +1,7 @@
 import os
 import subprocess
 import uuid
+from typing import Optional
 
 from app_config import Config
 from coderunner.base_code_generator import BaseCodeGenerator
@@ -14,7 +15,7 @@ class SimpleRunner(BaseRunner):
         super(SimpleRunner, self).__init__(code_generator)
         self.config = config
 
-    def _run_process(self, command: str, input_data: str = None) -> (str, str):
+    def _run_process(self, command: str, input_data: Optional[str] = None) -> (str, str):
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE,

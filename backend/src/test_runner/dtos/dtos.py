@@ -137,7 +137,7 @@ class CodeRunResultDto(object):
 class CodeRunIterationDto(BaseJsonable):
     __exportables__ = {
         "actual_output": JsonProperty(str, "actualOutput"),
-        "expected_output": JsonProperty(str, "expectedOutput")
+        "expected_output": JsonProperty(str, "expectedOutput", required=False)
     }
     actual_output: str = None
     expected_output: str = None
@@ -279,7 +279,7 @@ class CodeExecutionRequestDto(BaseJsonable):
 class CodeExecutionResponseDto(BaseDto):
     __exportables__ = {
         "is_valid": JsonProperty(bool, "isValid", required=False),
-        "actual_input": JsonProperty(str, "actualInput"),
+        "actual_input": JsonProperty(str, "actualInput", required=False),
         "actual_output": JsonProperty(str, "actualOutput")
     }
 

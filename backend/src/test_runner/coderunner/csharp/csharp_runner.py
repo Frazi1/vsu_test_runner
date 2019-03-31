@@ -1,7 +1,7 @@
 import os
 import uuid
 from contextlib import contextmanager
-from typing import List
+from typing import List, Optional
 
 from app_config import Config
 from coderunner.csharp.compilation_error import CompilationError
@@ -47,7 +47,7 @@ class CSharpRunner(SimpleRunner):
             if exe_file_path is not None and os.path.isfile(exe_file_path):
                 os.remove(exe_file_path)
 
-    def _execute_file(self, exe_file_path, input: str) -> FileRunResult:
+    def _execute_file(self, exe_file_path, input: Optional[str]) -> FileRunResult:
         out, err = self._run_process(exe_file_path, input)
         return FileRunResult(input, out, err)
 

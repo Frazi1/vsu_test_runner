@@ -3,7 +3,9 @@ import json
 import os
 from typing import List
 
+import bottle
 from bottle import Bottle, run, response, request
+from gevent import monkey
 
 from app_config import Config
 from coderunner.csharp.csharp_runner import CSharpRunner
@@ -30,7 +32,6 @@ from services.testing_input_service import TestingInputService
 from utils.business_error import BusinessException
 from utils.helpers import load_modules
 from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
-
 
 # monkey.patch_all()
 
@@ -88,6 +89,8 @@ converter = PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()], logger
 app.install(PyJsonPlugin(pyjson_converter=converter))
 
 app_config = Config()
+
+bottle.BaseRequest.MEMFILE_MAX = 4 * 1024 * 1024
 
 
 def _init_controllers(app, service_resolver):

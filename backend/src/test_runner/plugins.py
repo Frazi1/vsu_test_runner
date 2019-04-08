@@ -3,14 +3,9 @@ import json as json
 from functools import wraps
 from typing import List
 
-import bottle
 from bottle import response, request
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.scoping import ScopedSession
 
 from dtos.validation_exception import ValidationException
-from utils.pyjson.pyjson import PyJsonConverter
 
 
 class JsonPlugin:
@@ -200,29 +195,20 @@ class QueryParserException(Exception):
     pass
 
 
-class PyJsonPlugin(object):
+class ErrorHandlerPlugin(object):
     api = 2
-    name = 'pyjson_plugin'
-    accepts_param = 'accepts'
-    returns_param = 'returns'
-    pyjson_inject_name = 'parsed_body'
-
-    def __init__(self, pyjson_converter=None):
-        self.converter = pyjson_converter or PyJsonConverter()
+    name = 'error_handler_plugin'
 
     def apply(self, callback, context):
-        pyjson_accept_type = getattr(context.config, self.accepts_param)  # type: List[QueryParam]
-        pyjson_returns_type = getattr(context.config, self.returns_param)
+        def wrapper(*args, **kwargs):
+            try:
+                return callback(*args, **kwargs)
+            except BaseException as err:
+                message_ = {"code": 400,
+                            "message": str(err),
+                            "trace": traceback.format_exc()}
+                dump = json.dumps(message_)
+                response.body = dump
+                response.status = 500
 
-        def inner(*a, **kwa):
-            if pyjson_accept_type:
-                kwa[self.pyjson_inject_name] = self.converter.from_dict(request.json, pyjson_accept_type)
-
-            res = callback(*a, **kwa)
-            if pyjson_returns_type:
-                dict = self.converter.to_dict(res)
-                return dict
-            else:
-                return res
-
-        return inner
+        return wrapper

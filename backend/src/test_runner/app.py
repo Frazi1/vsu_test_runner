@@ -22,13 +22,14 @@ from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
-from plugins import EnableCors, BodyParser, ControllerPlugin, QueryParamParser, PyJsonPlugin
+from plugins import EnableCors, BodyParser, ControllerPlugin, QueryParamParser
 from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
 from services.instance_service import InstanceService
 from services.run_service import RunService
 from services.template_service import TemplateService
 from services.testing_input_service import TestingInputService
+from utils.bottle_pyjson_plugin.pyjson_plugin import BottlePyJsonPlugin
 from utils.business_error import BusinessException
 from utils.helpers import load_modules
 from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
@@ -87,7 +88,7 @@ app.install(BodyParser(encode_with_json_by_default=True))
 app.install(ControllerPlugin())
 app.install(QueryParamParser())
 converter = PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()], logger=_service_resolver.logger)
-app.install(PyJsonPlugin(pyjson_converter=converter))
+app.install(BottlePyJsonPlugin(pyjson_converter=converter))
 
 app_config = Config()
 

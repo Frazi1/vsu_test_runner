@@ -9,3 +9,7 @@
 [submodule "backend/src/test_runner/utils/bottle_pyjson_plugin"]
 	path = backend/src/test_runner/utils/bottle_pyjson_plugin
 	url = https://github.com/Frazi1/Bottle-PyJson-Plugin
+
+[submodule "backend/src/test_runner/utils/bottle_query_parser_plugin"]
+	path = backend/src/test_runner/utils/bottle_query_parser_plugin
+	url = https://github.com/Frazi1/Bottle-Query-Parser-Plugin.git

@@ -22,7 +22,7 @@ from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
-from plugins import EnableCors, BodyParser, ControllerPlugin, SQLAlchemySessionPlugin, QueryParamParser, PyJsonPlugin
+from plugins import EnableCors, BodyParser, ControllerPlugin, QueryParamParser, PyJsonPlugin
 from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
 from services.instance_service import InstanceService
@@ -32,6 +32,7 @@ from services.testing_input_service import TestingInputService
 from utils.business_error import BusinessException
 from utils.helpers import load_modules
 from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
+from utils.bottle_sqlalchemy_session_manager_plugin.bottle_sqlalchemy_session_manager_plugin import BottleSQLAlchemySessionPlugin
 
 # monkey.patch_all()
 
@@ -81,7 +82,7 @@ app = Bottle(autojson=False)
 # app.install(JsonPlugin())
 app.install(EnableCors())
 # app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
-app.install(SQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True))
+app.install(BottleSQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True))
 app.install(BodyParser(encode_with_json_by_default=True))
 app.install(ControllerPlugin())
 app.install(QueryParamParser())

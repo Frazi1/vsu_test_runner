@@ -1,3 +1,7 @@
 [submodule "backend/src/test_runner/utils/pyjson"]
 	path = backend/src/test_runner/utils/pyjson
 	url = https://github.com/Frazi1/pyjson
+
+[submodule "backend/src/test_runner/utils/bottle_sqlalchemy_session_manager_plugin"]
+	path = backend/src/test_runner/utils/bottle_sqlalchemy_session_manager_plugin
+	url = https://github.com/Frazi1/Bottle-SQLAlchemy-Session-Manager-Plugin.git

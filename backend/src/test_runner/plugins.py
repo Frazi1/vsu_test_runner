@@ -126,48 +126,6 @@ class ControllerPlugin(object):
         return inner
 
 
-class SQLAlchemySessionPlugin(object):
-    api = 2
-    name = 'sqlalchemy-session-plugin'
-
-    def __init__(self, engine, create_session_by_default=True, commit=False, session_maker=None):
-        self.commit = commit
-        self.engine = engine
-        self.create_session_by_default = create_session_by_default
-        self.session_maker = session_maker or sessionmaker()
-
-    def apply(self, callback, context):
-        should_create_session = getattr(context.config, 'create_session') or self.create_session_by_default
-
-        def wrapper(*a, **kwa):
-            if should_create_session is False:
-                return callback(*a, **kwa)
-            session = self.session_maker(bind=self.engine)
-            # session.rollback()
-            request.environ['db'] = session
-            try:
-                rv = callback(*a, **kwa)
-                if self.commit:
-                    session.commit()
-
-            except (SQLAlchemyError, bottle.HTTPError):
-                session.rollback()
-                raise
-            except bottle.HTTPResponse:
-                if self.commit:
-                    session.commit()
-                raise
-            finally:
-                if isinstance(self.session_maker, ScopedSession):
-                    self.session_maker.remove()
-                else:
-                    session.close()
-                request.environ['db'] = None
-            return rv
-
-        return wrapper
-
-
 class QueryParamParser(object):
     api = 2
     name = 'query_param_parser'

@@ -3,6 +3,7 @@ import { CodeLanguage } from '../CodeLanguage'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { ExecutionType } from '../ExecutionType'
 import { ScaffoldingType } from '../ScaffoldingType'
+import { CodeSnippet } from '../CodeSnippet'
 
 export class CodeExecutionRequest {
   clientId: string = undefined
@@ -37,7 +38,7 @@ export class CodeExecutionRequest {
   }
 
   public set scaffoldingType(value) {
-    this._scaffoldingType = ExecutionType[value]
+    this._scaffoldingType = ScaffoldingType[value]
   }
 
   public static fromReturnType(language: CodeLanguage,
@@ -54,6 +55,16 @@ export class CodeExecutionRequest {
                                scaffoldingType: ScaffoldingType,
                                clientId: string = null): CodeExecutionRequest {
     return new CodeExecutionRequest(clientId, null, functionId, language, code, scaffoldingType)
+  }
+
+  public static fromSnippet(snippet: CodeSnippet, scaffoldingType: ScaffoldingType) {
+    return new CodeExecutionRequest(null,
+      snippet.functionObj.returnType,
+      snippet.functionObj.id,
+      snippet.language,
+      snippet.code,
+      scaffoldingType
+    )
   }
 
 }

@@ -1,6 +1,6 @@
 import { CodeSnippet } from '../CodeSnippet'
 import { Type } from 'class-transformer'
-import { CodeRunIterationDto } from './CodeRunIterationDto'
+import { CodeExecutionResponseDto } from './CodeExecutionResponseDto'
 
 
 export class QuestionAnswer {
@@ -11,8 +11,8 @@ export class QuestionAnswer {
   validationPassed: boolean
   isValidated: boolean
 
-  @Type(() => CodeRunIterationDto)
-  iterations: CodeRunIterationDto[]
+  @Type(() => CodeExecutionResponseDto)
+  iterations: CodeExecutionResponseDto[]
 
   @Type(() => CodeSnippet)
   answerCodeSnippet: CodeSnippet = undefined

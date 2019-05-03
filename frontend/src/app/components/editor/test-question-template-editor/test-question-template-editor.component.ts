@@ -1,26 +1,34 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { Function } from '../../../shared/Function'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
+import { Subject } from 'rxjs'
+import { concatMap, concatMapTo, retry, switchMap, takeUntil, tap } from 'rxjs/operators'
+import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 
 @Component({
   selector:    'app-test-question-template-editor',
   templateUrl: './test-question-template-editor.component.html',
   styleUrls:   ['./test-question-template-editor.component.less']
 })
-export class TestQuestionTemplateEditorComponent implements OnInit {
+export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   private _editingName = false
   private _displayContent = true
+
   @Input()
-  private question: TestQuestionTemplate
+  question: TestQuestionTemplate
+
+  codeExecutionOutput$ = new Subject<string>()
+
+  private _codeRunBtn$ = new Subject<void>()
+  private _unsubscribe$ = new Subject<void>()
+
 
   constructor(private codeService: CodeService) {
   }
-
-  // endregion
 
   // region Getters/Setters
   get editingName(): boolean {
@@ -41,7 +49,21 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
     }
 
     console.log(this.question)
+
+    this._codeRunBtn$.pipe(
+      takeUntil(this._unsubscribe$),
+      switchMap(() => this.codeService.runCode(
+        CodeExecutionRequest.fromSnippet(this.question.codeSnippet, ScaffoldingType.FULL_TEMPLATE))
+      ),
+      tap(res =>  res.forEach(v => this.codeExecutionOutput$.next(v.actualOutput))),
+      retry()
+    ).subscribe()
   }
+
+  public ngOnDestroy(): void {
+
+  }
+
 
   private async scaffoldSolutionFunction(): Promise<void> {
     const functionId = this.question.codeSnippet.functionObj.id
@@ -52,5 +74,4 @@ export class TestQuestionTemplateEditorComponent implements OnInit {
     ).toPromise()
     this.question.codeSnippet.code = functionScaffoldingDto.code
   }
-
 }

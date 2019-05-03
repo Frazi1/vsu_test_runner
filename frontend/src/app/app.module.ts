@@ -29,7 +29,9 @@ import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
 import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
 import { QuestionAnswerResultViewerComponent } from './components/test-result/answer-result-viewer/question-answer-result-viewer.component'
 import { QuestionLinkComponent } from './components/editor/question-link/question-link.component';
-import { AnswerIterationsViewerComponent } from './components/test-result/answer-iterations-viewer/answer-iterations-viewer.component'
+import { AnswerIterationsViewerComponent } from './components/test-result/answer-iterations-viewer/answer-iterations-viewer.component';
+import { OutputViewerComponent } from './components/output-viewer/output-viewer.component'
+import { AngularSplitModule } from 'angular-split'
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import { AnswerIterationsViewerComponent } from './components/test-result/answer
     TestResultViewerComponent,
     QuestionAnswerResultViewerComponent,
     QuestionLinkComponent,
-    AnswerIterationsViewerComponent
+    AnswerIterationsViewerComponent,
+    OutputViewerComponent
   ],
   imports:      [
     BrowserModule,
@@ -61,7 +64,8 @@ import { AnswerIterationsViewerComponent } from './components/test-result/answer
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    AngularSplitModule.forRoot()
   ],
   providers:    [
     {provide: 'ITemplateService', useClass: TemplatesService},

@@ -1,5 +1,5 @@
 <div class="header">
-  <button (click)="_displayContent = !_displayContent">Переключить</button>
+  <button class="btn btn-primary" (click)="_displayContent = !_displayContent">Переключить</button>
   <h3 (click)="editingName = !editingName">Вопрос:
     <span *ngIf="!editingName">{{question.name}}</span>
     <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
@@ -9,16 +9,31 @@
 <ng-container *ngIf="_displayContent && question">
   <textarea [(ngModel)]="question.description"></textarea>
   <div>
-    <h2>Код решения</h2>
+    <h2 class="text-left">Код решения</h2>
     <div>
       <app-code-language-selector [(value)]="question.codeSnippet.language"></app-code-language-selector>
       <button (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
     </div>
-    <app-code-editor [(code)]="question.codeSnippet.code"></app-code-editor>
+    <div>
+      <as-split class="simple-split" [gutterSize]="2" direction="horizontal" >
+        <as-split-area [size]="70">
+          <app-code-editor [(code)]="question.codeSnippet.code"></app-code-editor>
+        </as-split-area>
+        <as-split-area [size]="30">
+          <div class="d-flex flex-column h-100">
+            <app-output-viewer #outputViewer [textSource]="codeExecutionOutput$" class="flex-grow-1"></app-output-viewer>
+            <div class="d-flex m-1">
+              <button class="btn btn-success" (click)="_codeRunBtn$.next()">Запуск</button>
+              <button class="btn btn-dark" (click)="outputViewer.clear()">Очистить</button>
+            </div>
+          </div>
+        </as-split-area>
+      </as-split>
+    </div>
   </div>
   <app-function-editor [functionObj]="question.codeSnippet.functionObj"></app-function-editor>
   <div>
-    <h2>Входные данные</h2>
+    <h2 class="text-left">Входные данные</h2>
     <app-function-declarative-input-editor [functionObj]="question.codeSnippet.functionObj">
     </app-function-declarative-input-editor>
   </div>

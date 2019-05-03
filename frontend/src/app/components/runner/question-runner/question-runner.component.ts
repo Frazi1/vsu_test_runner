@@ -4,7 +4,6 @@ import { CodeService } from '../../../services/code.service'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
-import { ExecutionType } from '../../../shared/ExecutionType'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 
 @Component({
@@ -71,7 +70,7 @@ export class QuestionRunnerComponent implements OnInit {
     const req = CodeExecutionRequest.fromReturnType(snippet.language,
       this.questionRun.answerCodeSnippet.code,
       snippet.functionObj.returnType,
-      ExecutionType.PLAIN_TEXT
+      ScaffoldingType.FUNCTION_ONLY
     )
     const res = await this.codeService.runCode(req).toPromise()
     console.log(res.codeRunResult)

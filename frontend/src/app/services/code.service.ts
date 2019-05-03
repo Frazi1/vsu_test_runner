@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { CodeType } from '../shared/CodeType'
-import { Observable, timer } from 'rxjs/index'
+import { Observable, timer } from 'rxjs'
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Config } from '../shared/Config'
 import { map, shareReplay, switchMap, take } from 'rxjs/internal/operators'
@@ -11,6 +11,7 @@ import { CodeExecutionRequest } from '../shared/runner/CodeExecutionRequest'
 import { CodeExecutionResponse } from '../shared/runner/CodeExecutionResponse'
 import { ClassTransformer } from 'class-transformer'
 import { ScaffoldingType } from '../shared/ScaffoldingType'
+import { CodeExecutionResponseDto } from '../shared/runner/CodeExecutionResponseDto'
 
 @Injectable({
   providedIn: 'root'
@@ -70,10 +71,10 @@ export class CodeService extends BaseService {
                )
   }
 
-  public runCode(codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponse> {
+  public runCode(codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {
     return this.http.post(this.buildUrl('run'), this.json.serialize(codeExecutionRequest))
                .pipe(
-                 map(res => this.json.plainToClass(CodeExecutionResponse, res as Object))
+                 map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object[]))
                )
   }
 }

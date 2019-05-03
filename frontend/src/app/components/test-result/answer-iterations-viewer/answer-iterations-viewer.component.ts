@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { CodeRunIterationDto } from '../../../shared/runner/CodeRunIterationDto'
+import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
 
 @Component({
   selector:    'app-answer-iterations-viewer',
@@ -11,11 +11,11 @@ export class AnswerIterationsViewerComponent implements OnInit {
   constructor() { }
 
   @Input()
-  iterations: CodeRunIterationDto[]
+  iterations: CodeExecutionResponseDto[]
 
 
-  private isPassed(iteration: CodeRunIterationDto): boolean {
-    return iteration.actualOutput === iteration.expectedOutput
+  private isPassed(iteration: CodeExecutionResponseDto): boolean {
+    return iteration.isValid === true
   }
 
   ngOnInit() {

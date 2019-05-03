@@ -2,4 +2,5 @@ from utils.business_error import BusinessException
 
 
 class CompilationError(BusinessException):
-    pass
+    def __init__(self, text):
+        self.text = text

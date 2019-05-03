@@ -148,12 +148,12 @@ class CodeRunIterationDto(BaseJsonable):
         self.expected_output = expected_output
 
     @classmethod
-    def from_entity(cls, code_run_iteration: CodeRunIteration) -> "CodeRunIterationDto":
+    def from_entity(cls, code_run_iteration: CodeRunIteration) -> "CodeExecutionResponseDto":
         return CodeRunIterationDto(actual_output=code_run_iteration.actual_output,
                                    expected_output=code_run_iteration.iteration_template.output_value)
 
     @classmethod
-    def from_entity_list(cls, entities: List[CodeRunIteration]) -> List["CodeRunIterationDto"]:
+    def from_entity_list(cls, entities: List[CodeRunIteration]) -> List["CodeExecutionResponseDto"]:
         return [CodeRunIterationDto.from_entity(x) for x in entities]
 
 
@@ -253,12 +253,12 @@ class TestInstanceUpdate(object):
 class FunctionScaffoldingDto(BaseJsonable):
     __exportables__ = {
         # "function": JsonProperty(Function),
-        "language":JsonProperty(LanguageEnum),
+        "language": JsonProperty(LanguageEnum),
         "code": JsonProperty(str),
-        "scaffolding_type":JsonProperty(ScaffoldingType, "scaffoldingType")
+        "scaffolding_type": JsonProperty(ScaffoldingType, "scaffoldingType")
     }
 
-    def __init__(self, code: str, language: LanguageEnum, function: Function, scaffolding_type:ScaffoldingType):
+    def __init__(self, code: str, language: LanguageEnum, function: Function, scaffolding_type: ScaffoldingType):
         self.function = function
         self.language = language
         self.code = code
@@ -289,7 +289,7 @@ class CodeExecutionResponseDto(BaseDto):
     __exportables__ = {
         "is_valid": JsonProperty(bool, "isValid", required=False),
         "actual_input": JsonProperty(str, "actualInput", required=False),
-        "actual_output": JsonProperty(str, "actualOutput")
+        "actual_output": JsonProperty(str, "actualOutput", required=False)
     }
 
     def __init__(self, actual_input: str, actual_output: str, is_valid: bool = None, **kwargs):

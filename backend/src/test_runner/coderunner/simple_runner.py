@@ -1,6 +1,7 @@
 import os
 import subprocess
 import uuid
+from itertools import takewhile
 from typing import Optional
 
 from app_config import Config
@@ -20,12 +21,29 @@ class SimpleRunner(BaseRunner):
             command = [command, input_data]
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE,
-                           # input=input_data,
-                           encoding="utf-8")
-        out = p.stdout
+                           stderr=subprocess.STDOUT,
+                           input=input_data,
+                           # universal_newlines=True,
+                           # encoding="utf-8"
+                           )
+
+        out = self._decode_text(p.stdout)
         out = out[:-1]  # remove last line break, because it contains no information
-        return out, p.stderr
+
+        err = self._decode_text(p.stderr)
+        err = err[:-1] if err is not None else None
+        return out, err
+
+    def _decode_text(self, bytes) -> str:
+        return self._decode(bytes, "utf-8") or self._decode(bytes, "cp866") or self._decode(bytes, "windows-1251")
+
+    def _decode(self, bytes, encoding):
+        if isinstance(bytes, str):
+            return bytes
+        try:
+            return bytes.decode(encoding)
+        except Exception as e:
+            return None
 
     def _run_file(self, utility_name: str, file_path: str, input: str) -> (str, str):
         return self._run_process('{} {} 1'.format(utility_name, file_path), input)

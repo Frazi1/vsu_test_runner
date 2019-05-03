@@ -52,5 +52,8 @@ class CSharpRunner(SimpleRunner):
         return FileRunResult(input, out, err)
 
     def execute_plain_code(self, code: str, inputs: List[str]) -> List[FileRunResult]:
-        with self._save_and_compile_file(code) as exe_file_path:
-            return [self._execute_file(exe_file_path, input_) for input_ in inputs]
+        try:
+            with self._save_and_compile_file(code) as exe_file_path:
+                return [self._execute_file(exe_file_path, input_) for input_ in inputs]
+        except CompilationError as e:
+            return [FileRunResult(None, None, e.text)]

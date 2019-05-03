@@ -1,9 +1,9 @@
-from controllers.base_controller import BaseController
 from dtos.dtos import TestInstanceUpdate
 from dtos.instance_schema import TestInstanceSchema, TestInstanceUpdateSchema
 from logger.logger import ILogger
 from models.test_instance import TestInstance
 from services.instance_service import InstanceService
+from utils.bottle_controller_plugin.controller_plugin import BaseController
 
 
 class InstanceController(BaseController):

@@ -1,8 +1,8 @@
 from bottle import Bottle
 
-from controllers.base_controller import BaseController
 from dtos.dtos import TestRunDto
 from interfaces.service_resolver import ServiceResolver
+from utils.bottle_controller_plugin.controller_plugin import BaseController
 
 
 class FinishedRunController(BaseController):

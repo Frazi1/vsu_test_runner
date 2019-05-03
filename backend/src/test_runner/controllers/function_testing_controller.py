@@ -1,6 +1,6 @@
-from controllers.base_controller import BaseController
 from dtos.function_testing_input_schemas import FunctionTestingInputDtoSchema
 from interfaces.service_resolver import ServiceResolver
+from utils.bottle_controller_plugin.controller_plugin import BaseController
 
 
 class FunctionTestingController(BaseController):

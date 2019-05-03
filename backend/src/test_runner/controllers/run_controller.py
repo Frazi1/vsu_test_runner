@@ -1,9 +1,9 @@
 from typing import List
 
-from controllers.base_controller import BaseController
 from dtos.dtos import TestRunDto, TestRunAnswerUpdateDto
 from dtos.run_schema import TestRunSchema
 from services.run_service import RunService
+from utils.bottle_controller_plugin.controller_plugin import BaseController
 
 
 class RunController(BaseController):

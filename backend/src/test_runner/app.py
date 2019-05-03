@@ -10,7 +10,6 @@ from gevent import monkey
 from app_config import Config
 from coderunner.csharp.csharp_runner import CSharpRunner
 from coderunner.python.python_runner import PythonRunner
-from controllers.base_controller import BaseController
 from controllers.code_execution_controller import CodeExecutionController
 from controllers.finished_run_controller import FinishedRunController
 from controllers.function_testing_controller import FunctionTestingController
@@ -22,13 +21,14 @@ from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
-from plugins import EnableCors, BodyParser, ControllerPlugin
+from plugins import EnableCors, BodyParser
 from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
 from services.instance_service import InstanceService
 from services.run_service import RunService
 from services.template_service import TemplateService
 from services.testing_input_service import TestingInputService
+from utils.bottle_controller_plugin.controller_plugin import ControllerPlugin, BaseController
 from utils.bottle_pyjson_plugin.pyjson_plugin import BottlePyJsonPlugin
 from utils.bottle_query_parser_plugin.query_parser_plugin import QueryParamParserPlugin
 from utils.business_error import BusinessException

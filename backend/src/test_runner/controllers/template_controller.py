@@ -1,10 +1,10 @@
 from typing import List
 
-from controllers.base_controller import BaseController
 from dtos.dtos import TestTemplateDto
 from logger.logger import ILogger
-from plugins import QueryParam
 from services.template_service import TemplateService
+from utils.bottle_controller_plugin.controller_plugin import BaseController
+from utils.bottle_query_parser_plugin.query_parser_plugin import QueryParam
 
 
 class TemplateController(BaseController):

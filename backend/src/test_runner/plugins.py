@@ -1,7 +1,7 @@
 # import ujson as json
 import json as json
+import traceback
 from functools import wraps
-from typing import List
 
 from bottle import response, request
 
@@ -36,7 +36,8 @@ class EnableCors(object):
             # set CORS headers
             response.headers['Access-Control-Allow-Origin'] = '*'
             response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
-            response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+            response.headers['Access-Control-Allow-Headers'] = '*'
+            # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
 
             if request.method != 'OPTIONS':
                 # actual request; reply with the actual response
@@ -103,20 +104,6 @@ class BodyParser(object):
                 inner_callback = self._encode_with_json(inner_callback, response)
 
             return inner_callback(*a, **ka)
-
-        return inner
-
-
-class ControllerPlugin(object):
-    api = 2
-    name = 'controller-plugin'
-
-    def apply(self, callback, context):
-        def inner(*a, **ka):
-            controller_instance = context.config._controller_instance
-            if controller_instance is None:
-                return callback(*a, **ka)
-            return callback(controller_instance, *a, **ka)
 
         return inner
 

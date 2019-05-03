@@ -1,13 +1,13 @@
 from typing import List
 
 from coderunner.scaffolding_type import ScaffoldingType
-from controllers.base_controller import BaseController
 from dtos.dtos import CodeExecutionRequestDto, CodeExecutionResponseDto, FunctionScaffoldingDto
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
-from plugins import QueryParam
 from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
+from utils.bottle_controller_plugin.controller_plugin import BaseController
+from utils.bottle_query_parser_plugin.query_parser_plugin import QueryParam
 
 
 class CodeExecutionController(BaseController):

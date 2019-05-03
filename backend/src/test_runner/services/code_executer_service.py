@@ -107,7 +107,15 @@ class CodeExecuterService:
     def validate_results(self, code_run_results: List[CodeRunResult]) -> List[CodeRunValidationResult]:
         res = []
         for run_result in code_run_results:
-            is_valid = not run_result.file_run_result.error and run_result.file_run_result.output == run_result.run_plan.expected_result
+            could_convert, typed_value = ValueConverter.try_from_string(
+                run_result.run_plan.function.return_type,
+                run_result.file_run_result.output
+            )
+
+            if not could_convert or run_result.file_run_result.error:
+                is_valid = False
+            else:
+                is_valid = typed_value == run_result.run_plan.expected_result
             res.append(CodeRunValidationResult(run_result, is_valid))
         return res
 

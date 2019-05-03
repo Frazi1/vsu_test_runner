@@ -1,3 +1,5 @@
+from typing import Tuple
+
 try:
     import ujson
     json = ujson
@@ -11,6 +13,13 @@ from models.argument_type import ArgumentType
 class ValueConverter:
     def __init__(self):
         pass
+
+    @staticmethod
+    def try_from_string(type_, value, parse_str=True) -> Tuple[bool, any]:
+        try:
+            return True, ValueConverter.from_string(type_, value, parse_str)
+        except:
+            return False, None
 
     @staticmethod
     def from_string(type_, value, parse_str=True):

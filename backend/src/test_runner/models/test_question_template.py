@@ -21,7 +21,7 @@ class TestQuestionTemplate(Base):
     name = Column(String(100), nullable=False, default="")
     description = Column(Text, nullable=True)
     time_limit = Column(Integer, nullable=True)
-    solution_code_snippet = relationship("CodeSnippet", back_populates="question_template")
+    solution_code_snippet: "CodeSnippet" = relationship("CodeSnippet", back_populates="question_template")
     version = Column(BigInteger, server_default=text('1'))  # TODO: increment version on update
     is_deleted = Column(Boolean, server_default=text('FALSE'))
 

@@ -7,7 +7,7 @@ from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
 from models.function_inputs.base_function_input import DeclarativeFunctionInput, BaseFunctionInput
-from models.function_inputs.code_run_iteration import CodeRunIteration
+from models.function_inputs.code_run_iteration import CodeRunIteration, CodeRunStatus
 from models.function_inputs.declarative_input_argument_item import DeclarativeInputArgumentItem
 from models.function_inputs.declarative_input_item import DeclarativeInputItem
 from models.function_parameter import FunctionArgument
@@ -137,23 +137,35 @@ class CodeRunResultDto(object):
 
 class CodeRunIterationDto(BaseJsonable):
     __exportables__ = {
-        "actual_output": JsonProperty(str, "actualOutput"),
-        "expected_output": JsonProperty(str, "expectedOutput", required=False)
+        "actual_output": JsonProperty(str, "actualOutput", required=False),
+        "expected_output": JsonProperty(str, "expectedOutput", required=False),
+        "status": JsonProperty(CodeRunStatus, "status", required=True),
+        "is_valid": JsonProperty(bool, "isValid", required=True)
     }
     actual_output: str = None
     expected_output: str = None
 
-    def __init__(self, actual_output: str = None, expected_output: str = None):
+    def __init__(self,
+                 actual_output: str = None,
+                 expected_output: str = None,
+                 is_valid: bool = False,
+                 status: CodeRunStatus = None):
         self.actual_output = actual_output
         self.expected_output = expected_output
+        self.status = status
+        self.is_valid = is_valid
 
     @classmethod
-    def from_entity(cls, code_run_iteration: CodeRunIteration) -> "CodeExecutionResponseDto":
-        return CodeRunIterationDto(actual_output=code_run_iteration.actual_output,
-                                   expected_output=code_run_iteration.iteration_template.output_value)
+    def from_entity(cls, code_run_iteration: CodeRunIteration) -> "CodeRunIterationDto":
+        actual = code_run_iteration.actual_output
+        expected = code_run_iteration.iteration_template.output_value
+        return CodeRunIterationDto(actual_output=actual,
+                                   expected_output=expected,
+                                   is_valid=actual == expected,
+                                   status=code_run_iteration.status)
 
     @classmethod
-    def from_entity_list(cls, entities: List[CodeRunIteration]) -> List["CodeExecutionResponseDto"]:
+    def from_entity_list(cls, entities: List[CodeRunIteration]) -> List["CodeRunIterationDto"]:
         return [CodeRunIterationDto.from_entity(x) for x in entities]
 
 
@@ -453,8 +465,9 @@ class DeclarativeInputItemDto(BaseDto):
     @classmethod
     def from_entity(cls, e):
         # type: (DeclarativeInputItem) -> DeclarativeInputItemDto
-        res = cls(id=e.id, declarative_argument_item_dtos=DeclarativeInputArgumentItemDto.from_list(e.argument_items),
-                  output_value=e.output_value)
+        res = cls(id=e.id,
+                  declarative_argument_item_dtos=DeclarativeInputArgumentItemDto.from_list(e.argument_items),
+                  output_value=e.output_value if e.predefined_output_value else None)
         return res
 
     @classmethod
@@ -466,7 +479,8 @@ class DeclarativeInputItemDto(BaseDto):
     def to_entity(self):
         # type: () -> DeclarativeInputItem
         res = DeclarativeInputItem(self.id, [x.to_entity() for x in self.declarative_argument_item_dtos],
-                                   self.output_value)
+                                   self.output_value,
+                                   self.output_value is not None)
         return res
 
 

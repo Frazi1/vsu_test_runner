@@ -73,6 +73,6 @@ export class QuestionRunnerComponent implements OnInit {
       ScaffoldingType.FUNCTION_ONLY
     )
     const res = await this.codeService.runCode(req).toPromise()
-    console.log(res.codeRunResult)
+    console.log(res)
   }
 }

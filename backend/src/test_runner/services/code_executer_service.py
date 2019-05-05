@@ -10,18 +10,22 @@ from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
 from models.language_enum import LanguageEnum
+from services.base_service import BaseService
 from services.function_service import FunctionService
 from services.models.code_run_result import CodeRunResult
 from services.models.code_run_validation_result import CodeRunValidationResult
+from services.testing_input_service import TestingInputService
 from shared.value_converter import ValueConverter
 from utils.business_error import BusinessException
 
 
-class CodeExecuterService:
+class CodeExecuterService(BaseService):
     def __init__(self,
-                 function_service  # type: FunctionService
+                 function_service: FunctionService,
+                 testing_input_service: TestingInputService,
                  ):
         self._function_service = function_service
+        self._testing_input_service = testing_input_service
 
     _runners = {}
 
@@ -85,6 +89,18 @@ class CodeExecuterService:
             if plan.expected_result is not None and plan.expected_result != "": continue
             plan.expected_result = result.file_run_result.output
 
+    def execute_function_tests_and_save_valid_results(self, code_snippet: CodeSnippet,
+                                                      function_: Function,
+                                                      function_run_plans: List[FunctionRunPlan]) -> None:
+        code_execution_request_for_valid_results = CodeExecutionRequestDto(function_.code_snippets[0].code,
+                                                                           code_snippet.language,
+                                                                           ScaffoldingType.FULL_TEMPLATE,
+                                                                           function_.id,
+                                                                           function_.return_type,
+                                                                           client_id=None)
+        self._execute_plans_for_valid_results(code_execution_request_for_valid_results, function_run_plans)
+        self._testing_input_service.update_testing_input(function_run_plans)
+
     def run_testing_set(self, code_snippet: CodeSnippet, function_: Function) -> List[CodeRunValidationResult]:
         plans = self._function_service.get_function_run_plans(function_.id)
         code_execution_request_for_valid_results = CodeExecutionRequestDto(function_.code_snippets[0].code,
@@ -109,7 +125,8 @@ class CodeExecuterService:
         for run_result in code_run_results:
             could_convert, typed_value = ValueConverter.try_from_string(
                 run_result.run_plan.function.return_type,
-                run_result.file_run_result.output
+                run_result.file_run_result.output,
+                parse_str=False
             )
 
             if not could_convert or run_result.file_run_result.error:

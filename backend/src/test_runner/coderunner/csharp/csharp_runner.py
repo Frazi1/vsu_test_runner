@@ -8,6 +8,7 @@ from coderunner.csharp.compilation_error import CompilationError
 from coderunner.csharp.csharp_code_generator import CSharpCodeGenerator
 from coderunner.file_run_result import FileRunResult
 from coderunner.simple_runner import SimpleRunner
+from models.code_run_status import CodeRunStatus
 from models.language_enum import LanguageEnum
 
 
@@ -49,11 +50,11 @@ class CSharpRunner(SimpleRunner):
 
     def _execute_file(self, exe_file_path, input: Optional[str]) -> FileRunResult:
         out, err = self._run_process(exe_file_path, input)
-        return FileRunResult(input, out, err)
+        return FileRunResult(input, out, err, CodeRunStatus.Success)
 
     def execute_plain_code(self, code: str, inputs: List[str]) -> List[FileRunResult]:
         try:
             with self._save_and_compile_file(code) as exe_file_path:
                 return [self._execute_file(exe_file_path, input_) for input_ in inputs]
         except CompilationError as e:
-            return [FileRunResult(None, None, e.text)]
+            return [FileRunResult(None, None, e.text, CodeRunStatus.CompileError)]

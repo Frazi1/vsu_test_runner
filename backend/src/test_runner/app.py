@@ -62,11 +62,11 @@ class LanguageStrategy(PyJsonStrategy):
 
 def _init_services():
     logger = ConsoleLogger()
-    template_service = TemplateService()
-    instance_service = InstanceService(template_service)
     testing_input_service = TestingInputService()
     function_service = FunctionService(testing_input_service)
-    code_execution_service = CodeExecuterService(function_service)
+    code_execution_service = CodeExecuterService(function_service, testing_input_service)
+    template_service = TemplateService(code_execution_service)
+    instance_service = InstanceService(template_service)
     run_service = RunService(instance_service, code_execution_service)
 
     return ServiceResolver(logger,

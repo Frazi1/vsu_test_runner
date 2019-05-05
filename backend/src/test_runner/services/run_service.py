@@ -4,6 +4,7 @@ from typing import List
 from sqlalchemy.orm import joinedload, raiseload, Query
 
 from dtos.dtos import TestRunAnswerUpdateDto
+from models.code_run_status import CodeRunStatus
 from models.code_snippet import CodeSnippet
 from models.function import Function
 from models.function_inputs.code_run_iteration import CodeRunIteration
@@ -118,9 +119,13 @@ class RunService(BaseService):
         answer.answer_iteration_results.clear()
         res = []
         for answer_result in validation_results:
-            iteration = CodeRunIteration(actual_output=answer_result.code_run_result.file_run_result.output,
-                                         iteration_template_id=answer_result.code_run_result.run_plan.declarative_input_item_id,
-                                         question_answer=answer, question_answer_id=answer.id)
+            file_run_result = answer_result.code_run_result.file_run_result
+            output = file_run_result.error or file_run_result.output
+            iteration = CodeRunIteration(
+                actual_output=output if file_run_result.status == CodeRunStatus.Success else file_run_result.error,
+                status=file_run_result.status,
+                iteration_template_id=answer_result.code_run_result.run_plan.declarative_input_item_id,
+                question_answer=answer, question_answer_id=answer.id)
             res.append(iteration)
         self._db.add_all(res)
 

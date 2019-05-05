@@ -22,7 +22,7 @@ class SimpleRunner(BaseRunner):
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT,
-                           input=input_data,
+                           input=input_data.encode("utf-8") if input_data is not None else b'',
                            # universal_newlines=True,
                            # encoding="utf-8"
                            )

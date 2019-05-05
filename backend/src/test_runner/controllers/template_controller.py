@@ -42,7 +42,7 @@ class TemplateController(BaseController):
     def update_test_template(self, id, parsed_body):
         # type: (int, TestTemplateDto) -> int
         template = parsed_body.to_entity()
-        updated_template = self.templates_service.update_test_template(id, template)
+        self.templates_service.update_test_template_and_calc_expected_results(template)
         return id
 
     @BaseController.delete('/template/<id:int>')

@@ -1,0 +1,20 @@
+from coderunner.function_run_argument import FunctionRunArgument
+from coderunner.function_run_plan import FunctionRunPlan
+from models.function import Function
+from models.function_inputs.base_function_input import DeclarativeFunctionInput, BaseFunctionInput
+from shared.value_converter import ValueConverter
+
+
+def get_run_plans(function_: Function, testing_input: BaseFunctionInput):
+    if isinstance(testing_input, DeclarativeFunctionInput):
+        res = [FunctionRunPlan(function_,
+                               [
+                                   FunctionRunArgument(arg.input_type, arg.input_value) for arg in
+                                   input.argument_items
+                               ],
+                               ValueConverter.from_string(function_.return_type, input.output_value,
+                                                          parse_str=False),
+                               input.id)
+               for input in testing_input.items]
+        return res
+    raise NotImplementedError("Input type {} is not supported".format(testing_input.type))

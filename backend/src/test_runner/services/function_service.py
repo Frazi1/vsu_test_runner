@@ -10,6 +10,7 @@ from models.function_inputs.base_function_input import DeclarativeFunctionInput
 from services.base_service import BaseService
 from services.testing_input_service import TestingInputService
 from shared.value_converter import ValueConverter
+from utils.run_plan_helpers import get_run_plans
 
 
 class FunctionService(BaseService):
@@ -40,14 +41,4 @@ class FunctionService(BaseService):
     def get_function_run_plans(self, function_id: int) -> List[FunctionRunPlan]:
         function_ = self.get_function_by_id(function_id)
         testing_input = self._testing_input_service.get_testing_input_by_function_id(function_id)
-        if isinstance(testing_input, DeclarativeFunctionInput):
-            res = [FunctionRunPlan(function_,
-                                   [
-                                       FunctionRunArgument(arg.input_type, arg.input_value) for arg in
-                                       input.argument_items
-                                   ],
-                                   ValueConverter.from_string(function_.return_type, input.output_value,
-                                                              parse_str=False),
-                                   input.id)
-                   for input in testing_input.items]
-            return res
+        return get_run_plans(function_, testing_input)

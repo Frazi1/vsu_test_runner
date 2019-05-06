@@ -47,10 +47,11 @@ class TemplateService(BaseService):
         for q in updated_test.questions:
             snippet: CodeSnippet = q.solution_code_snippet
             plans = get_run_plans(snippet.function, snippet.function.testing_input)
-            self._code_executer_service.execute_function_tests_and_save_valid_results(
-                snippet,
-                snippet.function,
-                plans)
+            if plans:
+                self._code_executer_service.execute_function_tests_and_save_valid_results(
+                    snippet,
+                    snippet.function,
+                    plans)
 
         self._db.commit()
 

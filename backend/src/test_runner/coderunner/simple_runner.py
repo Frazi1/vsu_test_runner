@@ -1,6 +1,7 @@
 import os
 import subprocess
 import uuid
+import re
 from itertools import takewhile
 from typing import Optional
 
@@ -17,7 +18,7 @@ class SimpleRunner(BaseRunner):
         self.config = config
 
     def _run_process(self, command: str, input_data: Optional[str] = None) -> (str, str):
-        if input_data:
+        if input_data is not None:
             command = [command, input_data]
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
@@ -28,7 +29,8 @@ class SimpleRunner(BaseRunner):
                            )
 
         out = self._decode_text(p.stdout)
-        out = out[:-1]  # remove last line break, because it contains no information
+        if re.search(".*\r\n$", out):
+            out = out.rstrip("\r\n")  # remove last line break, because it contains no information
 
         err = self._decode_text(p.stderr)
         err = err[:-1] if err is not None else None

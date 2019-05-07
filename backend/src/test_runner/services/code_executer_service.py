@@ -133,7 +133,7 @@ class CodeExecuterService(BaseService):
     def _generate_input_from_plan(self, plan: FunctionRunPlan) -> str:
         res = ""
         for arg in plan.arguments:
-            parsed_value = ValueConverter.from_string(arg.argument_type, arg.argument_value)
+            parsed_value = ValueConverter.from_string(arg.argument_type, arg.argument_value, parse_str=False)
             if arg.argument_type == ArgumentType.INTEGER or arg.argument_type == ArgumentType.STRING:
                 res += str(parsed_value)
             elif arg.argument_type == ArgumentType.ARRAY_INTEGER or arg.argument_type == ArgumentType.ARRAY_STRING:

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { Function } from '../../../shared/Function'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
@@ -7,6 +7,8 @@ import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 import { Subject } from 'rxjs'
 import { concatMap, concatMapTo, retry, switchMap, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
+import { CodeType } from '../../../shared/CodeType'
+import { FunctionDeclarativeInputEditorComponent } from '../function-declarative-input-editor/function-declarative-input-editor.component'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -26,6 +28,8 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   private _codeRunBtn$ = new Subject<void>()
   private _unsubscribe$ = new Subject<void>()
 
+  @ViewChild(FunctionDeclarativeInputEditorComponent)
+  private declarativeInputEditorComponent: FunctionDeclarativeInputEditorComponent
 
   constructor(private codeService: CodeService) {
   }
@@ -55,7 +59,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
       switchMap(() => this.codeService.runCode(
         CodeExecutionRequest.fromSnippet(this.question.codeSnippet, ScaffoldingType.FULL_TEMPLATE))
       ),
-      tap(res =>  res.forEach(v => this.codeExecutionOutput$.next(v.actualOutput))),
+      tap(res => res.forEach(v => this.codeExecutionOutput$.next(v.actualOutput))),
       retry()
     ).subscribe()
   }
@@ -73,5 +77,15 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
       ScaffoldingType.FULL_TEMPLATE
     ).toPromise()
     this.question.codeSnippet.code = functionScaffoldingDto.code
+  }
+
+  public fillFunction(question: TestQuestionTemplate, functionObj: Function): void {
+    functionObj.returnType = new CodeType('STRING')
+    functionObj.name = question.name != null ? question.name.toLowerCase() : ''
+  }
+
+  public onSave(): void {
+    this.fillFunction(this.question, this.question.codeSnippet.functionObj)
+    this.declarativeInputEditorComponent.onSave()
   }
 }

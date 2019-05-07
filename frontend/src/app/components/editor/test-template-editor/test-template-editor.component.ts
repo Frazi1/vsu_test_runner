@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit, Output } from '@angular/core'
+import { Component, Inject, OnInit, Output, QueryList, ViewChildren } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
-import { Subscription } from 'rxjs/index'
+import { Subscription } from 'rxjs'
 import { TestTemplate } from '../../../shared/TestTemplate'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { ITemplateService } from '../../../services/interfaces'
+import { TestQuestionTemplateEditorComponent } from '../test-question-template-editor/test-question-template-editor.component'
 
 @Component({
   selector:    'app-test-template-editor',
@@ -16,6 +17,9 @@ export class TestTemplateEditorComponent implements OnInit {
   private testTemplate: TestTemplate
   private paramSubscription: Subscription
   private isCreating: boolean
+
+  @ViewChildren(TestQuestionTemplateEditorComponent)
+  private questionEditorComponents: QueryList<TestQuestionTemplateEditorComponent>
 
   constructor(private route: ActivatedRoute,
               @Inject('ITemplateService') private templatesService: ITemplateService,
@@ -44,6 +48,7 @@ export class TestTemplateEditorComponent implements OnInit {
   }
 
   private save(): void {
+    this.onSave()
     if (this.isCreating) {
       this.add()
     } else {
@@ -66,5 +71,9 @@ export class TestTemplateEditorComponent implements OnInit {
       this.templatesService.deleteTemplate(this.testTemplate.id)
           .subscribe(() => this.router.navigate(['/']))
     }
+  }
+
+  public onSave(): void {
+    this.questionEditorComponents.forEach(qe => qe.onSave())
   }
 }

@@ -1,4 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import 'brace'
+import 'brace/mode/text'
+import 'brace/mode/csharp'
+import 'brace/mode/python'
+import 'brace/theme/github'
+import { CodeLanguage } from '../shared/CodeLanguage'
 
 @Component({
   selector:    'app-code-editor',
@@ -7,9 +13,15 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 })
 export class CodeEditorComponent implements OnInit {
 
+  constructor() {
+  }
+
 
   @Input()
   public code: string
+
+  @Input()
+  public language: CodeLanguage
 
   @Output()
   private codeChange = new EventEmitter<String>()
@@ -17,7 +29,15 @@ export class CodeEditorComponent implements OnInit {
   @Input()
   private isReadOnly = false
 
-  constructor() {
+  public getAceLanguageId(codeLanguage: CodeLanguage): string {
+    switch (codeLanguage.name) {
+      case 'CSHARP':
+        return 'csharp'
+      case 'PYTHON':
+        return 'python'
+      default:
+        return 'text'
+    }
   }
 
   ngOnInit() {

@@ -14,14 +14,15 @@
       <app-code-language-selector [(value)]="question.codeSnippet.language"></app-code-language-selector>
       <button (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
     </div>
-    <div>
-      <as-split class="simple-split" [gutterSize]="2" direction="horizontal" >
+    <div class="block-editor">
+      <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
         <as-split-area [size]="70">
-          <app-code-editor [(code)]="question.codeSnippet.code"></app-code-editor>
+          <app-code-editor [(code)]="question.codeSnippet.code" [language]="question.codeSnippet.language"></app-code-editor>
         </as-split-area>
         <as-split-area [size]="30">
           <div class="d-flex flex-column h-100">
-            <app-output-viewer #outputViewer [textSource]="codeExecutionOutput$" class="flex-grow-1"></app-output-viewer>
+            <app-output-viewer #outputViewer [textSource]="codeExecutionOutput$"
+                               class="flex-grow-1"></app-output-viewer>
             <div class="d-flex m-1">
               <button class="btn btn-success" (click)="_codeRunBtn$.next()">Запуск</button>
               <button class="btn btn-dark" (click)="outputViewer.clear()">Очистить</button>

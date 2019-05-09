@@ -32,6 +32,9 @@ import { QuestionLinkComponent } from './components/editor/question-link/questio
 import { AnswerIterationsViewerComponent } from './components/test-result/answer-iterations-viewer/answer-iterations-viewer.component';
 import { OutputViewerComponent } from './components/output-viewer/output-viewer.component'
 import { AngularSplitModule } from 'angular-split'
+import { AceConfig, AceConfigInterface, AceModule } from 'ngx-ace-wrapper'
+
+const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
 @NgModule({
   declarations: [
@@ -56,7 +59,7 @@ import { AngularSplitModule } from 'angular-split'
     AnswerIterationsViewerComponent,
     OutputViewerComponent
   ],
-  imports:      [
+  imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
@@ -65,7 +68,8 @@ import { AngularSplitModule } from 'angular-split'
     OwlNativeDateTimeModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
-    AngularSplitModule.forRoot()
+    AngularSplitModule.forRoot(),
+    AceModule
   ],
   providers:    [
     {provide: 'ITemplateService', useClass: TemplatesService},
@@ -76,7 +80,8 @@ import { AngularSplitModule } from 'angular-split'
       provide:  HTTP_INTERCEPTORS,
       useClass: ContentTypeInterceptor,
       multi:    true
-    }
+    },
+    {provide: AceConfig, useValue: DEFAULT_ACE_CONFIG}
   ],
   bootstrap:    [AppComponent]
 })

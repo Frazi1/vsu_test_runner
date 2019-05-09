@@ -1,2 +1,2 @@
-<textarea id="editor" class="w-100" disabled="{{isReadOnly}}" [(ngModel)]="code"
-          (ngModelChange)="onCodeChange()"></textarea>
+<ace id="editor" class="w-100 h-100" [mode]="getAceLanguageId(language)" [theme]="'github'" [(value)]="code"
+     [disabled]="isReadOnly"></ace>

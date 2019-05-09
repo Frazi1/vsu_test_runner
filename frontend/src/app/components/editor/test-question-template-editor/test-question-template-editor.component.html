@@ -7,7 +7,16 @@
 </div>
 
 <ng-container *ngIf="_displayContent && question">
-  <textarea [(ngModel)]="question.description"></textarea>
+  <div class="section-description">
+    <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
+      <as-split-area size="50">
+        <app-code-editor [(code)]="question.description" [language]="'markdown'"></app-code-editor>
+      </as-split-area>
+      <as-split-area size="50">
+        <markdown [data]="question.description"></markdown>
+      </as-split-area>
+    </as-split>
+  </div>
   <div>
     <h2 class="text-left">Код решения</h2>
     <div>

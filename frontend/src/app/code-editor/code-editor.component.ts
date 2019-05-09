@@ -3,6 +3,7 @@ import 'brace'
 import 'brace/mode/text'
 import 'brace/mode/csharp'
 import 'brace/mode/python'
+import 'brace/mode/markdown'
 import 'brace/theme/github'
 import { CodeLanguage } from '../shared/CodeLanguage'
 
@@ -21,7 +22,7 @@ export class CodeEditorComponent implements OnInit {
   public code: string
 
   @Input()
-  public language: CodeLanguage
+  public language: CodeLanguage | string
 
   @Output()
   private codeChange = new EventEmitter<String>()
@@ -29,8 +30,11 @@ export class CodeEditorComponent implements OnInit {
   @Input()
   private isReadOnly = false
 
-  public getAceLanguageId(codeLanguage: CodeLanguage): string {
-    switch (codeLanguage.name) {
+  public getAceLanguageId(codeLanguage: CodeLanguage | string): string {
+    let languageName = (codeLanguage instanceof CodeLanguage)
+      ? codeLanguage.name
+      : codeLanguage
+    switch (languageName) {
       case 'CSHARP':
         return 'csharp'
       case 'PYTHON':
@@ -43,7 +47,7 @@ export class CodeEditorComponent implements OnInit {
   ngOnInit() {
   }
 
-  private onCodeChange(): void {
+  public textChanged() {
     this.codeChange.emit(this.code)
   }
 }

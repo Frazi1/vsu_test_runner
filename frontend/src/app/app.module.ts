@@ -8,7 +8,7 @@ import { TestQuestionTemplateEditorComponent } from './components/editor/test-qu
 import { FormsModule } from '@angular/forms'
 import { TestTemplateListComponent } from './components/editor/test-template-list/test-template-list.component'
 import { NavMenuComponent } from './nav-menu/nav-menu.component'
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http'
 import { TemplatesService } from './services/templates.service'
 import { FunctionEditorComponent } from './components/editor/function-signature-editor/function-editor.component'
 import { CodeTypeSelectorComponent } from './components/editor/code-type-selector/code-type-selector.component'
@@ -33,6 +33,7 @@ import { AnswerIterationsViewerComponent } from './components/test-result/answer
 import { OutputViewerComponent } from './components/output-viewer/output-viewer.component'
 import { AngularSplitModule } from 'angular-split'
 import { AceConfig, AceConfigInterface, AceModule } from 'ngx-ace-wrapper'
+import { MarkdownModule } from 'ngx-markdown'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -69,7 +70,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     AngularSplitModule.forRoot(),
-    AceModule
+    AceModule,
+    MarkdownModule.forRoot({loader: HttpClient})
   ],
   providers:    [
     {provide: 'ITemplateService', useClass: TemplatesService},

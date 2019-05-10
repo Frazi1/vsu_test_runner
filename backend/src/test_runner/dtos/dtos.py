@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from coderunner.execution_type import ExecutionType
 from coderunner.scaffolding_type import ScaffoldingType
@@ -284,17 +284,20 @@ class CodeExecutionRequestDto(BaseJsonable):
         "language": JsonProperty(LanguageEnum),
         "code": JsonProperty(str),
         "scaffolding_type": JsonProperty(ScaffoldingType, "scaffoldingType"),
-        "client_id": JsonProperty(str, "clientId", required=False)
+        "client_id": JsonProperty(str, "clientId", required=False),
+        "testing_input": JsonProperty("FunctionInputDto", "testingInput", required=False)
     }
 
     def __init__(self, code: str = '', language: LanguageEnum = None, scaffolding_type: ScaffoldingType = None,
-                 function_id: int = None, return_type: ArgumentType = None, client_id: str = None):
+                 function_id: int = None, return_type: ArgumentType = None, client_id: str = None,
+                 testing_input: "FunctionInputDto" = None):
         self.return_type = return_type
         self.function_id = function_id
         self.language = language
         self.code = code
         self.scaffolding_type = scaffolding_type
         self.client_id = client_id
+        self.testing_input = testing_input
 
 
 class CodeExecutionResponseDto(BaseDto):
@@ -424,8 +427,7 @@ class FunctionInputDto(BaseDto):
     id = None  # type: int
 
     @classmethod
-    def from_entity(cls, e):
-        # type: (BaseFunctionInput) -> FunctionInputDto | None
+    def from_entity(cls, e: BaseFunctionInput) -> Optional["FunctionInputDto"]:
         if not e:
             return None
 

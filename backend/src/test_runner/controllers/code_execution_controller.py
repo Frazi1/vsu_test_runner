@@ -38,7 +38,7 @@ class CodeExecutionController(BaseController):
     @BaseController.post('/code/run', accepts=CodeExecutionRequestDto,
                          returns=CodeExecutionResponseDto)
     def execute_code_snippet(self, parsed_body: CodeExecutionRequestDto) -> List[CodeExecutionResponseDto]:
-        results = self._code_execution_service.execute_code(parsed_body, None)
+        results = self._code_execution_service.execute_code_with_request_testing_input(parsed_body)
         return [CodeExecutionResponseDto(x.file_run_result.input, x.file_run_result.output or x.file_run_result.error,
                                          parsed_body.client_id) for x
                 in results]

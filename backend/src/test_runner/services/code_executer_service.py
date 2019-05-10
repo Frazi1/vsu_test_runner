@@ -5,7 +5,7 @@ from coderunner.execution_type import ExecutionType
 from coderunner.file_run_result import FileRunResult
 from coderunner.function_run_plan import FunctionRunPlan
 from coderunner.scaffolding_type import ScaffoldingType
-from dtos.dtos import FunctionScaffoldingDto, CodeExecutionRequestDto
+from dtos.dtos import FunctionScaffoldingDto, CodeExecutionRequestDto, FunctionInputDto
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
@@ -17,6 +17,8 @@ from services.models.code_run_validation_result import CodeRunValidationResult
 from services.testing_input_service import TestingInputService
 from shared.value_converter import ValueConverter
 from utils.business_error import BusinessException
+from utils.run_plan_helpers import get_run_plans
+import utils.validation_utils as validation
 
 
 class CodeExecuterService(BaseService):
@@ -55,6 +57,18 @@ class CodeExecuterService(BaseService):
         runner = self._find_runner(language)
         code = runner.code_generator.scaffold_code(func, scaffolding_type)
         return FunctionScaffoldingDto(code, language, func, scaffolding_type)
+
+    def execute_code_with_request_testing_input(self, code_execution_request: CodeExecutionRequestDto) -> List[
+        CodeRunResult]:
+        validation.is_not_none(code_execution_request.testing_input, "code_execution_request.testing_input")
+        validation.is_not_none(code_execution_request.testing_input.declarative_input,
+                               "code_execution_request.testing_input.declarative_input")
+
+        run_plans = get_run_plans(
+            function_=None,
+            testing_input=FunctionInputDto.to_entity(code_execution_request.testing_input)
+        )
+        return self.execute_code(code_execution_request, run_plans)
 
     def execute_code(self, code_execution_request: CodeExecutionRequestDto,
                      run_plans: Optional[List[FunctionRunPlan]]) -> List[CodeRunResult]:

@@ -21,6 +21,12 @@ export class TestingInputParserService {
     return res
   }
 
+  public parseOne(test: string): DeclarativeFunctionInput {
+    const res = new DeclarativeFunctionInput()
+    res.items = [this.parseDeclarativeItem(test)]
+    return res
+  }
+
   private parseDeclarativeItem(item: string): DeclarativeInputItem {
     let res = new DeclarativeInputItem()
     let argumentItem = new DeclarativeInputArgumentItem()

@@ -29,6 +29,7 @@
     "marked": "^0.6.2",
     "ng-pick-datetime": "^7.0.0",
     "ngx-ace-wrapper": "^7.3.0",
+    "ngx-autosize": "^1.6.0",
     "ngx-markdown": "^7.1.5",
     "ngx-toastr": "^9.1.2",
     "rxjs": "~6.3.3",

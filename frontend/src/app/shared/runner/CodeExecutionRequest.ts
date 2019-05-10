@@ -4,6 +4,7 @@ import { Exclude, Expose, Type } from 'class-transformer'
 import { ExecutionType } from '../ExecutionType'
 import { ScaffoldingType } from '../ScaffoldingType'
 import { CodeSnippet } from '../CodeSnippet'
+import { FunctionTestingInputDto } from '../input/FunctionInputDto'
 
 export class CodeExecutionRequest {
   clientId: string = undefined
@@ -19,17 +20,21 @@ export class CodeExecutionRequest {
 
   code: string = undefined
 
+  @Type(() => FunctionTestingInputDto)
+  testingInput: FunctionTestingInputDto
+
   @Exclude()
   private _scaffoldingType: ScaffoldingType
 
   private constructor(clientId: string, returnType: CodeType, functionId: number, language: CodeLanguage, code: string,
-                      scaffoldingType: ScaffoldingType) {
+                      scaffoldingType: ScaffoldingType, testingInput: FunctionTestingInputDto) {
     this.clientId = clientId
     this.returnType = returnType
     this.functionId = functionId
     this.language = language
     this.code = code
     this.scaffoldingType = scaffoldingType
+    this.testingInput = testingInput
   }
 
   @Expose()
@@ -46,7 +51,7 @@ export class CodeExecutionRequest {
                                returnType: CodeType,
                                scaffoldingType: ScaffoldingType,
                                clientId: string = null): CodeExecutionRequest {
-    return new CodeExecutionRequest(clientId, returnType, null, language, code, scaffoldingType)
+    return new CodeExecutionRequest(clientId, returnType, null, language, code, scaffoldingType, null)
   }
 
   public static fromFunctionId(language: CodeLanguage,
@@ -54,16 +59,19 @@ export class CodeExecutionRequest {
                                functionId: number,
                                scaffoldingType: ScaffoldingType,
                                clientId: string = null): CodeExecutionRequest {
-    return new CodeExecutionRequest(clientId, null, functionId, language, code, scaffoldingType)
+    return new CodeExecutionRequest(clientId, null, functionId, language, code, scaffoldingType, null)
   }
 
-  public static fromSnippet(snippet: CodeSnippet, scaffoldingType: ScaffoldingType) {
+  public static fromSnippet(snippet: CodeSnippet,
+                            scaffoldingType: ScaffoldingType,
+                            testingInput: FunctionTestingInputDto) {
     return new CodeExecutionRequest(null,
       snippet.functionObj.returnType,
       snippet.functionObj.id,
       snippet.language,
       snippet.code,
-      scaffoldingType
+      scaffoldingType,
+      testingInput
     )
   }
 

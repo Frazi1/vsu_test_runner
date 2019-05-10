@@ -34,6 +34,7 @@ import { OutputViewerComponent } from './components/output-viewer/output-viewer.
 import { AngularSplitModule } from 'angular-split'
 import { AceConfig, AceConfigInterface, AceModule } from 'ngx-ace-wrapper'
 import { MarkdownModule } from 'ngx-markdown'
+import { AutosizeModule } from 'ngx-autosize'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -71,7 +72,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     ToastrModule.forRoot(),
     AngularSplitModule.forRoot(),
     AceModule,
-    MarkdownModule.forRoot({loader: HttpClient})
+    MarkdownModule.forRoot({loader: HttpClient}),
+    AutosizeModule
   ],
   providers:    [
     {provide: 'ITemplateService', useClass: TemplatesService},

@@ -9,6 +9,8 @@ import { concatMap, concatMapTo, retry, switchMap, takeUntil, tap } from 'rxjs/o
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { CodeType } from '../../../shared/CodeType'
 import { FunctionDeclarativeInputEditorComponent } from '../function-declarative-input-editor/function-declarative-input-editor.component'
+import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
+import { FunctionTestingInputDto } from '../../../shared/input/FunctionInputDto'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -23,6 +25,8 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   @Input()
   question: TestQuestionTemplate
 
+  textInput: string
+
   codeExecutionOutput$ = new Subject<string>()
 
   private _codeRunBtn$ = new Subject<void>()
@@ -31,7 +35,8 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   @ViewChild(FunctionDeclarativeInputEditorComponent)
   private declarativeInputEditorComponent: FunctionDeclarativeInputEditorComponent
 
-  constructor(private codeService: CodeService) {
+  constructor(private codeService: CodeService,
+              private testingInputParserService: TestingInputParserService) {
   }
 
   // region Getters/Setters
@@ -57,7 +62,10 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
     this._codeRunBtn$.pipe(
       takeUntil(this._unsubscribe$),
       switchMap(() => this.codeService.runCode(
-        CodeExecutionRequest.fromSnippet(this.question.codeSnippet, ScaffoldingType.FULL_TEMPLATE))
+        CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
+          ScaffoldingType.FULL_TEMPLATE,
+          new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
+        ))
       ),
       tap(res => res.forEach(v => this.codeExecutionOutput$.next(v.actualOutput))),
       retry()
@@ -65,7 +73,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-
+    this._unsubscribe$.next()
   }
 
 

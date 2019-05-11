@@ -1,1 +1,22 @@
-<textarea class="h-100 w-100"  [(ngModel)]="outputText" disabled></textarea>
+<div class="h-100 w-100 d-flex position-relative">
+  <div class="h-100 w-100 bg-light d-flex align-items-start flex-column overflow-auto"
+       id="output-container" (click)="setDetailedItem(null)">
+    <div *ngFor="let bubble of responses"
+         class="bubble speech-bubble d-inline-block g--cursor-pointer flex-shrink-0 text-left"
+         (click)="setDetailedItem(bubble);$event.stopPropagation()">
+    <span class="text-bubble text-left" *ngIf="bubble.isValid == null">
+      {{bubble.actualOutput}}
+    </span>
+    </div>
+  </div>
+  <div *ngIf="detailedItem" class="position-absolute details bg-white h-100 overflow-auto"
+       (click)="$event.stopPropagation()">
+    <div class="position-sticky">
+      <h1>Детали</h1>
+      <h3>Expected: {{detailedItem.expectedOutput}}</h3>
+      <h3>Actual: {{detailedItem.actualOutput}}</h3>
+      <h3>Passed: {{detailedItem.isValid}}</h3>
+    </div>
+  </div>
+
+</div>

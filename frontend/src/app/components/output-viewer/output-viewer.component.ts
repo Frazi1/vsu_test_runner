@@ -1,45 +1,45 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { Observable, Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
+import { CodeExecutionResponseDto } from '../../shared/runner/CodeExecutionResponseDto'
 
 @Component({
   selector:    'app-output-viewer',
   templateUrl: './output-viewer.component.html',
   styleUrls:   ['./output-viewer.component.less']
 })
-export class OutputViewerComponent implements OnInit, OnDestroy {
+export class OutputViewerComponent implements OnDestroy {
 
-  outputText: string
-
-  private _textSource$: Observable<string>
+  private _textSource$: Observable<CodeExecutionResponseDto>
   private _unsubscribe$ = new Subject<void>()
 
+  detailedItem: CodeExecutionResponseDto
+  responses: CodeExecutionResponseDto[] = []
+
   @Input()
-  set textSource(value: Observable<string>) {
+  set textSource(value: Observable<CodeExecutionResponseDto>) {
     this._unsubscribe$.next()
     this._textSource$ = value
     if (this._textSource$ != null) {
       this._textSource$.pipe(
         takeUntil(this._unsubscribe$)
-      ).subscribe(msg => this.append(msg))
+      ).subscribe(resp => this.append(resp))
     }
-  }
-
-  constructor() { }
-
-  ngOnInit() {
   }
 
   public ngOnDestroy(): void {
     this._unsubscribe$.next()
   }
 
-  private append(msg: string): void {
-    this.outputText += '\n' + msg
+  private append(response: CodeExecutionResponseDto): void {
+    this.responses.push(response)
   }
 
   public clear(): void {
-    this.outputText = ''
+    this.responses.length = 0
   }
 
+  public setDetailedItem(bubble: CodeExecutionResponseDto) {
+    this.detailedItem = bubble
+  }
 }

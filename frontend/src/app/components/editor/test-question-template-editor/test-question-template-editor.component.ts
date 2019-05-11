@@ -11,6 +11,7 @@ import { CodeType } from '../../../shared/CodeType'
 import { FunctionDeclarativeInputEditorComponent } from '../function-declarative-input-editor/function-declarative-input-editor.component'
 import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
 import { FunctionTestingInputDto } from '../../../shared/input/FunctionInputDto'
+import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -27,7 +28,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   textInput: string
 
-  codeExecutionOutput$ = new Subject<string>()
+  codeExecutionOutput$ = new Subject<CodeExecutionResponseDto>()
 
   private _codeRunBtn$ = new Subject<void>()
   private _unsubscribe$ = new Subject<void>()
@@ -67,7 +68,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
           new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
         ))
       ),
-      tap(res => res.forEach(v => this.codeExecutionOutput$.next(v.actualOutput))),
+      tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),
       retry()
     ).subscribe()
   }

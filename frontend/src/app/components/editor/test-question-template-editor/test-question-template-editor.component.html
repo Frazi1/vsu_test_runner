@@ -7,7 +7,7 @@
 </div>
 
 <ng-container *ngIf="_displayContent && question">
-  <div class="section-description">
+  <div class="section-description section-panel">
     <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
       <as-split-area size="50">
         <app-code-editor [(code)]="question.description" [language]="'markdown'"></app-code-editor>
@@ -17,17 +17,18 @@
       </as-split-area>
     </as-split>
   </div>
-  <div>
+  <div class="section-panel">
     <h2 class="text-left">Код решения</h2>
     <div>
       <app-code-language-selector [(value)]="question.codeSnippet.language"></app-code-language-selector>
       <button (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
     </div>
-    <div class="block-editor">
+    <div>
       <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
         <as-split-area [size]="70">
           <app-code-editor [(code)]="question.codeSnippet.code"
-                           [language]="question.codeSnippet.language"></app-code-editor>
+                           [language]="question.codeSnippet.language"
+          ></app-code-editor>
         </as-split-area>
         <as-split-area [size]="30">
           <div class="d-flex flex-column h-100">
@@ -44,7 +45,7 @@
       </as-split>
     </div>
   </div>
-  <div>
+  <div class="section-panel">
     <h2 class="text-left">Входные данные</h2>
     <app-function-declarative-input-editor [functionObj]="question.codeSnippet.functionObj">
     </app-function-declarative-input-editor>

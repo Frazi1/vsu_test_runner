@@ -1,3 +1,7 @@
-<ace id="editor" class="w-100 h-100" [mode]="getAceLanguageId(language)" [theme]="'github'" [(value)]="code"
+<!--class="w-100 h-100"-->
+<ace id="editor" [mode]="getAceLanguageId(language)"
+     [theme]="'github'" [(value)]="code"
      (valueChange)="textChanged()"
-     [disabled]="isReadOnly"></ace>
+     [disabled]="isReadOnly"
+     [config]="config">
+</ace>

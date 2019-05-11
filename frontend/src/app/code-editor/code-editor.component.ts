@@ -6,6 +6,7 @@ import 'brace/mode/python'
 import 'brace/mode/markdown'
 import 'brace/theme/github'
 import { CodeLanguage } from '../shared/CodeLanguage'
+import { AceConfigInterface } from 'ngx-ace-wrapper'
 
 @Component({
   selector:    'app-code-editor',
@@ -29,6 +30,12 @@ export class CodeEditorComponent implements OnInit {
 
   @Input()
   private isReadOnly = false
+
+  public config: AceConfigInterface = {
+    autoScrollEditorIntoView: true,
+    minLines:                 10,
+    maxLines:                 50
+  }
 
   public getAceLanguageId(codeLanguage: CodeLanguage | string): string {
     let languageName = (codeLanguage instanceof CodeLanguage)

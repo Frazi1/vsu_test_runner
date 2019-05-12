@@ -10,6 +10,8 @@ from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
 from models.function import Function
 from models.language_enum import LanguageEnum
+from models.question_answer import QuestionAnswer
+from models.question_instance import QuestionInstance
 from services.base_service import BaseService
 from services.function_service import FunctionService
 from services.models.code_run_result import CodeRunResult
@@ -61,6 +63,22 @@ class CodeExecuterService(BaseService):
         code = runner.code_generator.scaffold_code(func, scaffolding_type)
         return FunctionScaffoldingDto(code, language, func, scaffolding_type)
 
+    def get_starting_snippet_for_answer(self, question_answer_id: int,
+                                        language: LanguageEnum) -> FunctionScaffoldingDto:
+        question_answer: QuestionAnswer = (
+            self._db.query(QuestionAnswer)
+            .join(QuestionAnswer.question_instance)
+            .join(QuestionInstance.solution_code_snippet)
+            .filter(QuestionAnswer.id == question_answer_id)
+            .first()
+        )
+
+        correct_answer_snippet = question_answer.question_instance.solution_code_snippet
+
+        code_generator = self._find_runner(language).code_generator
+        prepared_code = code_generator.remove_solution_part_from_code(correct_answer_snippet.code)
+        return FunctionScaffoldingDto(prepared_code, language, None, ScaffoldingType.FULL_TEMPLATE)
+
     def scaffold_starting_snipet(self, language: LanguageEnum) -> FunctionScaffoldingDto:
         func = Function(id=None, name="myFunc", return_type=ArgumentType.STRING, arguments=[], testing_input=None)
         return self.scaffold_function(func, language, ScaffoldingType.FULL_TEMPLATE)
@@ -79,7 +97,6 @@ class CodeExecuterService(BaseService):
 
     def execute_code(self, code_execution_request: CodeExecutionRequestDto,
                      run_plans: Optional[List[FunctionRunPlan]]) -> List[CodeRunResult]:
-
         function_ = self._function_service.get_function_by_id(code_execution_request.function_id)
 
         if code_execution_request.return_type:
@@ -134,7 +151,7 @@ class CodeExecuterService(BaseService):
 
         code_execution_request = CodeExecutionRequestDto(code_snippet.code,
                                                          code_snippet.language,
-                                                         ScaffoldingType.FUNCTION_ONLY,
+                                                         ScaffoldingType.FULL_TEMPLATE,
                                                          function_.id,
                                                          function_.return_type,
                                                          client_id=None)

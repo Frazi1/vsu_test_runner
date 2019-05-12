@@ -20,3 +20,7 @@ class BaseCodeGenerator(object):
     @abstractmethod
     def prepare_execution_code_from_function_declaration(self, function_declaration: str, function: Function):
         raise NotImplementedError()
+
+    @abstractmethod
+    def remove_solution_part_from_code(self, solution_code: str):
+        raise NotImplementedError()

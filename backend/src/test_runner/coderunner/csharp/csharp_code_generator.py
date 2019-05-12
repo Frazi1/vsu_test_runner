@@ -15,6 +15,11 @@ class CSharpCodeGenerator(BaseCodeGenerator):
         SINGLE_LINE_COMMENT_START + "EndTargetFunction"
     ]
 
+    SOLUTION_MARKER = [
+        SINGLE_LINE_COMMENT_START + "SolutionStart",
+        SINGLE_LINE_COMMENT_START + "SolutionEnd"
+    ]
+
     PROGRAM_TEMPLATE = """
 using System;
 using System.Linq;
@@ -37,6 +42,18 @@ namespace TestRunner
 
     }}
 }}"""
+
+    def __init__(self):
+        self.target_function_regex = re.compile(r'{start_target_function}{line_sep}?(.*?){end_target_function}'
+                                                .format(line_sep="\n",
+                                                        start_target_function=self.TARGET_FUNCTION_MARKER[0],
+                                                        end_target_function=self.TARGET_FUNCTION_MARKER[1]),
+                                                re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
+        self.solution_marker_regex = re.compile(r'{solution_start}{line_sep}?(.*?){solution_end}'
+                                                .format(line_sep="\n",
+                                                        solution_start=self.SOLUTION_MARKER[0],
+                                                        solution_end=self.SOLUTION_MARKER[1]),
+                                                re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
 
     def _get_csharp_type_name(self, argument_type: ArgumentType):
         if argument_type == ArgumentType.STRING:
@@ -84,12 +101,10 @@ namespace TestRunner
 
     def prepare_execution_code_from_function_declaration(self, function_declaration: str, function: Function):
         full_code_template: str = function.code_snippets[0].code
-        regex = re.compile(
-            r'{start_target_function}{line_sep}?(.*?){end_target_function}'.format(
-                line_sep="\n",
-                start_target_function=self.TARGET_FUNCTION_MARKER[0],
-                end_target_function=self.TARGET_FUNCTION_MARKER[1]),
-            re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
-        template_function_code = regex.findall(full_code_template)[0]
+        template_function_code = self.target_function_regex.findall(full_code_template)[0]
         result = full_code_template.replace(template_function_code, os.linesep + function_declaration + os.linesep)
         return result
+
+    def remove_solution_part_from_code(self, solution_code: str):
+        return self.solution_marker_regex.sub("{} write code here".format(
+            self.SINGLE_LINE_COMMENT_START), solution_code)

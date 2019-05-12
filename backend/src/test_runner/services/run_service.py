@@ -99,7 +99,9 @@ class RunService(BaseService):
         db_test_run = self.get_active_test_run(test_run_id)
 
         validation_results = [
-            self._code_executer_service.run_testing_set(answer.code_snippet, answer.code_snippet.function) for
+            self._code_executer_service.run_testing_set(answer.code_snippet.code,
+                                                        answer.code_snippet.language,
+                                                        answer.code_snippet.function) for
             answer in db_test_run.question_answers
         ]
 

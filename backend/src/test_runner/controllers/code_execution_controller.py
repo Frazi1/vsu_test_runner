@@ -59,5 +59,9 @@ class CodeExecutionController(BaseController):
 
     @BaseController.post("/code/run_tests", accepts=CodeExecutionRequestDto, returns=[CodeExecutionResponseDto])
     def run_tests(self, parsed_body: CodeExecutionRequestDto) -> List[CodeExecutionResponseDto]:
-        results = self._code_execution_service.execute_tests(parsed_body)
-        return results
+        results = self._code_execution_service.run_testing_set_from_request(parsed_body)
+        return [CodeExecutionResponseDto(
+            x.code_run_result.file_run_result.input,
+            x.code_run_result.file_run_result.output or x.code_run_result.file_run_result.error,
+            x.is_valid)
+            for x in results]

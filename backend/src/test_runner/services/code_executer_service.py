@@ -67,10 +67,10 @@ class CodeExecuterService(BaseService):
                                         language: LanguageEnum) -> FunctionScaffoldingDto:
         question_answer: QuestionAnswer = (
             self._db.query(QuestionAnswer)
-            .join(QuestionAnswer.question_instance)
-            .join(QuestionInstance.solution_code_snippet)
-            .filter(QuestionAnswer.id == question_answer_id)
-            .first()
+                .join(QuestionAnswer.question_instance)
+                .join(QuestionInstance.solution_code_snippet)
+                .filter(QuestionAnswer.id == question_answer_id)
+                .first()
         )
 
         correct_answer_snippet = question_answer.question_instance.solution_code_snippet
@@ -139,18 +139,24 @@ class CodeExecuterService(BaseService):
         self._execute_plans_for_valid_results(code_execution_request_for_valid_results, function_run_plans)
         self._testing_input_service.update_testing_input(function_run_plans)
 
-    def run_testing_set(self, code_snippet: CodeSnippet, function_: Function) -> List[CodeRunValidationResult]:
+    def run_testing_set_from_request(self, code_execution_request: CodeExecutionRequestDto) \
+            -> List[CodeRunValidationResult]:
+        validation.is_not_none(code_execution_request.function_id, "code_execution_request.function_id")
+        function_ = self._function_service.get_function_by_id(code_execution_request.function_id)
+        return self.run_testing_set(code_execution_request.code, code_execution_request.language, function_)
+
+    def run_testing_set(self, code: str, language: LanguageEnum, function_: Function) -> List[CodeRunValidationResult]:
         plans = self._function_service.get_function_run_plans(function_.id)
         code_execution_request_for_valid_results = CodeExecutionRequestDto(function_.code_snippets[0].code,
-                                                                           code_snippet.language,
+                                                                           language,
                                                                            ScaffoldingType.FULL_TEMPLATE,
                                                                            function_.id,
                                                                            function_.return_type,
                                                                            client_id=None)
         self._execute_plans_for_valid_results(code_execution_request_for_valid_results, plans)
 
-        code_execution_request = CodeExecutionRequestDto(code_snippet.code,
-                                                         code_snippet.language,
+        code_execution_request = CodeExecutionRequestDto(code,
+                                                         language,
                                                          ScaffoldingType.FULL_TEMPLATE,
                                                          function_.id,
                                                          function_.return_type,

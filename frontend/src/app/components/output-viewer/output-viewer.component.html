@@ -13,9 +13,9 @@
        (click)="$event.stopPropagation()">
     <div class="position-sticky">
       <h1>Детали</h1>
-      <h3>Expected: {{detailedItem.expectedOutput}}</h3>
+      <h3 *ngIf="detailedItem.expectedOutput">Expected: {{detailedItem.expectedOutput}}</h3>
       <h3>Actual: {{detailedItem.actualOutput}}</h3>
-      <h3>Passed: {{detailedItem.isValid}}</h3>
+      <h3 *ngIf="detailedItem.isValid">Passed: {{detailedItem.isValid}}</h3>
     </div>
   </div>
 

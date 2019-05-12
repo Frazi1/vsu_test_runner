@@ -94,4 +94,11 @@ export class CodeService extends BaseService {
                  map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object[]))
                )
   }
+
+  public runTests(codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {
+    return this.http.post(this.buildUrl('run_tests'), this.json.serialize(codeExecutionRequest))
+               .pipe(
+                 map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object[]))
+               )
+  }
 }

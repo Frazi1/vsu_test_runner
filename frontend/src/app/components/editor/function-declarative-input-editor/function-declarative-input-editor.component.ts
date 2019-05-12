@@ -30,8 +30,12 @@ export class FunctionDeclarativeInputEditorComponent implements OnInit, OnDestro
     }
   }
 
-  public onSave(): void {
+  public parse(): void {
     this.functionObj.testingInput.declarativeInput = this.testingInputParser.parse(this._input)
+  }
+
+  public onSave(): void {
+    this.parse()
   }
 
   ngOnDestroy(): void {

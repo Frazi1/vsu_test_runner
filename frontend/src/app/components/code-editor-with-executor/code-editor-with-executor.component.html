@@ -11,7 +11,11 @@
       <textarea class="g--resize-none" placeholder="Входные данные" autosize minRows="1" maxRows="5"
                 type="text" [(ngModel)]="textInput"></textarea>
       <div class="d-flex m-1">
-        <button class="btn btn-success" (click)="_codeRunBtn$.next()">Запуск</button>
+        <button class="btn btn-success g--margin-right-px-5" (click)="_codeRunBtn$.next()">Запуcтить</button>
+        <button class="btn btn-success g--margin-right-px-5" (click)="_codeRunTestsBtn$.next()"
+                [disabled]="!onRunTestsClick">
+          Запустить тесты
+        </button>
         <button class="btn btn-dark" (click)="outputViewer.clear()">Очистить</button>
       </div>
     </div>

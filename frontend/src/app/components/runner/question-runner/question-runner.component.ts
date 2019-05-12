@@ -5,8 +5,9 @@ import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
-import { Subject } from 'rxjs'
-import { retry, retryWhen, switchMap, tap } from 'rxjs/operators'
+import { Observable, Subject } from 'rxjs'
+import { retryWhen, switchMap, tap } from 'rxjs/operators'
+import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
 
 @Component({
   selector:    'app-question-runner',
@@ -20,6 +21,8 @@ export class QuestionRunnerComponent implements OnInit {
   private _isReady = false
 
   resetBtnClick$ = new Subject<void>()
+
+  public runTestsClosure = this.runTests.bind(this)
 
   constructor(private codeService: CodeService) {
 
@@ -75,5 +78,12 @@ export class QuestionRunnerComponent implements OnInit {
       )
     }
     this._code = this.questionRun.answerCodeSnippet.code
+  }
+
+  public runTests(): Observable<CodeExecutionResponseDto[]> {
+    return this.codeService.runTests(CodeExecutionRequest.fromSnippet(this.questionRun.answerCodeSnippet,
+      ScaffoldingType.FULL_TEMPLATE,
+      null
+    ))
   }
 }

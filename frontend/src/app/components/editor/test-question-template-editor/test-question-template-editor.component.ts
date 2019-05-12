@@ -4,8 +4,8 @@ import { Function } from '../../../shared/Function'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
-import { Subject } from 'rxjs'
-import { concatMap, concatMapTo, retry, retryWhen, switchMap, takeUntil, tap } from 'rxjs/operators'
+import { Observable, Subject } from 'rxjs'
+import { concatMap, retryWhen, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { CodeType } from '../../../shared/CodeType'
 import { FunctionDeclarativeInputEditorComponent } from '../function-declarative-input-editor/function-declarative-input-editor.component'
@@ -20,6 +20,19 @@ import { FunctionScaffoldingDto } from '../../../shared/code/FunctionScaffolding
   styleUrls:   ['./test-question-template-editor.component.less']
 })
 export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
+
+  constructor(private codeService: CodeService,
+              private testingInputParserService: TestingInputParserService) {
+  }
+
+  // region Getters/Setters
+  get editingName(): boolean {
+    return this._editingName
+  }
+
+  set editingName(value: boolean) {
+    this._editingName = value
+  }
 
   private _editingName = false
   private _displayContent = true
@@ -37,18 +50,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   @ViewChild(FunctionDeclarativeInputEditorComponent)
   private declarativeInputEditorComponent: FunctionDeclarativeInputEditorComponent
 
-  constructor(private codeService: CodeService,
-              private testingInputParserService: TestingInputParserService) {
-  }
-
-  // region Getters/Setters
-  get editingName(): boolean {
-    return this._editingName
-  }
-
-  set editingName(value: boolean) {
-    this._editingName = value
-  }
+  public runTestsClosure = this.runTests.bind(this)
 
   ngOnInit() {
     if (this.question.codeSnippet == null) {
@@ -103,6 +105,15 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   public fillFunction(question: TestQuestionTemplate, functionObj: Function): void {
     functionObj.returnType = new CodeType('STRING')
     functionObj.name = question.name != null ? question.name.toLowerCase() : ''
+  }
+
+  public runTests(): Observable<CodeExecutionResponseDto[]> {
+    this.declarativeInputEditorComponent.parse()
+    const req = CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
+      ScaffoldingType.FULL_TEMPLATE,
+      this.question.codeSnippet.functionObj.testingInput
+    )
+    return this.codeService.runCode(req)
   }
 
   public onSave(): void {

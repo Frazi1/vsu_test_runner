@@ -3,8 +3,11 @@
        id="output-container" (click)="setDetailedItem(null)">
     <div *ngFor="let bubble of responses"
          class="bubble speech-bubble d-inline-block g--cursor-pointer flex-shrink-0 text-left"
+         [class.bubble-valid]="bubble.isValid===true"
+         [class.bubble-invalid]="bubble.isValid===false"
+         [class.bubble-default]="bubble.isValid==null"
          (click)="setDetailedItem(bubble);$event.stopPropagation()">
-    <span class="text-bubble text-left" *ngIf="bubble.isValid == null">
+    <span class="text-bubble text-left">
       {{bubble.actualOutput}}
     </span>
     </div>
@@ -13,9 +16,25 @@
        (click)="$event.stopPropagation()">
     <div class="position-sticky">
       <h1>Детали</h1>
-      <h3 *ngIf="detailedItem.expectedOutput">Expected: {{detailedItem.expectedOutput}}</h3>
-      <h3>Actual: {{detailedItem.actualOutput}}</h3>
-      <h3 *ngIf="detailedItem.isValid">Passed: {{detailedItem.isValid}}</h3>
+      <ng-container *ngIf="detailedItem.actualInput != null">
+        <h3>Входные данные:</h3>
+        <span class="d-inline-block">{{detailedItem.actualInput}}</span>
+      </ng-container>
+
+      <ng-container *ngIf="detailedItem.expectedOutput != null">
+        <h3>Ожидалось:</h3>
+        <span class="d-inline-block">{{detailedItem.expectedOutput}}</span>
+      </ng-container>
+
+      <ng-container>
+        <h3>Результат:</h3>
+        <span class="d-inline-block">{{detailedItem.actualOutput}}</span>
+      </ng-container>
+
+      <ng-container *ngIf="detailedItem.isValid != null">
+        <h3>Проверка:</h3>
+        <span class="d-inline-block">{{detailedItem.isValid}}</span>
+      </ng-container>
     </div>
   </div>
 

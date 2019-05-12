@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core'
-import { Subject } from 'rxjs'
+import { Observable, Subject } from 'rxjs'
 import { CodeExecutionResponseDto } from '../../shared/runner/CodeExecutionResponseDto'
-import { concatMap, retryWhen, takeUntil, tap } from 'rxjs/operators'
+import { concatMap, retryWhen, switchMap, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../shared/runner/CodeExecutionRequest'
 import { ScaffoldingType } from '../../shared/ScaffoldingType'
 import { FunctionTestingInputDto } from '../../shared/input/FunctionInputDto'
@@ -24,10 +24,14 @@ export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
   @Input()
   codeSnippet: CodeSnippet
 
+  @Input()
+  onRunTestsClick: () => Observable<CodeExecutionResponseDto[]>
+
   textInput: string
   codeExecutionOutput$ = new Subject<CodeExecutionResponseDto>()
 
   private _codeRunBtn$ = new Subject<void>()
+  private _codeRunTestsBtn$ = new Subject<void>()
   private _unsubscribe$ = new Subject<void>()
 
 
@@ -36,14 +40,22 @@ export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
     this._codeRunBtn$.pipe(
       takeUntil(this._unsubscribe$),
       tap(() => console.log('_codeRunBtn$ clicked')),
-      concatMap(() => {
-          return this.codeService.runCode(
-            CodeExecutionRequest.fromSnippet(this.codeSnippet,
-              ScaffoldingType.FULL_TEMPLATE,
-              new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
-            ))
-        }
+      concatMap(() =>
+        this.codeService.runCode(
+          CodeExecutionRequest.fromSnippet(this.codeSnippet,
+            ScaffoldingType.FULL_TEMPLATE,
+            new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
+          ))
       ),
+      tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),
+      retryWhen(errors => errors.pipe(
+        tap(e => console.log(e))
+      )),
+    ).subscribe()
+
+    this._codeRunTestsBtn$.pipe(
+      takeUntil(this._unsubscribe$),
+      switchMap(() => this.onRunTestsClick()),
       tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),
       retryWhen(errors => errors.pipe(
         tap(e => console.log(e))

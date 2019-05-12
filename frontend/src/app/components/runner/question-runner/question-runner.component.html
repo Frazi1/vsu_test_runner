@@ -7,7 +7,7 @@
   <div class="section-panel">
     <h3 class="text-left">Код Решения</h3>
     <button class="btn btn-danger" (click)="resetBtnClick$.next()">Сбросить код</button>
-    <app-code-editor-with-executor [codeSnippet]="questionRun.answerCodeSnippet">
+    <app-code-editor-with-executor [codeSnippet]="questionRun.answerCodeSnippet" [onRunTestsClick]="runTestsClosure">
     </app-code-editor-with-executor>
   </div>
 </div>

@@ -1,4 +1,7 @@
 @bubbleTriangleSize: 13px;
+@bubbleValidColor: green;
+@bubbleInvalidColor: red;
+@bubbleDefaultColor: gainsboro;
 
 #output-container {
   max-height: 100%;
@@ -20,13 +23,36 @@ textarea {
   flex-basis: @bubbleTriangleSize * 4;
 }
 
+.bubble-valid {
+  background: @bubbleValidColor;
+
+  &:after {
+    border-right-color: @bubbleValidColor !important;
+  }
+}
+
+.bubble-invalid {
+  background: @bubbleInvalidColor;
+
+  &:after {
+    border-right-color: @bubbleInvalidColor !important;
+  }
+}
+
+.bubble-default {
+  background: @bubbleDefaultColor;
+
+  &:after {
+    border-right-color: @bubbleDefaultColor !important;
+  }
+}
+
 .text-bubble {
   white-space: pre-line;
 }
 
 .speech-bubble {
   position: relative;
-  background: #98fef9;
   border-radius: .4em;
 }
 
@@ -38,7 +64,6 @@ textarea {
   width: 0;
   height: 0;
   border: @bubbleTriangleSize solid transparent;
-  border-right-color: #98fef9;
   border-left: 0;
   margin-left: -@bubbleTriangleSize;
 }

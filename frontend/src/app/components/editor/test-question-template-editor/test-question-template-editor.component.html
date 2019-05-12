@@ -24,7 +24,7 @@
       <button (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
     </div>
     <div>
-      <app-code-editor-with-executor [codeSnippet]="question.codeSnippet">
+      <app-code-editor-with-executor [codeSnippet]="question.codeSnippet" [onRunTestsClick]="runTestsClosure">
       </app-code-editor-with-executor>
     </div>
   </div>

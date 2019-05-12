@@ -27,6 +27,13 @@ class CodeExecutionController(BaseController):
         scaffold_function = self._code_execution_service.scaffold_function(function_id, language, scaffolding_type)
         return scaffold_function
 
+    @BaseController.get('/code/scaffold',
+                        query=[QueryParam("language", LanguageEnum)],
+                        returns=FunctionScaffoldingDto)
+    def scaffold_starting_snippet(self, language: LanguageEnum):
+        snippet = self._code_execution_service.scaffold_starting_snipet(language)
+        return snippet
+
     @BaseController.get('/code/types')
     def supported_code_types(self):
         return [e.name for e in ArgumentType]

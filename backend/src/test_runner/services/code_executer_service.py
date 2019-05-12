@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from coderunner.base_runner import BaseRunner
 from coderunner.execution_type import ExecutionType
@@ -50,16 +50,23 @@ class CodeExecuterService(BaseService):
     def get_supported_languages(self):
         return self._runners.keys()
 
-    def scaffold_function(self, function_id: int, language: LanguageEnum,
+    def scaffold_function(self, function_or_id: Union[int, Function], language: LanguageEnum,
                           scaffolding_type: ScaffoldingType) -> FunctionScaffoldingDto:
 
-        func = self._function_service.get_function_by_id(function_id)
+        func = self._function_service.get_function_by_id(function_or_id) \
+            if isinstance(function_or_id, int) \
+            else function_or_id
+
         runner = self._find_runner(language)
         code = runner.code_generator.scaffold_code(func, scaffolding_type)
         return FunctionScaffoldingDto(code, language, func, scaffolding_type)
 
-    def execute_code_with_request_testing_input(self, code_execution_request: CodeExecutionRequestDto) -> List[
-        CodeRunResult]:
+    def scaffold_starting_snipet(self, language: LanguageEnum) -> FunctionScaffoldingDto:
+        func = Function(id=None, name="myFunc", return_type=ArgumentType.STRING, arguments=[], testing_input=None)
+        return self.scaffold_function(func, language, ScaffoldingType.FULL_TEMPLATE)
+
+    def execute_code_with_request_testing_input(self, code_execution_request: CodeExecutionRequestDto) \
+            -> List[CodeRunResult]:
         validation.is_not_none(code_execution_request.testing_input, "code_execution_request.testing_input")
         validation.is_not_none(code_execution_request.testing_input.declarative_input,
                                "code_execution_request.testing_input.declarative_input")

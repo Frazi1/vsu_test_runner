@@ -37,7 +37,7 @@ class LanguageDto(BaseJsonable):
 
 class ArgumentTypeDto(BaseJsonable):
     __exportables__ = {
-        "name": JsonProperty(ArgumentType)
+        "name": JsonProperty(ArgumentType, required=True, allow_none=False)
     }
 
     def __init__(self, name=None):
@@ -279,7 +279,7 @@ class FunctionScaffoldingDto(BaseJsonable):
 
 class CodeExecutionRequestDto(BaseJsonable):
     __exportables__ = {
-        "return_type": JsonProperty(ArgumentType, "returnType"),
+        "return_type": JsonProperty(ArgumentType, "returnType", required=True, allow_none=False),
         "function_id": JsonProperty(int, "functionId", required=False),
         "language": JsonProperty(LanguageEnum),
         "code": JsonProperty(str),
@@ -288,8 +288,12 @@ class CodeExecutionRequestDto(BaseJsonable):
         "testing_input": JsonProperty("FunctionInputDto", "testingInput", required=False)
     }
 
-    def __init__(self, code: str = '', language: LanguageEnum = None, scaffolding_type: ScaffoldingType = None,
-                 function_id: int = None, return_type: ArgumentType = None, client_id: str = None,
+    def __init__(self, code: str = '',
+                 language: LanguageEnum = None,
+                 scaffolding_type: ScaffoldingType = None,
+                 function_id: int = None,
+                 return_type: ArgumentType = None,
+                 client_id: str = None,
                  testing_input: "FunctionInputDto" = None):
         self.return_type = return_type
         self.function_id = function_id
@@ -491,7 +495,7 @@ class DeclarativeInputArgumentItemDto(BaseDto):
         "id": JsonProperty(int, required=False),
         "argument_index": JsonProperty(int, dump_name="argumentIndex"),
         "input_type": JsonProperty(ArgumentType, dump_name="inputType"),
-        "input_value": JsonProperty(str, dump_name="inputValue")
+        "input_value": JsonProperty(str, dump_name="inputValue", required=False)
     }
     id = None  # type: int
     argument_index = None  # type: int

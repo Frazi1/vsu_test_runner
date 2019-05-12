@@ -74,9 +74,18 @@ export class CodeService extends BaseService {
   public scaffoldStartingSnippet(codeLanguage: CodeLanguage): Observable<FunctionScaffoldingDto> {
     const opt = new HttpParams().append('language', codeLanguage.name)
     return this.http.get(this.buildUrl('scaffold'), {params: opt})
-      .pipe(
-        map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
-      )
+               .pipe(
+                 map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
+               )
+  }
+
+  public getStartingSnippetForAnswer(codeLanguage: CodeLanguage,
+                                     questionAnswerId: number): Observable<FunctionScaffoldingDto> {
+    const opt = new HttpParams().append('language', codeLanguage.name)
+    return this.http.get(this.buildUrl('starting_snippet_for_answer', questionAnswerId), {params: opt})
+               .pipe(
+                 map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
+               )
   }
 
   public runCode(codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {

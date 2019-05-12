@@ -5,6 +5,8 @@ import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeLanguage } from '../../../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
+import { Subject } from 'rxjs'
+import { retry, retryWhen, switchMap, tap } from 'rxjs/operators'
 
 @Component({
   selector:    'app-question-runner',
@@ -16,6 +18,8 @@ export class QuestionRunnerComponent implements OnInit {
   private _code: string
   private _codeLanguages: CodeLanguage[]
   private _isReady = false
+
+  resetBtnClick$ = new Subject<void>()
 
   constructor(private codeService: CodeService) {
 
@@ -29,6 +33,17 @@ export class QuestionRunnerComponent implements OnInit {
     //     new CodeSnippet(null, res.codeLanguage, res.code.split('\n'), res.functionObj);
     //   this._code = this.questionRun.answerCodeSnippet.code.join('\n');
     // });
+
+    this.resetBtnClick$.pipe(
+      tap(() => console.log('Reset btn click!')),
+      switchMap(() => this.codeService
+                          .getStartingSnippetForAnswer(this.questionRun.answerCodeSnippet.language, this.questionRun.id)
+      ),
+      tap(res => this.questionRun.answerCodeSnippet.code = res.code),
+      retryWhen(errors => errors.pipe(
+        tap(e => console.log(e))
+      ))
+    ).subscribe()
   }
 
   get questionRun(): QuestionAnswer {
@@ -52,10 +67,7 @@ export class QuestionRunnerComponent implements OnInit {
   private async update() {
     if (this.questionRun.answerCodeSnippet == null) {
       const codeLanguage = this._codeLanguages[0]
-      const scaffold = await this.codeService.scaffoldFunction(this.questionRun.functionId,
-        codeLanguage,
-        ScaffoldingType.FUNCTION_ONLY
-      ).toPromise()
+      const scaffold = await this.codeService.getStartingSnippetForAnswer(codeLanguage, this.questionRun.id).toPromise()
       this.questionRun.answerCodeSnippet = new CodeSnippet(null,
         codeLanguage,
         scaffold.code.split('\n'),
@@ -63,16 +75,5 @@ export class QuestionRunnerComponent implements OnInit {
       )
     }
     this._code = this.questionRun.answerCodeSnippet.code
-  }
-
-  private async runCode() {
-    const snippet = this._questionRun.answerCodeSnippet
-    const req = CodeExecutionRequest.fromReturnType(snippet.language,
-      this.questionRun.answerCodeSnippet.code,
-      snippet.functionObj.returnType,
-      ScaffoldingType.FUNCTION_ONLY
-    )
-    const res = await this.codeService.runCode(req).toPromise()
-    console.log(res)
   }
 }

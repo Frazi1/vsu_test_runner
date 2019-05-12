@@ -1,9 +1,13 @@
 <div *ngIf="_questionRun">
   <h1>{{_questionRun.name}}</h1>
-  <h2>{{_questionRun.description}}</h2>
-  <h3>Code</h3>
-  <app-function-editor *ngIf="questionRun.answerCodeSnippet" [functionObj]="_questionRun.answerCodeSnippet.functionObj"
-                       [isReadOnly]="true"></app-function-editor>
-  <textarea *ngIf="questionRun.answerCodeSnippet" [(ngModel)]="_questionRun.answerCodeSnippet.code"></textarea>
-  <button (click)="runCode()">Запустить код</button>
+  <div class="section-panel">
+    <markdown [data]="questionRun.description"></markdown>
+  </div>
+
+  <div class="section-panel">
+    <h3 class="text-left">Код Решения</h3>
+    <button class="btn btn-danger" (click)="resetBtnClick$.next()">Сбросить код</button>
+    <app-code-editor-with-executor [codeSnippet]="questionRun.answerCodeSnippet">
+    </app-code-editor-with-executor>
+  </div>
 </div>

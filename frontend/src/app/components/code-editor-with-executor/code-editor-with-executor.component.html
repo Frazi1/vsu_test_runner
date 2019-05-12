@@ -1,0 +1,19 @@
+<as-split class="simple-split" [gutterSize]="2" direction="horizontal">
+  <as-split-area [size]="70">
+    <app-code-editor [(code)]="codeSnippet.code"
+                     [language]="codeSnippet.language"
+    ></app-code-editor>
+  </as-split-area>
+  <as-split-area [size]="30">
+    <div class="d-flex flex-column h-100">
+      <app-output-viewer #outputViewer [textSource]="codeExecutionOutput$"
+                         class="flex-grow-1"></app-output-viewer>
+      <textarea class="g--resize-none" placeholder="Входные данные" autosize minRows="1" maxRows="5"
+                type="text" [(ngModel)]="textInput"></textarea>
+      <div class="d-flex m-1">
+        <button class="btn btn-success" (click)="_codeRunBtn$.next()">Запуск</button>
+        <button class="btn btn-dark" (click)="outputViewer.clear()">Очистить</button>
+      </div>
+    </div>
+  </as-split-area>
+</as-split>

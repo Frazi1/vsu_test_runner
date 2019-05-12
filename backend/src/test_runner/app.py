@@ -34,9 +34,11 @@ from utils.bottle_query_parser_plugin.query_parser_plugin import QueryParamParse
 from utils.business_error import BusinessException
 from utils.helpers import load_modules
 from utils.pyjson.pyjson import PyJsonStrategy, PyJsonConverter
-from utils.bottle_sqlalchemy_session_manager_plugin.bottle_sqlalchemy_session_manager_plugin import BottleSQLAlchemySessionPlugin
+from utils.bottle_sqlalchemy_session_manager_plugin.bottle_sqlalchemy_session_manager_plugin import \
+    BottleSQLAlchemySessionPlugin
+import utils.validation_utils as validation
 
-# monkey.patch_all()
+monkey.patch_all()
 
 
 class ArgumentTypeStrategy(PyJsonStrategy):
@@ -46,7 +48,9 @@ class ArgumentTypeStrategy(PyJsonStrategy):
         return {"name": value.name}
 
     def from_json(self, value, concrete_type=None):
-        return concrete_type[value["name"]]
+        val = value["name"]
+        validation.is_not_none(val, "val")
+        return concrete_type[val]
 
 
 class LanguageStrategy(PyJsonStrategy):

@@ -29,7 +29,7 @@ export class CodeExecutionRequest {
   private constructor(clientId: string, returnType: CodeType, functionId: number, language: CodeLanguage, code: string,
                       scaffoldingType: ScaffoldingType, testingInput: FunctionTestingInputDto) {
     this.clientId = clientId
-    this.returnType = returnType
+    this.returnType = returnType == null ? CodeType.STRING : returnType
     this.functionId = functionId
     this.language = language
     this.code = code

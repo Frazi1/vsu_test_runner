@@ -14,7 +14,9 @@ export class TestingInputParserService {
 
   public parse(text: string): DeclarativeFunctionInput {
     const res = new DeclarativeFunctionInput()
-
+    if (!text) {
+      text = ''
+    }
     res.items = text
       .split(this.ITEMS_SEPARATOR)
       .map(item => this.parseDeclarativeItem(item))

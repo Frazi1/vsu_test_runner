@@ -5,13 +5,14 @@ import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 import { Subject } from 'rxjs'
-import { concatMap, concatMapTo, retry, switchMap, takeUntil, tap } from 'rxjs/operators'
+import { concatMap, concatMapTo, retry, retryWhen, switchMap, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { CodeType } from '../../../shared/CodeType'
 import { FunctionDeclarativeInputEditorComponent } from '../function-declarative-input-editor/function-declarative-input-editor.component'
 import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
 import { FunctionTestingInputDto } from '../../../shared/input/FunctionInputDto'
 import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
+import { FunctionScaffoldingDto } from '../../../shared/code/FunctionScaffoldingDto'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -62,14 +63,19 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
     this._codeRunBtn$.pipe(
       takeUntil(this._unsubscribe$),
-      switchMap(() => this.codeService.runCode(
-        CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
-          ScaffoldingType.FULL_TEMPLATE,
-          new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
-        ))
+      tap(() => console.log('_codeRunBtn$ clicked')),
+      concatMap(() => {
+          return this.codeService.runCode(
+            CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
+              ScaffoldingType.FULL_TEMPLATE,
+              new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
+            ))
+        }
       ),
       tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),
-      retry()
+      retryWhen(errors => errors.pipe(
+        tap(e => console.log(e))
+      )),
     ).subscribe()
   }
 
@@ -79,12 +85,18 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
 
   private async scaffoldSolutionFunction(): Promise<void> {
-    const functionId = this.question.codeSnippet.functionObj.id
     const language = this.question.codeSnippet.language
-    const functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId,
-      language,
-      ScaffoldingType.FULL_TEMPLATE
-    ).toPromise()
+    const functionId = this.question.codeSnippet.functionObj.id
+
+    let functionScaffoldingDto: FunctionScaffoldingDto
+    if (functionId) {
+      functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId,
+        language,
+        ScaffoldingType.FULL_TEMPLATE
+      ).toPromise()
+    } else {
+      functionScaffoldingDto = await this.codeService.scaffoldStartingSnippet(language).toPromise()
+    }
     this.question.codeSnippet.code = functionScaffoldingDto.code
   }
 

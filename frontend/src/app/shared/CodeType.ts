@@ -1,7 +1,9 @@
 export class CodeType {
-  name: string
+  public static STRING = new CodeType('STRING')
 
   constructor(name: string = null) {
     this.name = name
   }
+
+  name: string
 }

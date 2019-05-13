@@ -49,11 +49,11 @@ export class TestRunnerComponent implements OnInit {
         tap(res => this._testRun = res),
         filter(
           _ => this.currentQuestion.answerCodeSnippet.code === '' || this.currentQuestion.answerCodeSnippet.code == null),
-        mergeMap(_ => this.codeService.scaffoldFunction(this.currentQuestion.functionId,
-          this.currentQuestion.answerCodeSnippet.language, ScaffoldingType.FUNCTION_ONLY
-          )
-        ),
-        tap(functionScaffolding => this.currentQuestion.answerCodeSnippet.code = functionScaffolding.code)
+        // mergeMap(_ => this.codeService.scaffoldFunction(this.currentQuestion.functionId,
+        //   this.currentQuestion.answerCodeSnippet.language, ScaffoldingType.FUNCTION_ONLY
+        //   )
+        // ),
+        // tap(functionScaffolding => this.currentQuestion.answerCodeSnippet.code = functionScaffolding.code)
       ).subscribe()
   }
 

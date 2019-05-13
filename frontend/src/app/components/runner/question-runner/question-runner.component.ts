@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core'
 import { QuestionAnswer } from '../../../shared/runner/QuestionAnswer'
 import { CodeService } from '../../../services/code.service'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
@@ -14,7 +14,7 @@ import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionRe
   templateUrl: './question-runner.component.html',
   styleUrls:   ['./question-runner.component.less']
 })
-export class QuestionRunnerComponent implements OnInit {
+export class QuestionRunnerComponent implements OnInit, AfterViewInit {
   private _questionRun: QuestionAnswer
   private _code: string
   private _codeLanguages: CodeLanguage[]
@@ -25,7 +25,6 @@ export class QuestionRunnerComponent implements OnInit {
   public runTestsClosure = this.runTests.bind(this)
 
   constructor(private codeService: CodeService) {
-
     // // TODO: fix
     // this._questionRunObs.pipe(
     //   mergeMap(_ => codeService.languages()),
@@ -56,15 +55,14 @@ export class QuestionRunnerComponent implements OnInit {
   @Input()
   set questionRun(value: QuestionAnswer) {
     this._questionRun = value
-    if (this._isReady) {
-      this.update()
-    }
+    // if (this._isReady) {
+    //   this.update()
+    // }
   }
 
   async ngOnInit() {
     this._codeLanguages = await this.codeService.languages().toPromise()
     this._isReady = true
-    await this.update()
   }
 
   private async update() {
@@ -85,5 +83,9 @@ export class QuestionRunnerComponent implements OnInit {
       ScaffoldingType.FULL_TEMPLATE,
       null
     ))
+  }
+
+  public ngAfterViewInit(): void {
+    this.resetBtnClick$.next()
   }
 }

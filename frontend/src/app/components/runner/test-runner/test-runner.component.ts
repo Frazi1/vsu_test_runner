@@ -1,27 +1,27 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { RunService } from '../../../services/run.service'
 import { ActivatedRoute, Router } from '@angular/router'
 import { merge, Observable, Subject, Subscription } from 'rxjs'
 import { TestRun } from '../../../shared/runner/TestRun'
 import { QuestionAnswer } from '../../../shared/runner/QuestionAnswer'
 import { TestRunAnswerUpdate } from '../../../shared/runner/TestRunAnswerUpdate'
-import { filter, map, mergeMap, retry, tap, } from 'rxjs/internal/operators'
+import { concatMap, filter, map, mergeMap, retry, take, takeUntil, tap, } from 'rxjs/internal/operators'
 import { CodeService } from '../../../services/code.service'
-import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 
 @Component({
   selector:    'app-test-runner',
   templateUrl: './test-runner.component.html',
   styleUrls:   ['./test-runner.component.less']
 })
-export class TestRunnerComponent implements OnInit {
+export class TestRunnerComponent implements OnInit, OnDestroy {
 
   private $save = new Subject()
   private $finish = new Subject()
+  private _unsubscribe$ = new Subject()
 
-  private subscription: Subscription
   private _testRun: TestRun
   private _currentQuestionIndex = 0
+  private _currentId: number
 
   constructor(private runService: RunService,
               private activatedRoute: ActivatedRoute,
@@ -36,15 +36,17 @@ export class TestRunnerComponent implements OnInit {
   ngOnInit() {
     const $params: Observable<number> = this.activatedRoute.params.pipe(
       map(params => +params['id']),
-      tap(route => console.log(`ROUTE: ${route}`))
+      tap(route => console.log(`ROUTE: ${route}`)),
+      tap(id => this._currentId = id)
     )
     const $reload: Observable<number> = this.$save.pipe(
       mergeMap(() => this.save())
     )
 
-    this.subscription = merge($params, $reload, this.$finish.pipe(mergeMap(() => this.finish())))
+    merge($params, $reload)
       .pipe(
         retry(),
+        takeUntil(this._unsubscribe$),
         mergeMap(id => this.runService.getTestRun(id)),
         tap(res => this._testRun = res),
         filter(
@@ -55,6 +57,16 @@ export class TestRunnerComponent implements OnInit {
         // ),
         // tap(functionScaffolding => this.currentQuestion.answerCodeSnippet.code = functionScaffolding.code)
       ).subscribe()
+
+    this.$finish.pipe(
+      retry(),
+      takeUntil(this._unsubscribe$),
+      concatMap(() => this.finish())
+    ).subscribe(() => this.router.navigate(['/result', this._currentId]))
+  }
+
+  public ngOnDestroy(): void {
+    this._unsubscribe$.next()
   }
 
   private nextQuestion(): void {

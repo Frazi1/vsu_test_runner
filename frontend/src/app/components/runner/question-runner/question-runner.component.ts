@@ -86,6 +86,8 @@ export class QuestionRunnerComponent implements OnInit, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.resetBtnClick$.next()
+    if (this.questionRun.answerCodeSnippet.code == null) {
+      this.resetBtnClick$.next()
+    }
   }
 }

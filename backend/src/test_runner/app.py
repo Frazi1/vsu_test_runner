@@ -84,16 +84,23 @@ def _init_services():
 
 _service_resolver = _init_services()
 
+enable_cors_plugin = EnableCors()
+session_plugin = BottleSQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True)
+body_parser = BodyParser(encode_with_json_by_default=True)
+controller_plugin = ControllerPlugin()
+query_param_parser_plugin = QueryParamParserPlugin()
+converter = PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()], logger=_service_resolver.logger)
+bottle_py_json_plugin = BottlePyJsonPlugin(pyjson_converter=converter)
+
 app = Bottle(autojson=False)
 # app.install(JsonPlugin())
-app.install(EnableCors())
+app.install(enable_cors_plugin)
 # app.install(SQLAlchemyPlugin(engine=ENGINE, metadata=Base.metadata, commit=True, create=False))
-app.install(BottleSQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True))
-app.install(BodyParser(encode_with_json_by_default=True))
-app.install(ControllerPlugin())
-app.install(QueryParamParserPlugin())
-converter = PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()], logger=_service_resolver.logger)
-app.install(BottlePyJsonPlugin(pyjson_converter=converter))
+app.install(session_plugin)
+app.install(body_parser)
+app.install(controller_plugin)
+app.install(query_param_parser_plugin)
+app.install(bottle_py_json_plugin)
 
 app_config = Config()
 
@@ -161,6 +168,17 @@ def strip_path():
 def cors():
     print('After request hook.')
     response.headers['Access-Control-Allow-Origin'] = '*'
+
+
+@app.route('/app',
+           skip=[body_parser, bottle_py_json_plugin, session_plugin, query_param_parser_plugin, controller_plugin])
+def frontend_main():
+    return bottle.static_file('index.html', root='static')
+
+@app.route('/app/<filepath:re:.+>',
+           skip=[body_parser, bottle_py_json_plugin, session_plugin, query_param_parser_plugin, controller_plugin])
+def frontend(filepath):
+    return bottle.static_file(filepath, root='static')
 
 
 if __name__ == "__main__":

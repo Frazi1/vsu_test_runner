@@ -35,7 +35,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   }
 
   private _editingName = false
-  private _displayContent = true
+  displayContent = true
 
   @Input()
   question: TestQuestionTemplate

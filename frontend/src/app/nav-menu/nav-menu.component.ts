@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core'
 })
 
 export class NavMenuComponent implements OnInit {
-  private items = [
+  items = [
     {name: 'Главная', path: '/'},
     {name: 'Шаблоны', path: '/template'},
     {name: 'Открытые тесты', path: '/instance'},

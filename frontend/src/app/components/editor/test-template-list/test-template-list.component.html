@@ -1,16 +1,16 @@
 <button [routerLink]="'/template/new'">Add Test</button>
 <label>
   <span>Удаленные</span>
-  <input type="checkbox" [(ngModel)]="_includeDeleted"
-         (change)="_includeDeleted$.next(_includeDeleted)">
+  <input type="checkbox" [(ngModel)]="includeDeleted"
+         (change)="includeDeleted$.next(includeDeleted)">
 </label>
 <ng-container *ngIf="_testTemplates$ | async as testTemplates; else loading">
   <div *ngFor="let t of testTemplates">
     <div [routerLink]="['/template', t.id]">
       <span>{{t.id}}. Название: {{t.name}}  Вопросов: {{t.questionTemplates.length}}</span>
       <button *ngIf="!t.isDeleted" (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить</button>
-      <button #restoreBtn *ngIf="t.isDeleted"
-              (click)="_restore$.next(t.id);$event.stopPropagation()">Восстановить
+      <button *ngIf="t.isDeleted"
+              (click)="restore$.next(t.id);$event.stopPropagation()">Восстановить
       </button>
     </div>
   </div>

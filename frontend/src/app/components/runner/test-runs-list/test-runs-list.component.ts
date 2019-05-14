@@ -10,7 +10,7 @@ import { Router } from '@angular/router'
 })
 export class TestRunsListComponent implements OnInit {
 
-  private _testRuns: TestRun[]
+  _testRuns: TestRun[]
 
   constructor(private runService: RunService,
               private router: Router) {

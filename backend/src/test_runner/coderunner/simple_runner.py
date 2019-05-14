@@ -18,8 +18,8 @@ class SimpleRunner(BaseRunner):
         self.config = config
 
     def _run_process(self, command: str, input_data: Optional[str] = None) -> (str, str):
-        if input_data is not None:
-            command = [command, input_data]
+        # if input_data is not None:
+            # command = [command, input_data]
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT,

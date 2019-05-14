@@ -22,5 +22,13 @@ class BaseCodeGenerator(object):
         raise NotImplementedError()
 
     @abstractmethod
-    def remove_solution_part_from_code(self, solution_code: str):
+    def _get_solution_marker_regex(self):
         raise NotImplementedError()
+
+    @abstractmethod
+    def _get_single_line_comment_start(self):
+        raise NotImplementedError()
+
+    def remove_solution_part_from_code(self, solution_code: str):
+        return self._get_solution_marker_regex().sub("{} write code here".format(
+            self._get_single_line_comment_start()), solution_code)

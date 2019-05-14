@@ -1,5 +1,7 @@
 from typing import List
 
+import re
+
 from coderunner.base_code_generator import BaseCodeGenerator
 from coderunner.function_run_argument import FunctionRunArgument
 from coderunner.function_run_plan import FunctionRunPlan
@@ -18,6 +20,25 @@ class PythonCodeGenerator(BaseCodeGenerator):
 
     FUNC_DECLARATION_MARKER = "%FUNC_DECLARATION%"
     FUNC_CALL_MARKER = "%FUNC_CALL%"
+
+    SINGLE_LINE_COMMENT_START = "#"
+    SOLUTION_MARKER = [
+        SINGLE_LINE_COMMENT_START + "SolutionStart",
+        SINGLE_LINE_COMMENT_START + "SolutionEnd"
+    ]
+
+    def __init__(self):
+        self.solution_marker_regex = re.compile(r'{solution_start}{line_sep}?(.*?){solution_end}'
+                                                .format(line_sep="\n",
+                                                        solution_start=self.SOLUTION_MARKER[0],
+                                                        solution_end=self.SOLUTION_MARKER[1]),
+                                                re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
+
+    def _get_single_line_comment_start(self):
+        return self.SINGLE_LINE_COMMENT_START
+
+    def _get_solution_marker_regex(self):
+        return self.solution_marker_regex
 
     def generate_function_call_text(self, function_run_plan: FunctionRunPlan) -> str:
         arguments_ = [self.generate_type_value_repr_text(x) for x in function_run_plan.arguments]

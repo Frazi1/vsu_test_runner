@@ -55,6 +55,12 @@ namespace TestRunner
                                                         solution_end=self.SOLUTION_MARKER[1]),
                                                 re.RegexFlag.MULTILINE | re.RegexFlag.DOTALL)
 
+    def _get_solution_marker_regex(self):
+        return self.solution_marker_regex
+
+    def _get_single_line_comment_start(self):
+        return self.SINGLE_LINE_COMMENT_START
+
     def _get_csharp_type_name(self, argument_type: ArgumentType):
         if argument_type == ArgumentType.STRING:
             return "string"
@@ -104,7 +110,3 @@ namespace TestRunner
         template_function_code = self.target_function_regex.findall(full_code_template)[0]
         result = full_code_template.replace(template_function_code, os.linesep + function_declaration + os.linesep)
         return result
-
-    def remove_solution_part_from_code(self, solution_code: str):
-        return self.solution_marker_regex.sub("{} write code here".format(
-            self.SINGLE_LINE_COMMENT_START), solution_code)

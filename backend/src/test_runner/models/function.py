@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from typing import List
 
 from sqlalchemy import *
@@ -7,6 +10,9 @@ from models import Base
 from models.argument_type import ArgumentType
 from models.function_inputs.base_function_input import BaseFunctionInput
 from models.function_parameter import FunctionArgument
+
+if TYPE_CHECKING:
+    from models.code_snippet import CodeSnippet
 
 
 class Function(Base):
@@ -18,11 +24,12 @@ class Function(Base):
         self.return_type = return_type
         self.arguments = arguments
         self.testing_input = testing_input
-        super(Function,self).__init__(*args, **kwargs)
+        super(Function, self).__init__(*args, **kwargs)
 
-    id = Column(Integer, primary_key=True)  # type: int
-    name = Column(String(100))  # type: str
-    return_type = Column(Enum(ArgumentType))  # type: ArgumentType
-    arguments = relationship("FunctionArgument", back_populates="function")  # type: List[FunctionArgument]
-    code_snippets: List["CodeSnippet"] = relationship("CodeSnippet", back_populates="function")
-    testing_input = relationship("BaseFunctionInput", back_populates="target_function", uselist=False)  # type: BaseFunctionInput
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(100))
+    return_type: ArgumentType = Column(Enum(ArgumentType))
+    arguments: List[FunctionArgument] = relationship("FunctionArgument", back_populates="function")
+    code_snippets: List[CodeSnippet] = relationship("CodeSnippet", back_populates="function")
+    testing_input: BaseFunctionInput = relationship("BaseFunctionInput", back_populates="target_function",
+                                                    uselist=False)

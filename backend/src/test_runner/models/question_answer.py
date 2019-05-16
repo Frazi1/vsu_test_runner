@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 
 from sqlalchemy import Column, Integer, ForeignKey, Boolean, text
@@ -13,10 +15,11 @@ from models.test_run import TestRun
 class QuestionAnswer(Base):
     __tablename__ = "question_answer"
 
-    id = Column(Integer, primary_key=True)  # type: int
-    test_run = relationship("TestRun", back_populates="question_answers")  # type: TestRun
-    question_instance = relationship("QuestionInstance", back_populates="answers")  # type: QuestionInstance
-    code_snippet = relationship("CodeSnippet", back_populates="question_answer")  # type: CodeSnippet
+    id: int = Column(Integer, primary_key=True)
+    test_run: TestRun = relationship("TestRun", back_populates="question_answers")
+    question_instance: QuestionInstance = relationship("QuestionInstance",
+                                                       back_populates="answers")
+    code_snippet: CodeSnippet = relationship("CodeSnippet", back_populates="question_answer")
     is_validated: bool = Column(Boolean, server_default=text("FALSE"))
     validation_passed: bool = Column(Boolean, nullable=True)
     answer_iteration_results: List[CodeRunIteration] = relationship("CodeRunIteration",

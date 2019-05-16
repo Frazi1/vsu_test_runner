@@ -1,7 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer, String, ForeignKey, Text, BigInteger, text, Boolean
 from sqlalchemy.orm import relationship
 
 from . import Base
+
+if TYPE_CHECKING:
+    from models.code_snippet import CodeSnippet
 
 
 class TestQuestionTemplate(Base):
@@ -17,13 +23,13 @@ class TestQuestionTemplate(Base):
         self.is_deleted = is_deleted
         super(TestQuestionTemplate, self).__init__(*args, **kwargs)
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False, default="")
-    description = Column(Text, nullable=True)
-    time_limit = Column(Integer, nullable=True)
-    solution_code_snippet: "CodeSnippet" = relationship("CodeSnippet", back_populates="question_template")
-    version = Column(BigInteger, server_default=text('1'))  # TODO: increment version on update
-    is_deleted = Column(Boolean, server_default=text('FALSE'))
+    id: int = Column(Integer, primary_key=True)
+    name: name = Column(String(100), nullable=False, default="")
+    description: str = Column(Text, nullable=True)
+    time_limit: int = Column(Integer, nullable=True)
+    solution_code_snippet: CodeSnippet = relationship("CodeSnippet", back_populates="question_template")
+    version: int = Column(BigInteger, server_default=text('1'))  # TODO: increment version on update
+    is_deleted: bool = Column(Boolean, server_default=text('FALSE'))
 
     solution_code_snippet_id = Column(Integer, ForeignKey("code_snippet.id"), nullable=True)
 

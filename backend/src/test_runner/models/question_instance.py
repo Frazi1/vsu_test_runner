@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, String, Integer, ForeignKey, BigInteger, Text
 from sqlalchemy.orm import relationship
 from typing import List
@@ -7,24 +10,27 @@ from models.associations import test_instance_to_question_instance_association
 from models.code_snippet import CodeSnippet
 from models.test_instance import TestInstance
 
+if TYPE_CHECKING:
+    from models.question_answer import QuestionAnswer
+
 
 class QuestionInstance(Base):
     __tablename__ = "question_instance"
 
-    id = Column(Integer, primary_key=True)  # type:int
-    name = Column(String(length=100))  # type: str
-    time_limit = Column(Integer, nullable=True)  # type: int
-    description = Column(Text, nullable=True)  # type: str
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(length=100))
+    time_limit: int = Column(Integer, nullable=True)
+    description: str = Column(Text, nullable=True)
 
-    tests = relationship(
+    tests: List[TestInstance] = relationship(
         "TestInstance",
         secondary=test_instance_to_question_instance_association,
         back_populates="questions"
-    )  # type: List[TestInstance]
+    )
 
-    parent_version = Column(BigInteger, nullable=False)  # type: int
-    answers = relationship("QuestionAnswer", back_populates="question_instance")  # type: List["QuestionAnswer"]
+    parent_version: int = Column(BigInteger, nullable=False)
+    answers: List[QuestionAnswer] = relationship("QuestionAnswer", back_populates="question_instance")
     solution_code_snippet: CodeSnippet = relationship("CodeSnippet", uselist=False)
 
-    solution_code_snippet_id = Column(Integer, ForeignKey("code_snippet.id"), nullable=False)  # type: int
-    parent_id = Column(Integer, ForeignKey('test_question_template.id'), nullable=False)  # type: int
+    solution_code_snippet_id: int = Column(Integer, ForeignKey("code_snippet.id"), nullable=False)
+    parent_id: int = Column(Integer, ForeignKey('test_question_template.id'), nullable=False)

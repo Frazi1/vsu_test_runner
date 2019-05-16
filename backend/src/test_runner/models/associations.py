@@ -17,3 +17,10 @@ test_instance_to_question_instance_association = Table(
     Column('test_instance_id', Integer, ForeignKey("test_instance.id")),
     Column('question_instance_id', Integer, ForeignKey("question_instance.id"))
 )
+
+user_to_groups_association = Table(
+    'user_to_groups',
+    Base.metadata,
+    Column('user_id', Integer, ForeignKey("user.id")),
+    Column('group_id', Integer, ForeignKey("group.id"))
+)

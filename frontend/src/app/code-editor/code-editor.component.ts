@@ -20,16 +20,16 @@ export class CodeEditorComponent implements OnInit {
 
 
   @Input()
-  public code: string
+  code: string
 
   @Input()
-  public language: CodeLanguage | string
+  language: CodeLanguage | string
 
   @Output()
   private codeChange = new EventEmitter<String>()
 
   @Input()
-  private isReadOnly = false
+  isReadOnly = false
 
   public config: AceConfigInterface = {
     autoScrollEditorIntoView: true,

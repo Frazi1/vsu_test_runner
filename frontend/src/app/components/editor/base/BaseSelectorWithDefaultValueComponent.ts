@@ -7,7 +7,7 @@ export abstract class BaseSelectorWithDefaultValueComponent<T extends { 'name' }
 
   @Input() public isReadOnly = false
 
-  private _value: T
+  protected _value: T
 
 
   get value(): T {

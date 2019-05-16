@@ -10,13 +10,13 @@ export class QuestionLinkComponent implements OnInit {
   QuestionState = QuestionState
 
   @Input()
-  private index: number
+  index: number
 
   @Input()
-  private state: QuestionState
+  state: QuestionState
 
   @Input()
-  private name: string
+  name: string
 
   constructor() { }
 

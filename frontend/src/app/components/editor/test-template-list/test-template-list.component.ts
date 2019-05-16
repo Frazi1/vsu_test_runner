@@ -11,12 +11,13 @@ import { Observable, Subject } from 'rxjs/index'
   styleUrls:   ['./test-template-list.component.less']
 })
 export class TestTemplateListComponent implements OnInit, OnDestroy {
-  private _restore$ = new Subject<number>()
-  private _includeDeleted$ = new Subject<boolean>()
+  restore$ = new Subject<number>()
+  includeDeleted$ = new Subject<boolean>()
+
   private _unsubscribe$ = new Subject()
 
   private _testTemplates$: Observable<TestTemplate[]>
-  private _includeDeleted = false
+  includeDeleted = false
 
 
   constructor(@Inject('ITemplateService') private templatesService: ITemplateService,
@@ -33,9 +34,9 @@ export class TestTemplateListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToLoadTemplates(): void {
-    this._includeDeleted$.pipe(
+    this.includeDeleted$.pipe(
       takeUntil(this._unsubscribe$),
-      startWith(this._includeDeleted),
+      startWith(this.includeDeleted),
       tap(v => console.log(`Include change: ${v}`)),
       tap(v => this._testTemplates$ = this.loadTemplates(v)),
       retry(),
@@ -43,11 +44,11 @@ export class TestTemplateListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToRestore() {
-    this._restore$.pipe(
+    this.restore$.pipe(
       takeUntil(this._unsubscribe$),
       tap(id => console.log(`Restoring: ${id}`)),
       mergeMap(id => this.templatesService.restore(id)),
-      tap(_ => this._testTemplates$ = this.loadTemplates(this._includeDeleted)),
+      tap(_ => this._testTemplates$ = this.loadTemplates(this.includeDeleted)),
     ).subscribe()
   }
 

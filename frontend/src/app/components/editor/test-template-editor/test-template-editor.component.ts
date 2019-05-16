@@ -14,7 +14,7 @@ import { TestQuestionTemplateEditorComponent } from '../test-question-template-e
 export class TestTemplateEditorComponent implements OnInit {
 
   @Output()
-  private testTemplate: TestTemplate
+  testTemplate: TestTemplate
   private paramSubscription: Subscription
   private isCreating: boolean
 

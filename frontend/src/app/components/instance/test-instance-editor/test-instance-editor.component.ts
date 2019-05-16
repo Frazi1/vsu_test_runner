@@ -10,10 +10,12 @@ import { TestInstanceUpdate } from '../../../shared/instance/TestInstanceUpdate'
   styleUrls:   ['./test-instance-editor.component.less']
 })
 export class TestInstanceEditorComponent implements OnInit {
-  private testInstance: TestInstance
+
+  testInstance: TestInstance
+  selectedRange: string
+
   private paramSubscription
 
-  private selectedRange: string
 
   constructor(private instanceService: InstanceService,
               private router: Router,

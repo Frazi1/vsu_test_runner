@@ -20,6 +20,6 @@ class DbGroup(Base):
 
     parent_id: int = Column(Integer, ForeignKey('group.id'))
     parent: DbGroup = relationship("DbGroup", back_populates="children")
-    children: List[DbGroup] = relationship("DbGroup", back_populates="parent")
+    children: List[DbGroup] = relationship("DbGroup", remote_side=[id], back_populates="parent")
 
     users: List[DbUser] = relationship("DbUser", secondary=user_to_groups_association, back_populates="groups")

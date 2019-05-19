@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from sqlalchemy import *
 from sqlalchemy.orm import relationship
-from typing import List
+from typing import List, TYPE_CHECKING
 
 from models import Base
 from models.associations import test_template_test_question_template_association
@@ -17,14 +19,14 @@ class TestTemplate(Base):
         self.id = id_
         super(TestTemplate, self).__init__(*args, **kwargs)
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(length=100))
-    time_limit = Column(Integer, nullable=True)
-    is_deleted = Column(Boolean, server_default=text("FALSE"))
-    questions = relationship(
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(length=100))
+    time_limit: int = Column(Integer, nullable=True)
+    is_deleted: bool = Column(Boolean, server_default=text("FALSE"))
+    questions: List[TestQuestionTemplate] = relationship(
         "TestQuestionTemplate",
         secondary=test_template_test_question_template_association,
-    )  # type: List[TestQuestionTemplate]
+    )
 
     def __repr__(self):
         return "<TestTemplate(id='{}', name='{}', time_limit='{}', questions={})>" \

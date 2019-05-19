@@ -12,7 +12,7 @@ class TemplateController(BaseController):
                  templates_service,  # type: TemplateService
                  logger  # type: ILogger
                  ):
-        super(TemplateController, self).__init__(bottle_app, logger)
+        super(TemplateController, self).__init__(bottle_app, logger, additional_route_keys={'auth': True})
         self.templates_service = templates_service
 
     @BaseController.get('/template', returns=[TestTemplateDto],

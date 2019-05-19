@@ -1,5 +1,6 @@
 bottle==0.12.7
 bottle-sqlalchemy==0.4.3
+bottlejwt==0.0.14
 enum34==1.1.6
 marshmallow==2.13.1
 PyMySQL==0.9.3

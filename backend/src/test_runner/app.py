@@ -5,6 +5,7 @@ from typing import List
 
 import bottle
 from bottle import Bottle, run, response, request
+from bottlejwt import JwtPlugin
 from gevent import monkey
 
 from app_config import Config
@@ -92,6 +93,14 @@ query_param_parser_plugin = QueryParamParserPlugin()
 converter = PyJsonConverter([ArgumentTypeStrategy(), LanguageStrategy()], logger=_service_resolver.logger)
 bottle_py_json_plugin = BottlePyJsonPlugin(pyjson_converter=converter)
 
+
+def auth_validation(auth, auth_value):
+    print(auth, auth_value)
+    return False
+
+
+jwt_plugin = JwtPlugin(auth_validation, "secret")
+
 app = Bottle(autojson=False)
 # app.install(JsonPlugin())
 app.install(enable_cors_plugin)
@@ -101,6 +110,7 @@ app.install(body_parser)
 app.install(controller_plugin)
 app.install(query_param_parser_plugin)
 app.install(bottle_py_json_plugin)
+app.install(jwt_plugin)
 
 app_config = Config()
 

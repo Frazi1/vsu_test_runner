@@ -1,13 +1,16 @@
 # coding=utf-8
 import json
 import os
+import docker
 from typing import List
 
 import bottle
 from bottle import Bottle, run, response, request
 from gevent import monkey
 
-from app_config import Config
+from app_config import Config, ContainerType
+from coderunner.csharp import charp_docker_runner
+from coderunner.csharp.charp_docker_runner import CSharpDockerRunner
 from coderunner.csharp.csharp_runner import CSharpRunner
 from coderunner.python.python_runner import PythonRunner
 from controllers.code_execution_controller import CodeExecutionController
@@ -131,7 +134,8 @@ def _init_controllers(app, service_resolver):
 def _init_code_runners(code_execution_service):
     runners = [
         PythonRunner(app_config),
-        CSharpRunner(app_config)
+        CSharpRunner(app_config) if app_config.CONTAINER_TYPE == ContainerType.Native else CSharpDockerRunner(
+            app_config, docker.from_env())
     ]
     for r in runners:
         code_execution_service.register_runner(r)

@@ -9,3 +9,4 @@ greenlet==0.4.15
 locust
 typing
 ujson
+docker==4.0.1

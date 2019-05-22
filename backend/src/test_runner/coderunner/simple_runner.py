@@ -8,6 +8,7 @@ from typing import Optional
 from app_config import Config
 from coderunner.base_code_generator import BaseCodeGenerator
 from coderunner.base_runner import BaseRunner
+from coderunner.file_creation_result import FileCreationResult
 
 
 class SimpleRunner(BaseRunner):
@@ -19,7 +20,7 @@ class SimpleRunner(BaseRunner):
 
     def _run_process(self, command: str, input_data: Optional[str] = None) -> (str, str):
         # if input_data is not None:
-            # command = [command, input_data]
+        # command = [command, input_data]
         p = subprocess.run(command,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.STDOUT,
@@ -50,13 +51,17 @@ class SimpleRunner(BaseRunner):
     def _run_file(self, utility_name: str, file_path: str, input: str) -> (str, str):
         return self._run_process('{} {} 1'.format(utility_name, file_path), input)
 
-    def save_code_to_file(self, name, extension, code):
-        if name is None:
-            name = uuid.uuid4().hex
-        file_path = os.path.join(self.config.tmp_folder_path, name + extension)
+    def save_code_to_file(self, file_name, file_ext, code) -> FileCreationResult:
+        if file_name == "" or file_name is None:
+            file_name = "src." + file_ext
+
+        folder_name = uuid.uuid4().hex
+        folder_path = os.path.join(self.config.tmp_folder_path, folder_name)
+        os.makedirs(folder_path)
+        file_path = os.path.join(self.config.tmp_folder_path, folder_name, file_name + file_ext)
         with open(file_path, "w") as file_:
             if isinstance(code, list):
                 file_.writelines(code)
             else:
                 file_.write(code)
-            return file_path
+            return FileCreationResult(file_name, file_ext, file_path, folder_path)

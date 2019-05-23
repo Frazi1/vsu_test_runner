@@ -107,8 +107,19 @@ as-split.simple-split {
 }
 
 .section-panel {
+  &:extend(.section-panel-auto);
+  & > h2 {
+    text-align: left;
+  }
+  min-height: 600px;
+}
+
+.section-panel-auto {
+  & > h2 {
+    text-align: left;
+  }
+
   background: white;
   margin-bottom: 25px;
-  min-height: 600px;
 }
 

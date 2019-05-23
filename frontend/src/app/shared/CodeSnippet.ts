@@ -29,4 +29,9 @@ export class CodeSnippet {
   set code_array(value: string[]) {
     this.code = value.join('\n')
   }
+
+  public static EMPTY(): CodeSnippet {
+    const functionObj = new Function()
+    return new CodeSnippet(null, null, [], functionObj)
+  }
 }

@@ -35,7 +35,8 @@ import { AngularSplitModule } from 'angular-split'
 import { AceConfig, AceConfigInterface, AceModule } from 'ngx-ace-wrapper'
 import { MarkdownModule } from 'ngx-markdown'
 import { AutosizeModule } from 'ngx-autosize';
-import { CodeEditorWithExecutorComponent } from './components/code-editor-with-executor/code-editor-with-executor.component'
+import { CodeEditorWithExecutorComponent } from './components/code-editor-with-executor/code-editor-with-executor.component';
+import { TestingInputGeneratorEditorComponent } from './components/testing-input-generator-editor/testing-input-generator-editor.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -61,7 +62,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     QuestionLinkComponent,
     AnswerIterationsViewerComponent,
     OutputViewerComponent,
-    CodeEditorWithExecutorComponent
+    CodeEditorWithExecutorComponent,
+    TestingInputGeneratorEditorComponent
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import { TestInstanceEditorComponent } from './components/instance/test-instance
 import { TestRunnerComponent } from './components/runner/test-runner/test-runner.component'
 import { TestRunsListComponent } from './components/runner/test-runs-list/test-runs-list.component'
 import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
+import { TestingInputGeneratorEditorComponent } from './components/testing-input-generator-editor/testing-input-generator-editor.component'
 
 const routes: Routes = [
   {path: 'template/new', component: TestTemplateEditorComponent},
@@ -16,7 +17,9 @@ const routes: Routes = [
   {path: 'instance/:id', component: TestInstanceEditorComponent},
   {path: 'run/:id', component: TestRunnerComponent},
   {path: 'run', component: TestRunsListComponent},
-  {path: 'result/:id', component: TestResultViewerComponent}
+  {path: 'result/:id', component: TestResultViewerComponent},
+  {path: 'generator/new', component: TestingInputGeneratorEditorComponent},
+  {path: 'generator/:id', component: TestingInputGeneratorEditorComponent},
 ]
 
 @NgModule({

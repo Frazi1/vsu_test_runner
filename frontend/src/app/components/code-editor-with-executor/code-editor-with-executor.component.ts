@@ -49,7 +49,7 @@ export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
       ),
       tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),
       retryWhen(errors => errors.pipe(
-        tap(e => console.log(e))
+        tap(e => console.error(e))
       )),
     ).subscribe()
 
@@ -58,7 +58,7 @@ export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
       switchMap(() => this.onRunTestsClick()),
       tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),
       retryWhen(errors => errors.pipe(
-        tap(e => console.log(e))
+        tap(e => console.error(e))
       )),
     ).subscribe()
 

@@ -13,17 +13,21 @@ from coderunner.python.python_runner import PythonRunner
 from controllers.code_execution_controller import CodeExecutionController
 from controllers.finished_run_controller import FinishedRunController
 from controllers.function_testing_controller import FunctionTestingController
+from controllers.generator_controller import GeneratorController
 from controllers.instance_controller import InstanceController
 from controllers.run_controller import RunController
 from controllers.template_controller import TemplateController
 from db_config import ENGINE
+from interfaces.repo_resolver import RepoResolver
 from interfaces.service_resolver import ServiceResolver
 from logger.console_logger import ConsoleLogger
 from models.argument_type import ArgumentType
 from models.language_enum import LanguageEnum
+from models.repositories.generator_repository import GeneratorRepository
 from plugins import EnableCors, BodyParser
 from services.code_executer_service import CodeExecuterService
 from services.function_service import FunctionService
+from services.generator_service import GeneratorService
 from services.instance_service import InstanceService
 from services.run_service import RunService
 from services.template_service import TemplateService
@@ -64,7 +68,15 @@ class LanguageStrategy(PyJsonStrategy):
         return concrete_type[name_]
 
 
-def _init_services():
+def _init_repos() -> RepoResolver:
+    def session_provider():
+        return request.environ['db']
+
+    generator_repo = GeneratorRepository(session_provider)
+    return RepoResolver(generator_repo)
+
+
+def _init_services(repo_resolver: RepoResolver):
     logger = ConsoleLogger()
     testing_input_service = TestingInputService()
     function_service = FunctionService(testing_input_service)
@@ -72,6 +84,7 @@ def _init_services():
     template_service = TemplateService(code_execution_service)
     instance_service = InstanceService(template_service)
     run_service = RunService(instance_service, code_execution_service)
+    generator_service = GeneratorService(repo_resolver.generator_repo)
 
     return ServiceResolver(logger,
                            code_execution_service,
@@ -79,10 +92,13 @@ def _init_services():
                            instance_service,
                            run_service,
                            template_service,
-                           testing_input_service)
+                           testing_input_service,
+                           generator_service
+                           )
 
 
-_service_resolver = _init_services()
+_repo_resolver = _init_repos()
+_service_resolver = _init_services(_repo_resolver)
 
 enable_cors_plugin = EnableCors()
 session_plugin = BottleSQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True)
@@ -107,9 +123,7 @@ app_config = Config()
 bottle.BaseRequest.MEMFILE_MAX = 4 * 1024 * 1024
 
 
-def _init_controllers(app, service_resolver):
-    # type: (Bottle, ServiceResolver) -> List[BaseController]
-
+def _init_controllers(app: Bottle, service_resolver: ServiceResolver) -> List[BaseController]:
     template_ctrl = TemplateController(app, service_resolver.template_service, service_resolver.logger)
 
     instance_ctrl = InstanceController(app, service_resolver.instance_service, service_resolver.logger)
@@ -124,8 +138,10 @@ def _init_controllers(app, service_resolver):
     function_testing_ctrl = FunctionTestingController(app, service_resolver)
 
     finished_run_controller = FinishedRunController(app, service_resolver)
+    generator_controller = GeneratorController(app, service_resolver.logger, service_resolver.generator_service)
 
-    return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl, function_testing_ctrl, finished_run_controller]
+    return [template_ctrl, instance_ctrl, run_ctrl, code_execution_ctrl, function_testing_ctrl,
+            finished_run_controller, generator_controller]
 
 
 def _init_code_runners(code_execution_service):
@@ -174,6 +190,7 @@ def cors():
            skip=[body_parser, bottle_py_json_plugin, session_plugin, query_param_parser_plugin, controller_plugin])
 def frontend_main():
     return bottle.static_file('index.html', root='static')
+
 
 @app.route('/app/<filepath:re:.+>',
            skip=[body_parser, bottle_py_json_plugin, session_plugin, query_param_parser_plugin, controller_plugin])

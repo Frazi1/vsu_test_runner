@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from datetime import datetime
 from typing import List, Optional
 
-from coderunner.execution_type import ExecutionType
 from coderunner.scaffolding_type import ScaffoldingType
 from models.argument_type import ArgumentType
 from models.code_snippet import CodeSnippet
+from models.db_testing_input_generator import DbTestingInputGenerator
 from models.function import Function
 from models.function_inputs.base_function_input import DeclarativeFunctionInput, BaseFunctionInput
 from models.function_inputs.code_run_iteration import CodeRunIteration, CodeRunStatus
@@ -24,6 +26,15 @@ class BaseDto(BaseJsonable):
     def __init__(self, **kwargs):
         for name, value in kwargs.items():
             setattr(self, name, value)
+
+    @classmethod
+    def from_list(cls, list_e):
+        res = [cls.from_entity(x) for x in list_e]
+        return res
+
+    @classmethod
+    def from_entity(cls, x):
+        raise NotImplementedError()
 
 
 class LanguageDto(BaseJsonable):
@@ -531,3 +542,26 @@ class FinishedTestRunResultsDto(BaseDto):
     name = None  # type: str
     answer_results = None  # type: List[QuestionAnswerDto]
     finished_at = None  # type: datetime
+
+
+class TestingInputGeneratorDto(BaseDto):
+    __exportables__ = {
+        "id": JsonProperty(int, required=False),
+        "description": JsonProperty(str, ),
+        "code_snippet": JsonProperty(CodeSnippetDto, "codeSnippet")
+    }
+
+    id: int
+    description: str
+    code_snippet: CodeSnippetDto
+
+    def to_entity(self) -> DbTestingInputGenerator:
+        res = DbTestingInputGenerator(id=self.id,
+                                      description=self.description,
+                                      code_snippet=self.code_snippet.to_entity())
+        return res
+
+    @classmethod
+    def from_entity(cls, e: DbTestingInputGenerator):
+        res = cls(id=e.id, description=e.description, code_snippet=CodeSnippetDto.from_entity(e.code_snippet))
+        return res

@@ -12,6 +12,7 @@ from models.snippet_type import SnippetType
 if TYPE_CHECKING:
     from models.test_question_template import TestQuestionTemplate
     from models.question_answer import QuestionAnswer
+    from models.db_testing_input_generator import DbTestingInputGenerator
 
 
 class CodeSnippet(Base):
@@ -32,3 +33,7 @@ class CodeSnippet(Base):
                                                    uselist=False)
 
     function_id: int = Column(Integer, ForeignKey('function.id'), nullable=false)
+
+    testing_input_generator: DbTestingInputGenerator = relationship("DbTestingInputGenerator",
+                                                                    back_populates="code_snippet",
+                                                                    uselist=False)

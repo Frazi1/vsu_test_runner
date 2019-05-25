@@ -1,13 +1,16 @@
 import { DeclarativeFunctionInput } from './DeclarativeFunctionInput'
 import { Type } from 'class-transformer'
 
-export class FunctionTestingInputDto {
+export class TestingInputDto {
 
-  @Type(() => DeclarativeFunctionInput)
-  declarativeInput: DeclarativeFunctionInput = undefined
+  id: number
+  input: string
+  expectedOutput: string
 
 
-  constructor(declarativeInput: DeclarativeFunctionInput = null) {
-    this.declarativeInput = declarativeInput
+  constructor(id: number = undefined, input: string = undefined, expectedOutput: string = undefined) {
+    this.id = id
+    this.input = input
+    this.expectedOutput = expectedOutput
   }
 }

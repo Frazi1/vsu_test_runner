@@ -1,5 +1,6 @@
 import { CodeSnippet } from './CodeSnippet'
 import { Type } from 'class-transformer'
+import { TestingInputDto } from './input/FunctionInputDto'
 
 
 export class TestQuestionTemplate {
@@ -13,6 +14,8 @@ export class TestQuestionTemplate {
 
   @Type(() => CodeSnippet)
   codeSnippet: CodeSnippet
+
+  testingInputs: TestingInputDto[]
 
   constructor(name: string             = '',
               text: string             = '',

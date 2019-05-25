@@ -1,14 +1,9 @@
-import { Function } from '../Function'
 import { CodeLanguage } from '../CodeLanguage'
 import { Exclude, Expose, Type } from 'class-transformer'
 import { ScaffoldingType } from '../ScaffoldingType'
 
 
-export class FunctionScaffoldingDto {
-
-  @Type(() => Function)
-  @Expose({name: 'function'})
-  functionObj: Function = undefined
+export class CodeSnippetScaffoldingDto {
 
   @Type(() => CodeLanguage)
   codeLanguage: CodeLanguage = undefined

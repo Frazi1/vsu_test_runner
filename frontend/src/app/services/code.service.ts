@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Config } from '../shared/Config'
 import { map, shareReplay, switchMap, take } from 'rxjs/internal/operators'
 import { BaseService } from './base.service'
-import { FunctionScaffoldingDto } from '../shared/code/FunctionScaffoldingDto'
+import { CodeSnippetScaffoldingDto } from '../shared/code/CodeSnippetScaffoldingDto'
 import { CodeLanguage } from '../shared/CodeLanguage'
 import { CodeExecutionRequest } from '../shared/runner/CodeExecutionRequest'
 import { CodeExecutionResponse } from '../shared/runner/CodeExecutionResponse'
@@ -62,29 +62,29 @@ export class CodeService extends BaseService {
 
   public scaffoldFunction(functionId: number,
                           codeLanguage: CodeLanguage,
-                          scaffoldingType: ScaffoldingType): Observable<FunctionScaffoldingDto> {
+                          scaffoldingType: ScaffoldingType): Observable<CodeSnippetScaffoldingDto> {
     const opt = new HttpParams().append('language', codeLanguage.name)
                                 .append('scaffoldingType', ScaffoldingType[scaffoldingType])
     return this.http.get(this.buildUrl('scaffold', functionId), {params: opt})
                .pipe(
-                 map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
+                 map(res => this.json.plainToClass(CodeSnippetScaffoldingDto, res as Object))
                )
   }
 
-  public scaffoldStartingSnippet(codeLanguage: CodeLanguage): Observable<FunctionScaffoldingDto> {
+  public scaffoldStartingSnippet(codeLanguage: CodeLanguage): Observable<CodeSnippetScaffoldingDto> {
     const opt = new HttpParams().append('language', codeLanguage.name)
     return this.http.get(this.buildUrl('scaffold'), {params: opt})
                .pipe(
-                 map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
+                 map(res => this.json.plainToClass(CodeSnippetScaffoldingDto, res as Object))
                )
   }
 
   public getStartingSnippetForAnswer(codeLanguage: CodeLanguage,
-                                     questionAnswerId: number): Observable<FunctionScaffoldingDto> {
+                                     questionAnswerId: number): Observable<CodeSnippetScaffoldingDto> {
     const opt = new HttpParams().append('language', codeLanguage.name)
     return this.http.get(this.buildUrl('starting_snippet_for_answer', questionAnswerId), {params: opt})
                .pipe(
-                 map(res => this.json.plainToClass(FunctionScaffoldingDto, res as Object))
+                 map(res => this.json.plainToClass(CodeSnippetScaffoldingDto, res as Object))
                )
   }
 

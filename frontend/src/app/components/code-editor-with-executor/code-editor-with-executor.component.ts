@@ -4,7 +4,7 @@ import { CodeExecutionResponseDto } from '../../shared/runner/CodeExecutionRespo
 import { concatMap, retryWhen, switchMap, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../shared/runner/CodeExecutionRequest'
 import { ScaffoldingType } from '../../shared/ScaffoldingType'
-import { FunctionTestingInputDto } from '../../shared/input/FunctionInputDto'
+import { TestingInputDto } from '../../shared/input/FunctionInputDto'
 import { CodeService } from '../../services/code.service'
 import { TestingInputParserService } from '../../services/logic/testing-input-parser.service'
 import { CodeSnippet } from '../../shared/CodeSnippet'
@@ -44,7 +44,7 @@ export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
         this.codeService.runCode(
           CodeExecutionRequest.fromSnippet(this.codeSnippet,
             ScaffoldingType.FULL_TEMPLATE,
-            new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
+            this.testingInputParserService.parse(this.textInput)
           ))
       ),
       tap(res => res.forEach(v => this.codeExecutionOutput$.next(v))),

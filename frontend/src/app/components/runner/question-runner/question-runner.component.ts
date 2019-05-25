@@ -72,7 +72,6 @@ export class QuestionRunnerComponent implements OnInit, AfterViewInit {
       this.questionRun.answerCodeSnippet = new CodeSnippet(null,
         codeLanguage,
         scaffold.code.split('\n'),
-        scaffold.functionObj
       )
     }
     this._code = this.questionRun.answerCodeSnippet.code

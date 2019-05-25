@@ -11,15 +11,10 @@ export class CodeSnippet {
 
   code: string = undefined
 
-  @Expose({name: 'function'})
-  @Type(() => Function)
-  functionObj: Function
-
-  constructor(id: number = null, language: CodeLanguage = null, code: string[] = [], functionObj: Function) {
+  constructor(id: number = undefined, language: CodeLanguage = undefined, code: string[] = []) {
     this.id = id
     this.language = language
     this.code_array = code
-    this.functionObj = functionObj
   }
 
   get code_array(): string[] {
@@ -31,7 +26,6 @@ export class CodeSnippet {
   }
 
   public static EMPTY(): CodeSnippet {
-    const functionObj = new Function()
-    return new CodeSnippet(null, null, [], functionObj)
+    return new CodeSnippet(null, null, [])
   }
 }

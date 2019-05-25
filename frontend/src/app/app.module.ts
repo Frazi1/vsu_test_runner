@@ -23,7 +23,6 @@ import { QuestionRunnerComponent } from './components/runner/question-runner/que
 import { TestRunsListComponent } from './components/runner/test-runs-list/test-runs-list.component'
 import { CodeEditorComponent } from './code-editor/code-editor.component'
 import { LanguageSelectorComponent } from './components/editor/language-selector/language-selector.component'
-import { FunctionDeclarativeInputEditorComponent } from './components/editor/function-declarative-input-editor/function-declarative-input-editor.component'
 import { ClassTransformer } from 'class-transformer'
 import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
 import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
@@ -56,7 +55,6 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     TestRunsListComponent,
     CodeEditorComponent,
     LanguageSelectorComponent,
-    FunctionDeclarativeInputEditorComponent,
     TestResultViewerComponent,
     QuestionAnswerResultViewerComponent,
     QuestionLinkComponent,

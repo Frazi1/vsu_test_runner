@@ -3,6 +3,7 @@ import { DeclarativeFunctionInput } from '../../shared/input/DeclarativeFunction
 import { DeclarativeInputItem } from '../../shared/input/DeclarativeInputItem'
 import { DeclarativeInputArgumentItem } from '../../shared/input/DeclarativeInputArgumentItem'
 import { CodeType } from '../../shared/CodeType'
+import { TestingInputDto } from '../../shared/input/FunctionInputDto'
 
 @Injectable({
   providedIn: 'root'
@@ -12,40 +13,26 @@ export class TestingInputParserService {
 
   constructor() { }
 
-  public parse(text: string): DeclarativeFunctionInput {
-    const res = new DeclarativeFunctionInput()
+  public parse(text: string): TestingInputDto[] {
     if (!text) {
       text = ''
     }
-    res.items = text
+    return text
       .split(this.ITEMS_SEPARATOR)
-      .map(item => this.parseDeclarativeItem(item))
+      .map(item => this.parseOne(item))
+  }
+
+  public parseOne(text: string): TestingInputDto {
+    const res = new TestingInputDto()
+    res.input = text
     return res
   }
 
-  public parseOne(test: string): DeclarativeFunctionInput {
-    const res = new DeclarativeFunctionInput()
-    res.items = [this.parseDeclarativeItem(test)]
-    return res
+  public dump(inputs: TestingInputDto[]): string {
+    return inputs.map(i => this.dumpItem(i)).join(this.ITEMS_SEPARATOR)
   }
 
-  private parseDeclarativeItem(item: string): DeclarativeInputItem {
-    let res = new DeclarativeInputItem()
-    let argumentItem = new DeclarativeInputArgumentItem()
-    argumentItem.inputType = new CodeType('STRING')
-    argumentItem.argumentIndex = 0
-    argumentItem.inputValue = item
-
-    res.argumentItems = [argumentItem]
-
-    return res
-  }
-
-  public dump(input: DeclarativeFunctionInput): string {
-    return input.items.map(i => this.dumpDeclarativeItem(i)).join(this.ITEMS_SEPARATOR)
-  }
-
-  private dumpDeclarativeItem(item: DeclarativeInputItem): string {
-    return item.argumentItems[0].inputValue
+  private dumpItem(item: TestingInputDto): string {
+    return item.input
   }
 }

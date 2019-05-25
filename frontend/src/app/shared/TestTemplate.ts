@@ -13,9 +13,9 @@ export class TestTemplate {
   questionTemplates: TestQuestionTemplate[]
 
 
-  constructor(id: number                                = null,
+  constructor(id: number                                = undefined,
               name: string                              = '',
-              timeLimit: number                         = null,
+              timeLimit: number                         = undefined,
               questionTemplates: TestQuestionTemplate[] = []) {
     this.id = id
     this.name = name

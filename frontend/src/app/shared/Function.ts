@@ -1,6 +1,6 @@
 import { CodeType } from './CodeType'
 import { FunctionArgument } from './FunctionArgument'
-import { FunctionTestingInputDto } from './input/FunctionInputDto'
+import { TestingInputDto } from './input/FunctionInputDto'
 import { Type } from 'class-transformer'
 
 
@@ -17,8 +17,8 @@ export class Function {
   arguments: FunctionArgument[]
 
 
-  @Type(() => FunctionTestingInputDto)
-  testingInput: FunctionTestingInputDto = new FunctionTestingInputDto()
+  @Type(() => TestingInputDto)
+  testingInput: TestingInputDto = new TestingInputDto()
 
   constructor(name: string = '', returnType: CodeType = null, args: FunctionArgument[] = []) {
     this.id = null

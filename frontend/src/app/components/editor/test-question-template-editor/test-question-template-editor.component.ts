@@ -1,18 +1,14 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
-import { Function } from '../../../shared/Function'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 import { Observable, Subject } from 'rxjs'
 import { concatMap, retryWhen, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
-import { CodeType } from '../../../shared/CodeType'
-import { FunctionDeclarativeInputEditorComponent } from '../function-declarative-input-editor/function-declarative-input-editor.component'
 import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
-import { FunctionTestingInputDto } from '../../../shared/input/FunctionInputDto'
 import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
-import { FunctionScaffoldingDto } from '../../../shared/code/FunctionScaffoldingDto'
+import { CodeSnippetScaffoldingDto } from '../../../shared/code/CodeSnippetScaffoldingDto'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -47,18 +43,11 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   private _codeRunBtn$ = new Subject<void>()
   private _unsubscribe$ = new Subject<void>()
 
-  @ViewChild(FunctionDeclarativeInputEditorComponent)
-  private declarativeInputEditorComponent: FunctionDeclarativeInputEditorComponent
-
   public runTestsClosure = this.runTests.bind(this)
 
   ngOnInit() {
     if (this.question.codeSnippet == null) {
-      this.question.codeSnippet = new CodeSnippet(null, null, [], new Function())
-    }
-
-    if (this.question.codeSnippet.functionObj == null) {
-      this.question.codeSnippet.functionObj = new Function()
+      this.question.codeSnippet = new CodeSnippet(null, null, [])
     }
 
     console.log(this.question)
@@ -70,7 +59,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
           return this.codeService.runCode(
             CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
               ScaffoldingType.FULL_TEMPLATE,
-              new FunctionTestingInputDto(this.testingInputParserService.parseOne(this.textInput))
+              this.testingInputParserService.parse(this.textInput)
             ))
         }
       ),
@@ -88,36 +77,22 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   private async scaffoldSolutionFunction(): Promise<void> {
     const language = this.question.codeSnippet.language
-    const functionId = this.question.codeSnippet.functionObj.id
 
-    let functionScaffoldingDto: FunctionScaffoldingDto
-    if (functionId) {
-      functionScaffoldingDto = await this.codeService.scaffoldFunction(functionId,
-        language,
-        ScaffoldingType.FULL_TEMPLATE
-      ).toPromise()
-    } else {
-      functionScaffoldingDto = await this.codeService.scaffoldStartingSnippet(language).toPromise()
-    }
-    this.question.codeSnippet.code = functionScaffoldingDto.code
-  }
-
-  public fillFunction(question: TestQuestionTemplate, functionObj: Function): void {
-    functionObj.returnType = new CodeType('STRING')
-    functionObj.name = question.name != null ? question.name.toLowerCase() : ''
+    let snippetScaffoldingDto: CodeSnippetScaffoldingDto
+    snippetScaffoldingDto = await this.codeService.scaffoldStartingSnippet(language).toPromise()
+    this.question.codeSnippet.code = snippetScaffoldingDto.code
   }
 
   public runTests(): Observable<CodeExecutionResponseDto[]> {
-    this.declarativeInputEditorComponent.parse()
+    this.onSave()
     const req = CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
       ScaffoldingType.FULL_TEMPLATE,
-      this.question.codeSnippet.functionObj.testingInput
+      this.question.testingInputs
     )
     return this.codeService.runCode(req)
   }
 
   public onSave(): void {
-    this.fillFunction(this.question, this.question.codeSnippet.functionObj)
-    this.declarativeInputEditorComponent.onSave()
+    this.question.testingInputs = this.testingInputParserService.parse(this.textInput)
   }
 }

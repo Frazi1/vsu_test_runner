@@ -9,7 +9,7 @@ namespace DataAccess.Repository
     {
         private readonly TestRunnerDbContext _context;
 
-        public BaseRepository(TestRunnerDbContext context)
+        protected BaseRepository(TestRunnerDbContext context)
         {
             _context = context;
         }

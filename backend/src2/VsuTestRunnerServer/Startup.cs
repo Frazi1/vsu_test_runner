@@ -28,7 +28,7 @@ namespace VsuTestRunnerServer
                 options.UseMySql(Configuration.GetConnectionString("db")));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddRepositories();
-            services.AddBusinessServices();
+            services.AddBusinessServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

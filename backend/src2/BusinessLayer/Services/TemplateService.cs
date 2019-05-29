@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using DataAccess.Model;
 using DataAccess.Repository;
 using JetBrains.Annotations;
 using SharedModels.DTOs;
@@ -14,8 +12,7 @@ namespace BusinessLayer.Services
     {
         private readonly TestTemplateRepository _repository;
 
-        public TemplateService(TestTemplateRepository repository, IMapper mapper)
-            : base(mapper)
+        public TemplateService(TestTemplateRepository repository)
         {
             _repository = repository;
         }
@@ -23,23 +20,23 @@ namespace BusinessLayer.Services
         public async Task<TestTemplateDto> GetTemplateByIdAsync(int id)
         {
             var dbTemplate = await _repository.GetByIdAsync(id);
-            var res = Mapper.Map<TestTemplateDto>(dbTemplate);
+            var res = dbTemplate.ToTestTemplateDto();
             return res;
         }
 
         public async Task<List<TestTemplateDto>> GetAllTemplatesAsync()
         {
             var dbTemplates = await _repository.GetAllAsync();
-            var res = dbTemplates.Select(x => Mapper.Map<TestTemplateDto>(x)).ToList();
+            var res = dbTemplates.Select(x => x.ToTestTemplateDto()).ToList();
             return res;
         }
 
         public async Task<TestTemplateDto> AddTestTemplateAsync(TestTemplateDto template)
         {
-            var dbTemplate = Mapper.Map<DbTestTemplate>(template);
+            var dbTemplate = template.ToDbTestTemplate();
             _repository.Add(dbTemplate);
             await _repository.SaveChangesAsync();
-            return Mapper.Map<TestTemplateDto>(dbTemplate);
+            return dbTemplate.ToTestTemplateDto();
         }
 
         public async Task DeleteTemplateByIdAsync(int id)

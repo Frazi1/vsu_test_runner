@@ -8,7 +8,7 @@ namespace SharedModels.DTOs
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public virtual CodeSnippetDto SolutionCodeSnippet { get; set; }
+        public virtual CodeSnippetDto CodeSnippet { get; set; }
         public virtual List<TestingInputDto> TestingInputs { get; set; }
     }
 }

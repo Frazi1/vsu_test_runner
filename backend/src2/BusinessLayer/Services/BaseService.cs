@@ -1,14 +1,7 @@
-﻿using AutoMapper;
-
+﻿
 namespace BusinessLayer.Services
 {
-    public class BaseService
+    public abstract class BaseService
     {
-        protected IMapper Mapper { get; }
-
-        protected BaseService(IMapper mapper)
-        {
-            Mapper = mapper;
-        }
     }
 }

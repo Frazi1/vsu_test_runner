@@ -1,7 +1,12 @@
 export class CodeLanguage {
-  name: string
+  id: string
+  displayName: string
 
   constructor(name: string) {
-    this.name = name
+    this.id = name
+  }
+
+  get name(): string {
+    return this.id
   }
 }

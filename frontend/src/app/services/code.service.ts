@@ -50,7 +50,7 @@ export class CodeService extends BaseService {
       this._languageCache$ = timer$.pipe(
         switchMap(() => this.http.get(this.buildUrl('languages'))
                             .pipe(
-                              map((res: string[]) => res.map(langName => new CodeLanguage(langName))),
+                              map((res) => this.json.plainToClass(CodeLanguage, res as Object[])),
                             )
         ),
         take(1),
@@ -63,7 +63,7 @@ export class CodeService extends BaseService {
   public scaffoldFunction(functionId: number,
                           codeLanguage: CodeLanguage,
                           scaffoldingType: ScaffoldingType): Observable<CodeSnippetScaffoldingDto> {
-    const opt = new HttpParams().append('language', codeLanguage.name)
+    const opt = new HttpParams().append('language', codeLanguage.id)
                                 .append('scaffoldingType', ScaffoldingType[scaffoldingType])
     return this.http.get(this.buildUrl('scaffold', functionId), {params: opt})
                .pipe(
@@ -72,7 +72,7 @@ export class CodeService extends BaseService {
   }
 
   public scaffoldStartingSnippet(codeLanguage: CodeLanguage): Observable<CodeSnippetScaffoldingDto> {
-    const opt = new HttpParams().append('language', codeLanguage.name)
+    const opt = new HttpParams().append('language', codeLanguage.id)
     return this.http.get(this.buildUrl('scaffold'), {params: opt})
                .pipe(
                  map(res => this.json.plainToClass(CodeSnippetScaffoldingDto, res as Object))
@@ -81,7 +81,7 @@ export class CodeService extends BaseService {
 
   public getStartingSnippetForAnswer(codeLanguage: CodeLanguage,
                                      questionAnswerId: number): Observable<CodeSnippetScaffoldingDto> {
-    const opt = new HttpParams().append('language', codeLanguage.name)
+    const opt = new HttpParams().append('language', codeLanguage.id)
     return this.http.get(this.buildUrl('starting_snippet_for_answer', questionAnswerId), {params: opt})
                .pipe(
                  map(res => this.json.plainToClass(CodeSnippetScaffoldingDto, res as Object))

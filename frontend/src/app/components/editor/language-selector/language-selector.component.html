@@ -1,8 +1,8 @@
 <select [compareWith]="valueComparer" [(ngModel)]="value" (ngModelChange)="onValueChange($event, value)"
         [disabled]="isReadOnly">
   <option [ngValue]="defaultValue" disabled
-          *ngIf="value == defaultValue || value == undefined">{{defaultValue.name}}
+          *ngIf="value == defaultValue || value == undefined">{{defaultValue.id}}
   </option>
-  <option *ngFor="let opt of options | async" [ngValue]="opt">{{opt.name}}</option>
+  <option *ngFor="let opt of options | async" [ngValue]="opt">{{opt.id}}</option>
 </select>
 

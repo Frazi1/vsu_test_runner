@@ -26,6 +26,6 @@ export class CodeSnippet {
   }
 
   public static EMPTY(): CodeSnippet {
-    return new CodeSnippet(null, null, [])
+    return new CodeSnippet(undefined, undefined, [])
   }
 }

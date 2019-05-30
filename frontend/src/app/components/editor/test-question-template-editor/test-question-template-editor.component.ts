@@ -47,7 +47,11 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.question.codeSnippet == null) {
-      this.question.codeSnippet = new CodeSnippet(null, null, [])
+      this.question.codeSnippet = CodeSnippet.EMPTY()
+    }
+
+    if (this.question.testingInputs) {
+      this.textInput = this.testingInputParserService.dump(this.question.testingInputs)
     }
 
     console.log(this.question)

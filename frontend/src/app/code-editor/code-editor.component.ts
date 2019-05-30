@@ -39,7 +39,7 @@ export class CodeEditorComponent implements OnInit {
 
   public getAceLanguageId(codeLanguage: CodeLanguage | string): string {
     let languageName = (codeLanguage instanceof CodeLanguage)
-      ? codeLanguage.id.toUpperCase()
+      ? (codeLanguage.id || '').toUpperCase()
       : codeLanguage
     switch (languageName) {
       case 'CSHARP':

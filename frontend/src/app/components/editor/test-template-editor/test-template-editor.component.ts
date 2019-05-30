@@ -5,6 +5,7 @@ import { TestTemplate } from '../../../shared/TestTemplate'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { ITemplateService } from '../../../services/interfaces'
 import { TestQuestionTemplateEditorComponent } from '../test-question-template-editor/test-question-template-editor.component'
+import { switchMap } from 'rxjs/operators'
 
 @Component({
   selector:    'app-test-template-editor',
@@ -62,8 +63,10 @@ export class TestTemplateEditorComponent implements OnInit {
   }
 
   private update(): void {
-    this.templatesService.updateTemplate(this.testTemplate)
-        .subscribe(id => this.templatesService.getTemplate(+id).subscribe(res => this.testTemplate = res))
+    const templateId = this.testTemplate.id
+    this.templatesService.updateTemplate(this.testTemplate).pipe(
+      switchMap(() => this.templatesService.getTemplate(templateId))
+    ).subscribe(res => this.testTemplate = res)
   }
 
   private deleteTemplate(): void {

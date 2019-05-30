@@ -39,8 +39,9 @@ namespace VsuTestRunnerServer.Controllers
 
         // PUT: api/Template1/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task Put(int id, [FromBody] TestTemplateDto templateDto)
         {
+            await _service.UpdateTestTemplateAsync(templateDto);
         }
 
         // DELETE: api/ApiWithActions/5

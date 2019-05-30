@@ -4,8 +4,8 @@ namespace SharedModels.DTOs
 {
     public class LanguageIdentifier
     {
-        public string Id { get; }
-        public string DisplayName { get; }
+        public string Id { get; set; }
+        public string DisplayName { get; set; }
 
 
         [UsedImplicitly]

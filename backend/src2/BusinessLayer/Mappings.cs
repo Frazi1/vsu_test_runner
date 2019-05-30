@@ -77,5 +77,23 @@ namespace BusinessLayer
                 TimeLimit = d.TimeLimit,
                 QuestionTemplates = d.QuestionTemplates.Select(ToDbQuestionTemplate).ToList()
             };
+
+        public static TestInstanceDto ToTestInstanceDto(this DbTestInstance d)
+            => new TestInstanceDto
+            {
+                Id = d.Id,
+                Name = d.TestTemplate.Name,
+                CreatedAt = d.CreatedAt,
+                DisabledAfter = d.DisabledAfter,
+                AvailableAfter = d.AvailableAfter,
+                Questions = d.QuestionInstances.Select(ToQuestionInstanceDto).ToList()
+            };
+
+        public static QuestionInstanceDto ToQuestionInstanceDto(this DbQuestionInstance d)
+            => new QuestionInstanceDto
+            {
+                Id = d.Id,
+                Name = d.QuestionTemplate.Name
+            };
     }
 }

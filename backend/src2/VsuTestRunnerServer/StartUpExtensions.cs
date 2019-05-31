@@ -38,25 +38,22 @@ namespace VsuTestRunnerServer
             }
         }
 
-        public static void AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
+        public static void AddBusinessServices(this IServiceCollection services)
         {
             foreach (Type type in GetInheritors<BaseService>())
                 services.AddScoped(type);
-
-            services.AddCodeExecutors(configuration);
         }
 
-        private static void AddCodeExecutors(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCodeExecutors(this IServiceCollection services, IConfiguration configuration)
         {
             var languagesDict = configuration.GetSection("LanguageSettings")
                 .GetChildren()
                 .Select(sect => sect.Get<LanguageConfiguration>())
                 .ToImmutableDictionary(e => e.LanguageIdentifier);
-            
+
             services.AddSingleton<IImmutableDictionary<LanguageIdentifier, LanguageConfiguration>>(languagesDict);
-            services.AddSingleton<PipeLineTasksProvider>(provider => new PipeLineTasksProvider(
-                provider.GetService<IImmutableDictionary<LanguageIdentifier, LanguageConfiguration>>(),
-                configuration.GetValue<string>("WorkDir"))
+            services.AddSingleton<PipeLineTasksProvider>(
+                provider => new PipeLineTasksProvider(configuration.GetValue<string>("WorkDir"))
             );
             services.AddSingleton<ExecutorsProvider>(provider =>
             {

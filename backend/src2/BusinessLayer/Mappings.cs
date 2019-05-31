@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DataAccess.Model;
 using SharedModels.DTOs;
 
@@ -95,5 +96,31 @@ namespace BusinessLayer
                 Id = d.Id,
                 Name = d.QuestionTemplate.Name
             };
+
+        public static TestRunDto ToTestRunDto(this DbTestRun d)
+            => new TestRunDto
+            {
+                Id = d.Id,
+                Name = d.TestInstance.TestTemplate.Name,
+                TimeLimit = d.TestInstance.TestTemplate.TimeLimit,
+                StartedAt = d.CreatedAt,
+                EndsAt = d.CreatedAt.Add(TimeSpan.FromSeconds(d.TestInstance.TestTemplate.TimeLimit)),
+                QuestionAnswers = d.QuestionAnswers.Select(ToQuestionAnswerDto).ToList()
+            };
+
+        public static QuestionAnswerDto ToQuestionAnswerDto(this DbQuestionAnswer d)
+            => new QuestionAnswerDto
+            {
+                Id = d.Id,
+                Name = d.QuestionInstance.QuestionTemplate.Name,
+                Iterations = d.CodeRunIterations.Select(ToCodeExecutionResponseDto).ToList(),
+                Description = d.QuestionInstance.QuestionTemplate.Description,
+                IsValidated = d.ValidatedAt.HasValue,
+                ValidationPassed = d.ValidationPassed,
+                AnswerCodeSnippet = d.CodeSnippet.ToCodeSnippetDto()
+            };
+
+        public static CodeExecutionResponseDto ToCodeExecutionResponseDto(this DbCodeRunIteration d)
+            => new CodeExecutionResponseDto(d.TestingInput.Input, d.ActualOutput, d.IsValid, d.Status);
     }
 }

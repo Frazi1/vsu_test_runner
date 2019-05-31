@@ -1,6 +1,4 @@
-﻿using System;
-using AutoMapper;
-using DataAccess;
+﻿using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,9 +24,9 @@ namespace VsuTestRunnerServer
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContextPool<TestRunnerDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("db")));
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddRepositories();
-            services.AddBusinessServices(Configuration);
+            services.AddBusinessServices();
+            services.AddCodeExecutors(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

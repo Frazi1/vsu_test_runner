@@ -6,6 +6,7 @@ namespace DataAccess.Model
     {
         public int Id { get; set; }
         public string ActualOutput { get; set; }
+        public bool? IsValid { get; set; }
         public CodeRunStatus Status { get; set; }
         
         public int TestingInputId { get; set; }

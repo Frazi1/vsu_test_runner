@@ -13,10 +13,14 @@ namespace DataAccess.Model
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
 
-        public int UserId { get; set; }
+        //TODO: not nullable
+        public int? UserId { get; set; }
+        public int TestInstanceId { get; set; }
         
         public virtual DbUser User { get; set; }
         public virtual ICollection<DbQuestionAnswer> QuestionAnswers { get; set; }
+        public virtual DbTestInstance TestInstance { get; set; }
     }
 }

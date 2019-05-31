@@ -1,9 +1,10 @@
-namespace DataAccess.Model
+namespace SharedModels.Enum
 {
     public enum CodeRunStatus
     {
         Success,
         CompileError,
-        RuntimeError
+        RuntimeError,
+        TimeOutExceeded
     }
 }

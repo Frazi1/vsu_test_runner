@@ -12,5 +12,8 @@ namespace Utils
                 action(x);
             }
         }
+
+        public static string JoinToString<T>(this IEnumerable<T> enumerable, string separator)
+            => string.Join(separator, enumerable);
     }
 }

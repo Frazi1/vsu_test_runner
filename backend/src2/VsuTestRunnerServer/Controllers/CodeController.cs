@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using SharedModels.DTOs;
@@ -24,5 +25,11 @@ namespace VsuTestRunnerServer.Controllers
         {
             return _codeService.ScaffoldStartingLanguageSnippet(LanguageIdentifier.FromString(language));
         }
+
+        [HttpPost("run")]
+        public async Task<List<CodeExecutionResponseDto>> ExecuteCode([FromBody] CodeExecutionRequestDto codeExecutionRequest)
+        {
+            return await _codeService.RunCode(codeExecutionRequest);
+        } 
     }
 }

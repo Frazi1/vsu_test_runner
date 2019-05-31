@@ -1,3 +1,5 @@
+using SharedModels.Enum;
+
 namespace DataAccess.Model
 {
     public class DbCodeRunIteration: IEntityWithId

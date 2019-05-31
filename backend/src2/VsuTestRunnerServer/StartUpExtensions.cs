@@ -5,10 +5,12 @@ using System.Linq;
 using System.Reflection;
 using BusinessLayer;
 using BusinessLayer.Executors;
+using BusinessLayer.Executors.PipelineTasks;
 using BusinessLayer.Services;
 using DataAccess.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharedModels.DTOs;
 
 namespace VsuTestRunnerServer
 {
@@ -46,18 +48,30 @@ namespace VsuTestRunnerServer
 
         private static void AddCodeExecutors(this IServiceCollection services, IConfiguration configuration)
         {
-            var languagesConfigs = configuration.GetSection("LanguageSettings")
+            var languagesDict = configuration.GetSection("LanguageSettings")
                 .GetChildren()
                 .Select(sect => sect.Get<LanguageConfiguration>())
-                .Select(config => (
-                    config.LanguageIdentifier,
-                    Executor: config.CompilationRequired ? new CompileCodeExecutor(config) : new CodeExecutor(config))
-                )
-                .ToImmutableDictionary(e => e.LanguageIdentifier, e=> e.Executor);
+                .ToImmutableDictionary(e => e.LanguageIdentifier);
+            
+            services.AddSingleton<IImmutableDictionary<LanguageIdentifier, LanguageConfiguration>>(languagesDict);
+            services.AddSingleton<PipeLineTasksProvider>(provider => new PipeLineTasksProvider(
+                provider.GetService<IImmutableDictionary<LanguageIdentifier, LanguageConfiguration>>(),
+                configuration.GetValue<string>("WorkDir"))
+            );
+            services.AddSingleton<ExecutorsProvider>(provider =>
+            {
+                var languages = provider.GetService<IImmutableDictionary<LanguageIdentifier, LanguageConfiguration>>();
+                var pipeLineTasksProvider = provider.GetService<PipeLineTasksProvider>();
 
-            var executorsProvider = new ExecutorsProvider(languagesConfigs);
-
-            services.AddSingleton(executorsProvider);
+                var executors = languages
+                    .Select(l => l.Value)
+                    .Select(conf => (Language: conf.LanguageIdentifier,
+                        Executor: conf.CompilationRequired
+                            ? new CompileCodeExecutor(conf, pipeLineTasksProvider)
+                            : new CodeExecutor(conf, pipeLineTasksProvider)))
+                    .ToImmutableDictionary(a => a.Language, a => a.Executor);
+                return new ExecutorsProvider(executors);
+            });
         }
     }
 }

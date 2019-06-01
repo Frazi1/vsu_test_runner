@@ -29,14 +29,14 @@ namespace BusinessLayer.Services
         public async Task<int> StartTestRunFromTestInstanceAsync(int testInstanceId)
         {
             var testInstance = await _testInstanceRepository.GetTestsInstanceWithTemplateByIdAsync(testInstanceId);
-            
+
             //TODO: set user id
             var dbQuestionAnswers = testInstance.QuestionInstances.Select(q => new DbQuestionAnswer
             {
                 QuestionInstanceId = q.Id,
-                CodeSnippet = new DbCodeSnippet()
+                CodeSnippet = new DbCodeSnippet {Language = q.QuestionTemplate.SolutionCodeSnippet.Language}
             }).ToList();
-            
+
             var dbTestRun = new DbTestRun
             {
                 TestInstanceId = testInstanceId,
@@ -52,6 +52,19 @@ namespace BusinessLayer.Services
         {
             var dbTestRun = await _testRunRepository.GetFullByIdAsync(id);
             return dbTestRun.ToTestRunDto();
+        }
+
+        public async Task UpdateTestRunAnswersAsync(int testRunId, List<QuestionAnswerUpdateDto> answerUpdates)
+        {
+            var dbTestRun = await _testRunRepository.GetFullByIdAsync(testRunId);
+            foreach (var answerUpdate in answerUpdates)
+            {
+                var dbQuestionAnswer = dbTestRun.QuestionAnswers.First(a => a.Id == answerUpdate.AnswerId);
+                dbQuestionAnswer.CodeSnippet.Code = answerUpdate.AnswerCodeSnippet.Code;
+                dbQuestionAnswer.CodeSnippet.Language = answerUpdate.AnswerCodeSnippet.Language.Id;
+            }
+            await _testRunRepository.Update(dbTestRun);
+            await _testRunRepository.SaveChangesAsync();
         }
     }
 }

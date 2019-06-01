@@ -18,7 +18,9 @@ namespace DataAccess.Repository
         {
             return Set
                 .Include(d => d.TestTemplate)
-                .Include(d => d.QuestionInstances).ThenInclude(q => q.QuestionTemplate);
+                .Include(d => d.QuestionInstances)
+                    .ThenInclude(q => q.QuestionTemplate)
+                        .ThenInclude(t => t.SolutionCodeSnippet);
         }
 
         public async Task<List<DbTestInstance>> GetTestsInstancesWithTemplates()

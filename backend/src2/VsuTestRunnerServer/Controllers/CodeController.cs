@@ -14,6 +14,7 @@ namespace VsuTestRunnerServer.Controllers
         {
             _codeService = codeService;
         }
+
         [HttpGet("languages")]
         public List<LanguageIdentifier> GetSupportedLanguages()
         {
@@ -30,6 +31,14 @@ namespace VsuTestRunnerServer.Controllers
         public async Task<List<CodeExecutionResponseDto>> ExecuteCode([FromBody] CodeExecutionRequestDto codeExecutionRequest)
         {
             return await _codeService.RunCode(codeExecutionRequest);
-        } 
+        }
+
+        [HttpGet("starting_snippet_for_answer/{id}")]
+        public async Task<CodeSnippetScaffoldingDto> ScaffoldStartingSnippetForTestRun(int id,
+            [FromQuery] string language)
+        {
+            return await _codeService.ScaffoldStartingSnippetForQuestionAnswer(id,
+                LanguageIdentifier.FromString(language));
+        }
     }
 }

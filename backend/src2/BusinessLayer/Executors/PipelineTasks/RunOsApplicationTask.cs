@@ -18,7 +18,7 @@ namespace BusinessLayer.Executors.PipelineTasks
         {
             string executableFilePath = Path.Combine(state.WorkspaceId, state.ExecutableFileName);
             string runCmd = config.RunCmd.Replace("{outputFileName}", executableFilePath);
-            string runCmdArgs = config.RunCmdArgs?.Replace("{outputFileName}", executableFilePath) ?? "";
+            string runCmdArgs = config.RunCmdArgs?.Replace("{outputFileName}", state.ExecutableFileName) ?? "";
 
             var processTuples = request.TestingInputs
                 .Select(i =>
@@ -63,7 +63,7 @@ namespace BusinessLayer.Executors.PipelineTasks
                             CodeRunStatus.Success);
                     return new ProcessRunResult(input.Id, input.Input, "Timeout exceeded", null,
                         CodeRunStatus.TimeOutExceeded);
-                });
+                }).ToList();
 
             state.ExecutionResults.AddRange(executionResults);
         }

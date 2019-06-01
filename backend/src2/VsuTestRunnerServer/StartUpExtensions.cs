@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using BusinessLayer;
 using BusinessLayer.Executors;
 using BusinessLayer.Executors.PipelineTasks;
 using BusinessLayer.Services;
+using BusinessLayer.Wildcards;
 using DataAccess.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,6 +71,11 @@ namespace VsuTestRunnerServer
                     .ToImmutableDictionary(a => a.Language, a => a.Executor);
                 return new ExecutorsProvider(executors);
             });
+        }
+
+        public static void AddWildcards(this IServiceCollection services)
+        {
+            services.AddSingleton<WildcardsFactory>();
         }
     }
 }

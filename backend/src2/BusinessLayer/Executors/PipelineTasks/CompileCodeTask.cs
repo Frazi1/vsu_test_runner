@@ -1,6 +1,8 @@
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using BusinessLayer.Executors.Interfaces;
+using BusinessLayer.Executors.PipelineTasks.Exceptions;
 using SharedModels.DTOs;
 
 namespace BusinessLayer.Executors.PipelineTasks
@@ -18,20 +20,24 @@ namespace BusinessLayer.Executors.PipelineTasks
             string compileCmdArgs = compileCmdTemplate
                 .Replace("{inputFileName}", state.SourceFileName)
                 .Replace("{outputFileName}", compiledFileName);
-//            var strings = compileCmd.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
-//            string appName = strings[0];
-//            var args = strings.Skip(1).JoinToString(" ");
 
             var processStartInfo = new ProcessStartInfo
             {
                 WorkingDirectory = state.WorkspaceId,
                 FileName = compileCmd,
-                Arguments = compileCmdArgs
+                Arguments = compileCmdArgs,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
             };
             var process = Process.Start(processStartInfo);
             await Task.Run(() => process.WaitForExit());
-            
             state.ExecutableFileName = compiledFileName;
+
+            if (!File.Exists(state.GetExecutableFilePath()))
+            {
+                throw new CompilationException(await process.StandardOutput.ReadToEndAsync());
+            }
         }
     }
 }

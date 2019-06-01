@@ -32,5 +32,11 @@ namespace VsuTestRunnerServer.Controllers
         {
             return await _testRunService.StartTestRunFromTestInstanceAsync(id);
         }
+
+        [HttpPut("{id}")]
+        public async Task UpdateTestRunAnswersAsync(int id, [FromBody] List<QuestionAnswerUpdateDto> answerUpdates)
+        {
+            await _testRunService.UpdateTestRunAnswersAsync(id, answerUpdates);
+        }
     }
 }

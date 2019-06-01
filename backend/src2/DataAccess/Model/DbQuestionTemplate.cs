@@ -15,6 +15,7 @@ namespace DataAccess.Model
         public int SolutionCodeSnippetId { get; set; }
 
         public virtual DbCodeSnippet SolutionCodeSnippet { get; set; }
+        public virtual ICollection<DbQuestionInstance> QuestionInstances { get; set; }
         public virtual ICollection<DbTestingInput> TestingInputs { get; set; }
     }
 }

@@ -108,6 +108,22 @@ namespace BusinessLayer
                 QuestionAnswers = d.QuestionAnswers.Select(ToQuestionAnswerDto).ToList()
             };
 
+        public static DbTestRun ToDbTestRun(this TestRunDto d)
+            => new DbTestRun
+            {
+                Id = d.Id,
+                QuestionAnswers = d.QuestionAnswers.Select(ToDbQuestionAnswer).ToList()
+            };
+
+        public static DbQuestionAnswer ToDbQuestionAnswer(this QuestionAnswerDto d)
+            => new DbQuestionAnswer
+            {
+                Id = d.Id,
+                CodeSnippet = d.AnswerCodeSnippet.ToDbCodeSnippet(),
+                ValidationPassed = d.ValidationPassed
+            };
+        
+        
         public static QuestionAnswerDto ToQuestionAnswerDto(this DbQuestionAnswer d)
             => new QuestionAnswerDto
             {

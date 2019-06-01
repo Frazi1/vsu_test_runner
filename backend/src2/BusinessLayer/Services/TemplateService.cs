@@ -5,6 +5,7 @@ using DataAccess.Model;
 using DataAccess.Repository;
 using JetBrains.Annotations;
 using SharedModels.DTOs;
+using SharedModels.Enum;
 
 namespace BusinessLayer.Services
 {
@@ -12,10 +13,14 @@ namespace BusinessLayer.Services
     public class TemplateService : BaseService
     {
         private readonly TestTemplateRepository _repository;
+        private readonly CodeService _codeService;
 
-        public TemplateService(TestTemplateRepository repository)
+        public TemplateService(
+            TestTemplateRepository repository,
+            CodeService codeService)
         {
             _repository = repository;
+            _codeService = codeService;
         }
 
         public async Task<TestTemplateDto> GetTemplateByIdAsync(int id)
@@ -37,7 +42,28 @@ namespace BusinessLayer.Services
             var dbTemplate = template.ToDbTestTemplate();
             _repository.Add(dbTemplate);
             await _repository.SaveChangesAsync();
+            await ExecuteSolutionsAndSetResults(dbTemplate);
+            await _repository.SaveChangesAsync();
             return dbTemplate.ToTestTemplateDto();
+        }
+
+        private async Task ExecuteSolutionsAndSetResults(DbTestTemplate testTemplate)
+        {
+            foreach (var questionTemplate in testTemplate.QuestionTemplates)
+            {
+                var request = new CodeExecutionRequestDto
+                {
+                    Code = questionTemplate.SolutionCodeSnippet.Code,
+                    Language = LanguageIdentifier.FromString(questionTemplate.SolutionCodeSnippet.Language),
+                    TestingInputs = questionTemplate.TestingInputs.Select(x => x.ToTestingInputDto()).ToList()
+                };
+                var taskResult = await _codeService.RunCodeForTaskResultAsync(request);
+                if (taskResult.Status != CodeRunStatus.Success)
+                    return;
+
+                taskResult.ProcessRunResults.ForEach(r =>
+                    questionTemplate.TestingInputs.First(i => i.Id == r.TestingInputId).ExpectedOutput = r.Output);
+            }
         }
 
         public async Task DeleteTemplateByIdAsync(int id)
@@ -51,6 +77,8 @@ namespace BusinessLayer.Services
         {
             var dbTestTemplate = template.ToDbTestTemplate();
             await _repository.Update(dbTestTemplate);
+            await _repository.SaveChangesAsync();
+            await ExecuteSolutionsAndSetResults(dbTestTemplate);
             await _repository.SaveChangesAsync();
         }
     }

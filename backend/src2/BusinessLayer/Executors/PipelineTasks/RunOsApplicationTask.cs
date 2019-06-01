@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using BusinessLayer.Executors.Interfaces;
 using DataAccess.Model;
 using SharedModels.DTOs;
 using SharedModels.Enum;
+using Utils;
 
 namespace BusinessLayer.Executors.PipelineTasks
 {
@@ -58,7 +60,7 @@ namespace BusinessLayer.Executors.PipelineTasks
                         return new ProcessRunResult(
                             input.Id,
                             input.Input,
-                            task.Result.StandardOutput.ReadToEnd(),
+                            task.Result.StandardOutput.ReadToEnd().RemoveFromEndSafe(Environment.NewLine.Length),
                             task.Result.StandardError.ReadToEnd(),
                             CodeRunStatus.Success);
                     return new ProcessRunResult(input.Id, input.Input, "Timeout exceeded", null,

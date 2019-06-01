@@ -8,6 +8,7 @@ using BusinessLayer;
 using BusinessLayer.Executors;
 using BusinessLayer.Executors.PipelineTasks;
 using BusinessLayer.Services;
+using BusinessLayer.Validators;
 using BusinessLayer.Wildcards;
 using DataAccess.Repository;
 using Microsoft.Extensions.Configuration;
@@ -76,6 +77,13 @@ namespace VsuTestRunnerServer
         public static void AddWildcards(this IServiceCollection services)
         {
             services.AddSingleton<WildcardsFactory>();
+        }
+
+        public static void AddValidators(this IServiceCollection services)
+        {
+            services.AddSingleton<ITestValidator, LineByLineValidator>();
+            services.AddSingleton<IReadOnlyCollection<ITestValidator>>(provider =>
+                provider.GetServices<ITestValidator>().ToImmutableList());
         }
     }
 }

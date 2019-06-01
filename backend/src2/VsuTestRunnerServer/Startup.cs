@@ -28,6 +28,7 @@ namespace VsuTestRunnerServer
             services.AddBusinessServices();
             services.AddCodeExecutors(Configuration);
             services.AddWildcards();
+            services.AddValidators();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

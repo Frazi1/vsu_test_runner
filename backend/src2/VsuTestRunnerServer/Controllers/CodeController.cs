@@ -30,15 +30,22 @@ namespace VsuTestRunnerServer.Controllers
         [HttpPost("run")]
         public async Task<List<CodeExecutionResponseDto>> ExecuteCode([FromBody] CodeExecutionRequestDto codeExecutionRequest)
         {
-            return await _codeService.RunCode(codeExecutionRequest);
+            return await _codeService.RunCodeAsync(codeExecutionRequest);
         }
 
         [HttpGet("starting_snippet_for_answer/{id}")]
-        public async Task<CodeSnippetScaffoldingDto> ScaffoldStartingSnippetForTestRun(int id,
+        public async Task<CodeSnippetScaffoldingDto> ScaffoldStartingSnippetForTestRunAsync(int id,
             [FromQuery] string language)
         {
             return await _codeService.ScaffoldStartingSnippetForQuestionAnswer(id,
                 LanguageIdentifier.FromString(language));
+        }
+
+        [HttpPost("run_tests/{id}")]
+        public async Task<List<CodeExecutionResponseDto>> RunAvailableTestsForQuestionAnswerAsync(int id,
+            [FromBody] CodeExecutionRequestDto codeExecutionRequest)
+        {
+            return await _codeService.RunPublicTestingSetForQuestionAnswerAsync(id, codeExecutionRequest);
         }
     }
 }

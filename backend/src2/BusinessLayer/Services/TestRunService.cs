@@ -91,6 +91,7 @@ namespace BusinessLayer.Services
             if(dbTestRun.FinishedAt.HasValue) return;
 
             await UpdateTestRunAnswerInternalAsync(dbTestRun, answerUpdates);
+            await _testRunRepository.SaveChangesAsync();
             
             foreach (var dbQuestionAnswer in dbTestRun.QuestionAnswers)
             {

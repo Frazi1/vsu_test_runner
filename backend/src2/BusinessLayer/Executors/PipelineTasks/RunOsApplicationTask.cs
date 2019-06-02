@@ -57,12 +57,18 @@ namespace BusinessLayer.Executors.PipelineTasks
                 {
                     (TestingInputDto input, var task) = t;
                     if (task.Result.HasExited)
+                    {
+                        string output = task.Result.StandardOutput.ReadToEnd().RemoveFromEndSafe(Environment.NewLine.Length);
+                        string error = task.Result.StandardError.ReadToEnd();
+                        var status = task.Result.ExitCode == 0 ? CodeRunStatus.Success : CodeRunStatus.RuntimeError;
                         return new ProcessRunResult(
                             input.Id,
                             input.Input,
-                            task.Result.StandardOutput.ReadToEnd().RemoveFromEndSafe(Environment.NewLine.Length),
-                            task.Result.StandardError.ReadToEnd(),
-                            CodeRunStatus.Success);
+                            output,
+                            error,
+                            status);
+                    }
+
                     return new ProcessRunResult(input.Id, input.Input, "Timeout exceeded", null,
                         CodeRunStatus.TimeOutExceeded);
                 }).ToList();

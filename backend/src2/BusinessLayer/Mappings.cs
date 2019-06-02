@@ -3,6 +3,7 @@ using System.Linq;
 using BusinessLayer.Executors;
 using DataAccess.Model;
 using SharedModels.DTOs;
+using SharedModels.Enum;
 using Utils;
 
 namespace BusinessLayer
@@ -54,7 +55,7 @@ namespace BusinessLayer
         public static DbQuestionTemplate ToDbQuestionTemplate(this QuestionTemplateDto d)
             => new DbQuestionTemplate
             {
-                Id = d.Id,
+                Id = d.Id.GetValueOrDefault(),
                 Name = d.Name,
                 Description = d.Description,
                 SolutionCodeSnippet = d.CodeSnippet.ToDbCodeSnippet(),
@@ -107,6 +108,7 @@ namespace BusinessLayer
                 TimeLimit = d.TestInstance.TestTemplate.TimeLimit,
                 StartedAt = d.CreatedAt,
                 EndsAt = d.CreatedAt.Add(TimeSpan.FromSeconds(d.TestInstance.TestTemplate.TimeLimit)),
+                FinishedAt = d.FinishedAt,
                 QuestionAnswers = d.QuestionAnswers.Select(ToQuestionAnswerDto).ToList()
             };
 
@@ -137,8 +139,11 @@ namespace BusinessLayer
                 AnswerCodeSnippet = d.CodeSnippet.ToCodeSnippetDto()
             };
 
+        public static CodeExecutionResponseDto ToCodeExecutionResponseDto(this ProcessRunResult d)
+            => new CodeExecutionResponseDto(d.Input, d.Status == CodeRunStatus.Success ? d.Output : d.Error, d.IsValid, d.Status);
+        
         public static CodeExecutionResponseDto ToCodeExecutionResponseDto(this DbCodeRunIteration d)
-            => new CodeExecutionResponseDto(d.TestingInput.Input, d.ActualOutput, d.TestingInput.ExpectedOutput,
+            => new CodeExecutionResponseDto(d.TestingInput?.Input, d.ActualOutput, d.TestingInput?.ExpectedOutput,
                 d.IsValid, d.Status);
 
         public static DbCodeRunIteration ToCodeRunIteration(this ProcessRunResult d)
@@ -147,7 +152,7 @@ namespace BusinessLayer
                 Status = d.Status,
                 TestingInputId = d.TestingInputId,
                 IsValid = d.IsValid,
-                ActualOutput = d.Output.OrIfNullOrEmpty(d.Error),
+                ActualOutput = d.Status == CodeRunStatus.Success ? d.Output : d.Error
             };
     }
 }

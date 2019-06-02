@@ -25,10 +25,16 @@ namespace BusinessLayer.Services
             _defaultValidator = _validators.First(v => v is LineByLineValidator);
         }
 
-        public void ValidateResponsesWithTestingInputs(IReadOnlyCollection<ProcessRunResult> responses,
+        public TaskResult ValidateResponsesWithTestingInputs(TaskResult result,
             IImmutableDictionary<int, TestingInputDto> testingInputs)
         {
-            foreach (var response in responses)
+            if(result.Status != CodeRunStatus.Success)
+                return new TaskResult(result.Status, result.Message)
+                {
+                    ProcessRunResults = { new ProcessRunResult(null, null, null, result.Message, result.Status)}
+                };
+                
+            foreach (var response in result.ProcessRunResults)
             {
                 if (response.Status != CodeRunStatus.Success)
                 {
@@ -37,9 +43,11 @@ namespace BusinessLayer.Services
                 else
                 {
                     response.IsValid = _defaultValidator.Validate(response.Output,
-                        testingInputs[response.TestingInputId].ExpectedOutput);
+                        testingInputs[response.TestingInputId.Value].ExpectedOutput);
                 }
             }
+
+            return result;
         }
     }
 }

@@ -85,7 +85,7 @@ namespace BusinessLayer.Services
             }
 
             return taskResult.ProcessRunResults
-                .Select(r => new CodeExecutionResponseDto(r.Input, r.Output.OrIfNullOrEmpty(r.Error), r.IsValid, r.Status))
+                .Select(r => r.ToCodeExecutionResponseDto())
                 .ToList();
         }
 
@@ -119,8 +119,8 @@ namespace BusinessLayer.Services
             };
 
             var result = await RunCodeForTaskResultAsync(requestWithInputs);
-            _validationService.ValidateResponsesWithTestingInputs(
-                result.ProcessRunResults,
+            result = _validationService.ValidateResponsesWithTestingInputs(
+                result,
                 requestWithInputs.TestingInputs.ToImmutableDictionary(t => t.Id)
             );
             return result;

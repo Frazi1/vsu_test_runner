@@ -9,7 +9,7 @@ namespace DataAccess.Model
         public bool? IsValid { get; set; }
         public CodeRunStatus Status { get; set; }
         
-        public int TestingInputId { get; set; }
+        public int? TestingInputId { get; set; }
         public int QuestionAnswerId { get; set; }
         
         public virtual DbTestingInput TestingInput { get; set; }

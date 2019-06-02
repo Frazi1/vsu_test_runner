@@ -10,6 +10,7 @@ namespace SharedModels.DTOs
         public int TimeLimit { get; set; }
         public DateTime StartedAt { get; set; }
         public DateTime EndsAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
         public List<QuestionAnswerDto> QuestionAnswers { get; set; }
     }
 }

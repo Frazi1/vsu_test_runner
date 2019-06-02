@@ -8,4 +8,8 @@
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.3" />
+  </ItemGroup>
+
 </Project>

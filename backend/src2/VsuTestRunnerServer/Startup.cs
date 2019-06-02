@@ -1,4 +1,7 @@
-﻿using DataAccess;
+﻿using System;
+using DataAccess;
+using Hangfire;
+using Hangfire.MySql.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +32,10 @@ namespace VsuTestRunnerServer
             services.AddCodeExecutors(Configuration);
             services.AddWildcards();
             services.AddValidators();
+            services.AddHangfire(x =>
+                x.UseStorage(new MySqlStorage(Configuration.GetConnectionString("Hangfire")))
+            );
+            services.AddHangfireServer();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +52,7 @@ namespace VsuTestRunnerServer
                 .AllowAnyHeader());
 
             app.UseMvc();
-
+            app.UseHangfireDashboard();
         }
     }
 }

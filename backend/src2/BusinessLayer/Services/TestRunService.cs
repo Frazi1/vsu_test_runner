@@ -15,15 +15,19 @@ namespace BusinessLayer.Services
         private readonly TestRunRepository _testRunRepository;
         private readonly TestInstanceRepository _testInstanceRepository;
         private readonly CodeService _codeService;
+        private readonly SchedulingService _schedulingService;
 
         public TestRunService(
             TestRunRepository testRunRepository,
             TestInstanceRepository testInstanceRepository,
-            CodeService codeService)
+            CodeService codeService,
+            SchedulingService schedulingService
+            )
         {
             _testRunRepository = testRunRepository;
             _testInstanceRepository = testInstanceRepository;
             _codeService = codeService;
+            _schedulingService = schedulingService;
         }
 
         public async Task<List<TestRunDto>> GetActiveTestRunsAsync()
@@ -51,6 +55,7 @@ namespace BusinessLayer.Services
             _testRunRepository.Add(dbTestRun);
             await _testRunRepository.SaveChangesAsync();
 
+            _schedulingService.ScheduleTestRunCompletion(dbTestRun.Id, dbTestRun.TestInstance.TestTemplate.TimeLimit);
             return dbTestRun.Id;
         }
 
@@ -62,14 +67,14 @@ namespace BusinessLayer.Services
 
         public async Task UpdateTestRunAnswersAsync(int testRunId, List<QuestionAnswerUpdateDto> answerUpdates)
         {
-            await UpdateTestRunAnswerInternalAsync(testRunId, answerUpdates);
+            var dbTestRun = await _testRunRepository.GetFullByIdAsync(testRunId);
+            await UpdateTestRunAnswerInternalAsync(dbTestRun, answerUpdates);
             await _testRunRepository.SaveChangesAsync();
         }
 
-        private async Task<DbTestRun> UpdateTestRunAnswerInternalAsync(int testRunId,
+        private async Task UpdateTestRunAnswerInternalAsync(DbTestRun dbTestRun,
             IReadOnlyCollection<QuestionAnswerUpdateDto> answerUpdates)
         {
-            var dbTestRun = await _testRunRepository.GetFullByIdAsync(testRunId);
             foreach (var answerUpdate in answerUpdates ?? Enumerable.Empty<QuestionAnswerUpdateDto>())
             {
                 var dbQuestionAnswer = dbTestRun.QuestionAnswers.First(a => a.Id == answerUpdate.AnswerId);
@@ -78,12 +83,15 @@ namespace BusinessLayer.Services
             }
 
             await _testRunRepository.Update(dbTestRun);
-            return dbTestRun;
         }
 
         public async Task FinishTestRunAsync(int testRunId, IReadOnlyCollection<QuestionAnswerUpdateDto> answerUpdates)
         {
-            var dbTestRun = await UpdateTestRunAnswerInternalAsync(testRunId, answerUpdates);
+            var dbTestRun = await _testRunRepository.GetFullByIdAsync(testRunId);
+            if(dbTestRun.FinishedAt.HasValue) return;
+
+            await UpdateTestRunAnswerInternalAsync(dbTestRun, answerUpdates);
+            
             foreach (var dbQuestionAnswer in dbTestRun.QuestionAnswers)
             {
                 dbQuestionAnswer.CodeRunIterations.Clear();

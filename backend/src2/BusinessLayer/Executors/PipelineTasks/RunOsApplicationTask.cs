@@ -15,7 +15,7 @@ namespace BusinessLayer.Executors.PipelineTasks
     {
         private const int WaitTimeOut = 5000;
 
-        public async Task Execute(IPipeLineState state, CodeExecutionRequestDto request,
+        public async Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
         {
             string executableFilePath = Path.Combine(state.WorkspaceId, state.ExecutableFileName);

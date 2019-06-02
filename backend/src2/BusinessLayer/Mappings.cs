@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using BusinessLayer.Executors;
 using DataAccess.Model;
 using SharedModels.DTOs;
+using Utils;
 
 namespace BusinessLayer
 {
@@ -122,8 +124,7 @@ namespace BusinessLayer
                 CodeSnippet = d.AnswerCodeSnippet.ToDbCodeSnippet(),
                 ValidationPassed = d.ValidationPassed
             };
-        
-        
+
         public static QuestionAnswerDto ToQuestionAnswerDto(this DbQuestionAnswer d)
             => new QuestionAnswerDto
             {
@@ -137,6 +138,16 @@ namespace BusinessLayer
             };
 
         public static CodeExecutionResponseDto ToCodeExecutionResponseDto(this DbCodeRunIteration d)
-            => new CodeExecutionResponseDto(d.TestingInput.Input, d.ActualOutput, d.IsValid, d.Status);
+            => new CodeExecutionResponseDto(d.TestingInput.Input, d.ActualOutput, d.TestingInput.ExpectedOutput,
+                d.IsValid, d.Status);
+
+        public static DbCodeRunIteration ToCodeRunIteration(this ProcessRunResult d)
+            => new DbCodeRunIteration
+            {
+                Status = d.Status,
+                TestingInputId = d.TestingInputId,
+                IsValid = d.IsValid,
+                ActualOutput = d.Output.OrIfNullOrEmpty(d.Error),
+            };
     }
 }

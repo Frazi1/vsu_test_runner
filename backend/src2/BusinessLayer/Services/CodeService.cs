@@ -89,13 +89,13 @@ namespace BusinessLayer.Services
                 .ToList();
         }
 
-        public async Task<List<CodeExecutionResponseDto>> RunCodeAsync(CodeExecutionRequestDto request)
+        public async Task<List<CodeExecutionResponseDto>> RunCodeAsync(CodeExecutionRequestWithCustomInputDto request)
         {
             var taskResult = await RunCodeForTaskResultAsync(request);
             return BuildResponsesFromTaskResult(taskResult);
         }
 
-        public async Task<TaskResult> RunCodeForTaskResultAsync(CodeExecutionRequestDto request)
+        public async Task<TaskResult> RunCodeForTaskResultAsync(CodeExecutionRequestWithCustomInputDto request)
         {
             return await _executorsProvider.Get(request.Language).ExecuteCode(request);
         }
@@ -103,16 +103,27 @@ namespace BusinessLayer.Services
         public async Task<List<CodeExecutionResponseDto>> RunPublicTestingSetForQuestionAnswerAsync(
             int questionAnswerId, CodeExecutionRequestDto request)
         {
-            var dbTestingInputs = await _testingInputRepository.GetByQuestionAnswerId(questionAnswerId);
-            request.TestingInputs = dbTestingInputs.Select(x => x.ToTestingInputDto()).ToList();
+            TaskResult result = await RunQuestionTestingSetAsync(questionAnswerId, request);
 
-            var result = await RunCodeForTaskResultAsync(request);
+            return BuildResponsesFromTaskResult(result);
+        }
+
+        public async Task<TaskResult> RunQuestionTestingSetAsync(int questionAnswerId, CodeExecutionRequestDto request)
+        {
+            var dbTestingInputs = await _testingInputRepository.GetByQuestionAnswerId(questionAnswerId);
+            var requestWithInputs = new CodeExecutionRequestWithCustomInputDto
+            {
+                Code = request.Code,
+                Language = request.Language,
+                TestingInputs = dbTestingInputs.Select(x => x.ToTestingInputDto()).ToList()
+            };
+
+            var result = await RunCodeForTaskResultAsync(requestWithInputs);
             _validationService.ValidateResponsesWithTestingInputs(
                 result.ProcessRunResults,
-                request.TestingInputs.ToImmutableDictionary(t => t.Id)
+                requestWithInputs.TestingInputs.ToImmutableDictionary(t => t.Id)
             );
-            
-            return BuildResponsesFromTaskResult(result);
+            return result;
         }
     }
 }

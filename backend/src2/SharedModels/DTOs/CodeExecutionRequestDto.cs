@@ -6,6 +6,10 @@ namespace SharedModels.DTOs
     {
         public LanguageIdentifier Language { get; set; }
         public string Code { get; set; }
-        public List<TestingInputDto> TestingInputs { get; set; }
+    }
+
+    public class CodeExecutionRequestWithCustomInputDto: CodeExecutionRequestDto
+    {
+        public List<TestingInputDto> TestingInputs { get; set; }        
     }
 }

@@ -6,7 +6,7 @@ namespace BusinessLayer.Executors.PipelineTasks
 {
     public class NoCompileCodeTask: IPipeLineTask
     {
-        public Task Execute(IPipeLineState state, CodeExecutionRequestDto request,
+        public Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
         {
             state.ExecutableFileName = state.SourceFileName;

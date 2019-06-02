@@ -7,7 +7,7 @@ namespace BusinessLayer.Executors.PipelineTasks
 {
     public class SaveSourceCodeTask : IPipeLineTask
     {
-        public async Task Execute(IPipeLineState state, CodeExecutionRequestDto request,
+        public async Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
         {
             string fileExt = config.SourceFileExt;

@@ -15,7 +15,7 @@ namespace BusinessLayer.Executors.PipelineTasks
             _basePath = basePath;
         }
         
-        public Task Execute(IPipeLineState state, CodeExecutionRequestDto request,
+        public Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
         {
             string dirName = Guid.NewGuid().ToString();

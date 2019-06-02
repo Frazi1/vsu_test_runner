@@ -9,7 +9,7 @@ namespace BusinessLayer.Executors.PipelineTasks
 {
     public class CompileCodeTask : IPipeLineTask
     {
-        public async Task Execute(IPipeLineState state, CodeExecutionRequestDto request,
+        public async Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
         {
             string compileCmd = config.CompileCmd;

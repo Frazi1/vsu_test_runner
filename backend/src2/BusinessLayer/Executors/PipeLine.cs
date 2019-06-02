@@ -25,7 +25,7 @@ namespace BusinessLayer.Executors
             return this;
         }
 
-        public async Task<TaskResult> ExecuteTasks(IPipeLineState state, CodeExecutionRequestDto request,
+        public async Task<TaskResult> ExecuteTasks(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration languageConfiguration)
         {
             foreach (var task in Tasks)

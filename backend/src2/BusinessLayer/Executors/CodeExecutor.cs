@@ -24,7 +24,7 @@ namespace BusinessLayer.Executors
                 ;
         }
 
-        public async Task<TaskResult> ExecuteCode(CodeExecutionRequestDto request)
+        public async Task<TaskResult> ExecuteCode(CodeExecutionRequestWithCustomInputDto request)
         {
             using (var pipelineState = new OsPipeLineState())
             {

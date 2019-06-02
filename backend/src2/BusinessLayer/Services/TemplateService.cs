@@ -51,7 +51,7 @@ namespace BusinessLayer.Services
         {
             foreach (var questionTemplate in testTemplate.QuestionTemplates)
             {
-                var request = new CodeExecutionRequestDto
+                var request = new CodeExecutionRequestWithCustomInputDto
                 {
                     Code = questionTemplate.SolutionCodeSnippet.Code,
                     Language = LanguageIdentifier.FromString(questionTemplate.SolutionCodeSnippet.Language),

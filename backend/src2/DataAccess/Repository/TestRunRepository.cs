@@ -24,6 +24,7 @@ namespace DataAccess.Repository
                     .ThenInclude(a => a.QuestionInstance)
                 .Include(r => r.QuestionAnswers)
                     .ThenInclude(r => r.CodeRunIterations)
+                        .ThenInclude(i => i.TestingInput)
                 .Include(r => r.TestInstance)
                     .ThenInclude(i => i.TestTemplate)
                         .ThenInclude(t => t.QuestionTemplates);

@@ -28,7 +28,7 @@ namespace VsuTestRunnerServer.Controllers
         }
 
         [HttpPost("run")]
-        public async Task<List<CodeExecutionResponseDto>> ExecuteCode([FromBody] CodeExecutionRequestDto codeExecutionRequest)
+        public async Task<List<CodeExecutionResponseDto>> ExecuteCode([FromBody] CodeExecutionRequestWithCustomInputDto codeExecutionRequest)
         {
             return await _codeService.RunCodeAsync(codeExecutionRequest);
         }

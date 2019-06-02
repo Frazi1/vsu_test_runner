@@ -6,6 +6,6 @@ namespace BusinessLayer.Executors.Interfaces
 {
     public interface IPipeLineTask
     {
-        Task Execute(IPipeLineState state, CodeExecutionRequestDto request, LanguageConfiguration config);
+        Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request, LanguageConfiguration config);
     }
 }

@@ -6,7 +6,7 @@ import { Router } from '@angular/router'
 @Component({
   selector:    'app-test-runs-list',
   templateUrl: './test-runs-list.component.html',
-  styleUrls:   ['./test-runs-list.component.less']
+  styleUrls:   ['./test-runs-list.component.scss']
 })
 export class TestRunsListComponent implements OnInit {
 

@@ -12,7 +12,7 @@ import { CodeSnippet } from '../../shared/CodeSnippet'
 @Component({
   selector:    'app-code-editor-with-executor',
   templateUrl: './code-editor-with-executor.component.html',
-  styleUrls:   ['./code-editor-with-executor.component.less']
+  styleUrls:   ['./code-editor-with-executor.component.scss']
 })
 export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
 

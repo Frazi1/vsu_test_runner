@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators'
 @Component({
   selector:    'app-test-template-editor',
   templateUrl: './test-template-editor.component.html',
-  styleUrls:   ['./test-template-editor.component.less']
+  styleUrls:   ['./test-template-editor.component.scss']
 })
 export class TestTemplateEditorComponent implements OnInit {
 

@@ -7,7 +7,7 @@ import { TestInstanceUpdate } from '../../../shared/instance/TestInstanceUpdate'
 @Component({
   selector:    'app-test-instance-editor',
   templateUrl: './test-instance-editor.component.html',
-  styleUrls:   ['./test-instance-editor.component.less']
+  styleUrls:   ['./test-instance-editor.component.scss']
 })
 export class TestInstanceEditorComponent implements OnInit {
 

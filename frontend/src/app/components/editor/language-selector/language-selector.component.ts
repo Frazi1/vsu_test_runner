@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/index'
 @Component({
   selector:    'app-code-language-selector',
   templateUrl: './language-selector.component.html',
-  styleUrls:   ['./language-selector.component.less']
+  styleUrls:   ['./language-selector.component.scss']
 })
 export class LanguageSelectorComponent extends BaseSelectorWithDefaultValueComponent<CodeLanguage> implements OnInit {
 

@@ -6,7 +6,7 @@ import { CodeExecutionResponseDto } from '../../shared/runner/CodeExecutionRespo
 @Component({
   selector:    'app-output-viewer',
   templateUrl: './output-viewer.component.html',
-  styleUrls:   ['./output-viewer.component.less']
+  styleUrls:   ['./output-viewer.component.scss']
 })
 export class OutputViewerComponent implements OnDestroy {
 

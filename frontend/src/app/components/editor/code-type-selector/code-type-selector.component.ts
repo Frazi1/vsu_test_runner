@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/index'
 @Component({
   selector:    'app-code-type-selector',
   templateUrl: './code-type-selector.component.html',
-  styleUrls:   ['./code-type-selector.component.less']
+  styleUrls:   ['./code-type-selector.component.scss']
 })
 export class CodeTypeSelectorComponent extends BaseSelectorWithDefaultValueComponent<CodeType> implements OnInit {
 

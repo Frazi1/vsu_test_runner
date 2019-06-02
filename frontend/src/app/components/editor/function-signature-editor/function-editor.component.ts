@@ -7,7 +7,7 @@ import { FunctionArgument } from '../../../shared/FunctionArgument'
 @Component({
   selector:    'app-function-editor',
   templateUrl: './function-editor.component.html',
-  styleUrls:   ['./function-editor.component.less']
+  styleUrls:   ['./function-editor.component.scss']
 })
 export class FunctionEditorComponent implements OnInit {
 

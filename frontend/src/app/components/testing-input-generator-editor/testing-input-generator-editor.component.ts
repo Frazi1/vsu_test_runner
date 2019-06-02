@@ -10,7 +10,7 @@ import { CodeService } from '../../services/code.service'
 @Component({
   selector:    'app-input-generator-editor',
   templateUrl: './testing-input-generator-editor.component.html',
-  styleUrls:   ['./testing-input-generator-editor.component.less']
+  styleUrls:   ['./testing-input-generator-editor.component.scss']
 })
 export class TestingInputGeneratorEditorComponent implements OnInit {
   private generator: TestingInputGeneratorDto

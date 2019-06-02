@@ -3,6 +3,16 @@
   <input [(ngModel)]="testTemplate.name">
   <button (click)="addQuestion()">Добавить вопрос</button>
 
+  <div class="section-panel-auto">
+    <h2>Настройки</h2>
+    <div class="settings">
+      <label class="settings__item">
+        <span>Длительность, сек:</span>
+        <input type="number" [(ngModel)]="testTemplate.timeLimit">
+      </label>
+    </div>
+  </div>
+
   <div class="g--flex-column" *ngFor="let q of testTemplate.questionTemplates">
     <button (click)="removeQuestion(q)">Удалить</button>
     <app-test-question-template-editor [question]="q"></app-test-question-template-editor>

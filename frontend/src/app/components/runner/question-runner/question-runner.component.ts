@@ -12,7 +12,7 @@ import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionRe
 @Component({
   selector:    'app-question-runner',
   templateUrl: './question-runner.component.html',
-  styleUrls:   ['./question-runner.component.less']
+  styleUrls:   ['./question-runner.component.scss']
 })
 export class QuestionRunnerComponent implements OnInit, AfterViewInit {
   private _questionRun: QuestionAnswer
@@ -78,10 +78,12 @@ export class QuestionRunnerComponent implements OnInit, AfterViewInit {
   }
 
   public runTests(): Observable<CodeExecutionResponseDto[]> {
-    return this.codeService.runTests(CodeExecutionRequest.fromSnippet(this.questionRun.answerCodeSnippet,
-      ScaffoldingType.FULL_TEMPLATE,
-      null
-    ))
+    return this.codeService.runTests(this.questionRun.id,
+      CodeExecutionRequest.fromSnippet(this.questionRun.answerCodeSnippet,
+        ScaffoldingType.FULL_TEMPLATE,
+        null
+      )
+    )
   }
 
   public ngAfterViewInit(): void {

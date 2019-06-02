@@ -4,7 +4,7 @@ import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionRe
 @Component({
   selector:    'app-answer-iterations-viewer',
   templateUrl: './answer-iterations-viewer.component.html',
-  styleUrls:   ['./answer-iterations-viewer.component.less']
+  styleUrls:   ['./answer-iterations-viewer.component.scss']
 })
 export class AnswerIterationsViewerComponent implements OnInit {
 

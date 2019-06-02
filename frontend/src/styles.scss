@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@sectionPanelBorderRadius: 5px;
+$sectionPanelBorderRadius: 5px;
 
 html {
   height: 100%;
@@ -107,7 +107,7 @@ as-split.simple-split {
 }
 
 .section-panel {
-  &:extend(.section-panel-auto);
+  @extend .section-panel-auto;
   & > h2 {
     text-align: left;
   }

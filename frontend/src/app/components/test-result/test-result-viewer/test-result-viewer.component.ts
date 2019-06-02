@@ -9,7 +9,7 @@ import { QuestionState } from '../../../shared/question-state.enum'
 @Component({
   selector:    'app-test-result-viewer',
   templateUrl: './test-result-viewer.component.html',
-  styleUrls:   ['./test-result-viewer.component.less']
+  styleUrls:   ['./test-result-viewer.component.scss']
 })
 export class TestResultViewerComponent implements OnInit, OnDestroy {
 

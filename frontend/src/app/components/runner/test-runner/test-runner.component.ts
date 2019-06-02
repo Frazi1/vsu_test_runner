@@ -11,7 +11,7 @@ import { CodeService } from '../../../services/code.service'
 @Component({
   selector:    'app-test-runner',
   templateUrl: './test-runner.component.html',
-  styleUrls:   ['./test-runner.component.less']
+  styleUrls:   ['./test-runner.component.scss']
 })
 export class TestRunnerComponent implements OnInit, OnDestroy {
 
@@ -87,7 +87,9 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
 
   private save(): Observable<number> {
     const updates = this.getAnswerUpdates()
-    return this.runService.updateTestRunAnswers(this._testRun.id, updates)
+    return this.runService.updateTestRunAnswers(this._testRun.id, updates).pipe(
+      map(() => this._testRun.id)
+    )
   }
 
   private finish(): Observable<number> {

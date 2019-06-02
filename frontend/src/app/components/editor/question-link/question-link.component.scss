@@ -13,8 +13,8 @@
 }
 
 .link {
-  width: @answerLinkSize;
-  height: @answerLinkSize;
+  width: $answerLinkSize;
+  height: $answerLinkSize;
   font-family: Roboto, sans-serif;
   color: white;
   display: flex;

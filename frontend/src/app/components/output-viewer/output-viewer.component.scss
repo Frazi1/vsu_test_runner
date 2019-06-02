@@ -1,7 +1,7 @@
-@bubbleTriangleSize: 13px;
-@bubbleValidColor: green;
-@bubbleInvalidColor: red;
-@bubbleDefaultColor: gainsboro;
+$bubbleTriangleSize: 13px;
+$bubbleValidColor: green;
+$bubbleInvalidColor: red;
+$bubbleDefaultColor: gainsboro;
 
 #output-container {
   max-height: 100%;
@@ -14,36 +14,36 @@ textarea {
 }
 
 .bubble {
-  margin-left: @bubbleTriangleSize;
+  margin-left: $bubbleTriangleSize;
   margin-top: 10px;
   margin-right: 10px;
   padding-left: 2px;
   padding-right: 5px;
   min-width: 30px;
-  flex-basis: @bubbleTriangleSize * 4;
+  flex-basis: $bubbleTriangleSize * 4;
 }
 
 .bubble-valid {
-  background: @bubbleValidColor;
+  background: $bubbleValidColor;
 
   &:after {
-    border-right-color: @bubbleValidColor !important;
+    border-right-color: $bubbleValidColor !important;
   }
 }
 
 .bubble-invalid {
-  background: @bubbleInvalidColor;
+  background: $bubbleInvalidColor;
 
   &:after {
-    border-right-color: @bubbleInvalidColor !important;
+    border-right-color: $bubbleInvalidColor !important;
   }
 }
 
 .bubble-default {
-  background: @bubbleDefaultColor;
+  background: $bubbleDefaultColor;
 
   &:after {
-    border-right-color: @bubbleDefaultColor !important;
+    border-right-color: $bubbleDefaultColor !important;
   }
 }
 
@@ -63,9 +63,9 @@ textarea {
   top: 10%;
   width: 0;
   height: 0;
-  border: @bubbleTriangleSize solid transparent;
+  border: $bubbleTriangleSize solid transparent;
   border-left: 0;
-  margin-left: -@bubbleTriangleSize;
+  margin-left: -$bubbleTriangleSize;
 }
 
 .details {

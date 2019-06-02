@@ -8,7 +8,7 @@ import { Observable, Subject } from 'rxjs/index'
 @Component({
   selector:    'app-test-template-list',
   templateUrl: './test-template-list.component.html',
-  styleUrls:   ['./test-template-list.component.less']
+  styleUrls:   ['./test-template-list.component.scss']
 })
 export class TestTemplateListComponent implements OnInit, OnDestroy {
   restore$ = new Subject<number>()

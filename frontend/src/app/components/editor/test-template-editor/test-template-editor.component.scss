@@ -1,0 +1,14 @@
+@import "~src/styles";
+
+.settings {
+  @extend .g--flex-column;
+  align-items: flex-start;
+}
+
+.settings__item {
+  margin-left: 5px;
+
+  & > span {
+    margin-right: 5px;
+  }
+}

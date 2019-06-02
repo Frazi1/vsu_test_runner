@@ -13,7 +13,7 @@ import { CodeSnippetScaffoldingDto } from '../../../shared/code/CodeSnippetScaff
 @Component({
   selector:    'app-test-question-template-editor',
   templateUrl: './test-question-template-editor.component.html',
-  styleUrls:   ['./test-question-template-editor.component.less']
+  styleUrls:   ['./test-question-template-editor.component.scss']
 })
 export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 

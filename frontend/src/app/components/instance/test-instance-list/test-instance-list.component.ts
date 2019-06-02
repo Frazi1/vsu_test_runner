@@ -7,7 +7,7 @@ import { tap } from 'rxjs/internal/operators'
 @Component({
   selector:    'app-test-instance-list',
   templateUrl: './test-instance-list.component.html',
-  styleUrls:   ['./test-instance-list.component.less']
+  styleUrls:   ['./test-instance-list.component.scss']
 })
 export class TestInstanceListComponent implements OnInit {
 

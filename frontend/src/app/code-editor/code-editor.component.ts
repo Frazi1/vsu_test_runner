@@ -11,7 +11,7 @@ import { AceConfigInterface } from 'ngx-ace-wrapper'
 @Component({
   selector:    'app-code-editor',
   templateUrl: './code-editor.component.html',
-  styleUrls:   ['./code-editor.component.less'],
+  styleUrls:   ['./code-editor.component.scss'],
 })
 export class CodeEditorComponent implements OnInit {
 
@@ -40,12 +40,15 @@ export class CodeEditorComponent implements OnInit {
   public getAceLanguageId(codeLanguage: CodeLanguage | string): string {
     let languageName = (codeLanguage instanceof CodeLanguage)
       ? (codeLanguage.id || '').toUpperCase()
-      : codeLanguage
+      : codeLanguage || ''
+
+    if (languageName.includes('PYTHON')) {
+      return 'python'
+    }
+
     switch (languageName) {
       case 'CSHARP':
         return 'csharp'
-      case 'PYTHON':
-        return 'python'
       default:
         return 'text'
     }

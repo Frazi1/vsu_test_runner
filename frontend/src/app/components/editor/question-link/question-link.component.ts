@@ -4,7 +4,7 @@ import { QuestionState } from '../../../shared/question-state.enum'
 @Component({
   selector:    'app-question-link',
   templateUrl: './question-link.component.html',
-  styleUrls:   ['./question-link.component.less']
+  styleUrls:   ['./question-link.component.scss']
 })
 export class QuestionLinkComponent implements OnInit {
   QuestionState = QuestionState

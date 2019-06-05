@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BusinessLayer.Executors;
 using DataAccess.Model;
@@ -140,8 +142,9 @@ namespace BusinessLayer
             };
 
         public static CodeExecutionResponseDto ToCodeExecutionResponseDto(this ProcessRunResult d)
-            => new CodeExecutionResponseDto(d.Input, d.Status == CodeRunStatus.Success ? d.Output : d.Error, d.IsValid, d.Status);
-        
+            => new CodeExecutionResponseDto(d.Input, d.Status == CodeRunStatus.Success ? d.Output : d.Error, d.IsValid,
+                d.Status);
+
         public static CodeExecutionResponseDto ToCodeExecutionResponseDto(this DbCodeRunIteration d)
             => new CodeExecutionResponseDto(d.TestingInput?.Input, d.ActualOutput, d.TestingInput?.ExpectedOutput,
                 d.IsValid, d.Status);
@@ -153,6 +156,42 @@ namespace BusinessLayer
                 TestingInputId = d.TestingInputId,
                 IsValid = d.IsValid,
                 ActualOutput = d.Status == CodeRunStatus.Success ? d.Output : d.Error
+            };
+
+        public static InputGeneratorDto ToInputGeneratorDto(this DbInputGenerator d)
+            => new InputGeneratorDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                CodeSnippet = d.CodeSnippet.ToCodeSnippetDto(),
+                CreatedByUser = d.CreatedByUser.Email.OrIfNullOrEmpty(d.CreatedByUser.UserName),
+                CallArguments = GetGeneratorCallArguments(d.CallParameters)
+            };
+
+        public static List<GeneratorCallArgumentDto> GetGeneratorCallArguments(string input)
+            => input.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(item => new GeneratorCallArgumentDto {Name = item})
+                .ToList();
+
+        public static DbInputGenerator ToDbInputGenerator(this InputGeneratorDto d, int creatorUserId = 0)
+        {
+            var r = d.ToUpdateDbInputGenerator();
+            r.CreatedByUserId = creatorUserId;
+            return r;
+        }
+
+        public static DbInputGenerator ToUpdateDbInputGenerator(this InputGeneratorDto d)
+            => new DbInputGenerator
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                CodeSnippet = d.CodeSnippet.ToDbCodeSnippet(),
+                CodeSnippetId = (d.CodeSnippet?.Id).GetValueOrDefault(),
+                CallParameters = (d.CallArguments ?? Enumerable.Empty<GeneratorCallArgumentDto>())
+                    .Select(a => a.Name)
+                    .JoinToString(","),
             };
     }
 }

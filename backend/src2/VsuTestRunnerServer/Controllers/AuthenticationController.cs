@@ -21,11 +21,11 @@ namespace VsuTestRunnerServer.Controllers
         [AllowAnonymous]
         public async Task<AuthenticationResponseDto> Authenticate([FromBody] AuthenticationRequestDto request)
         {
-            var authenticationResult = _authenticationService.AuthenticateAsync(request);
+            var authenticationResult = await _authenticationService.AuthenticateAsync(request);
             if (authenticationResult == null)
                 throw new InvalidCredentialException();
 
-            return await authenticationResult;
+            return authenticationResult;
         }
 
         [HttpPost("signup")]

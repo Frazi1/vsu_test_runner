@@ -22,6 +22,7 @@ namespace DataAccess
         public DbSet<DbQuestionAnswer> QuestionAnswers { get; set; }
         public DbSet<DbUser> Users { get; set; }
         public DbSet<DbCodeRunIteration> CodeRunIterations { get; set; }
+        public DbSet<DbInputGenerator> InputGenerators { get; set; }
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {

@@ -17,5 +17,8 @@ namespace BusinessLayer.Wildcards
         public SolutionCodeExtractorWildcard SolutionCodeExtractorWildcard(LanguageIdentifier language)
             => new SolutionCodeExtractorWildcard(_languageConfigurations[language].SingleLineComment,
                 "Write code here..");
+        
+        public CallParameterWildcard CallParameterWildcard(LanguageIdentifier language)
+            => new CallParameterWildcard(_languageConfigurations[language].SingleLineComment);
     }
 }

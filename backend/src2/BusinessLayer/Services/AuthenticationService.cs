@@ -31,7 +31,7 @@ namespace BusinessLayer.Services
 
         public async Task<AuthenticationResponseDto> AuthenticateAsync(AuthenticationRequestDto request)
         {
-            var dbUser = await _userRepository.GetFirstAsync(u =>
+            var dbUser = await _userRepository.GetFirstOrDefaultAsync(u =>
                 (u.Email == request.UserName || u.UserName == request.UserName) &&
                 u.PasswordHash == request.Password);
             if (dbUser == null)

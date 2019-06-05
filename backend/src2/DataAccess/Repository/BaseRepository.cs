@@ -27,6 +27,9 @@ namespace DataAccess.Repository
         public async Task<T> GetFirstAsync(Expression<Func<T, bool>> expression) =>
             await Context.Set<T>().FirstAsync(expression);
 
+        public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> expression)
+            => await Context.Set<T>().FirstOrDefaultAsync(expression);
+
         public void Add(T entity) => Context.Add(entity);
         public void Remove(T entity) => Context.Remove(entity);
 

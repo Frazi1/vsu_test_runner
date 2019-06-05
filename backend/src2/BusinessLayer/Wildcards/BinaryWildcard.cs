@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 namespace BusinessLayer.Wildcards
 {
-    public abstract class BinaryWildcard
+    public abstract class BinaryWildcard : IWildcard
     {
         private readonly string _start;
         private readonly string _end;

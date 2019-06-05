@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.Authentication;
 using DataAccess.Model;
 using DataAccess.Repository;
 using JetBrains.Annotations;
@@ -16,8 +18,10 @@ namespace BusinessLayer.Services
         private readonly CodeService _codeService;
 
         public TemplateService(
+            ICurrentUser currentUser,
             TestTemplateRepository repository,
             CodeService codeService)
+            : base(currentUser)
         {
             _repository = repository;
             _codeService = codeService;

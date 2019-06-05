@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.Authentication;
 using BusinessLayer.Executors;
 using BusinessLayer.Executors.PipelineTasks;
 using BusinessLayer.Validators;
@@ -19,7 +21,8 @@ namespace BusinessLayer.Services
         private readonly ITestValidator _defaultValidator;
         private IReadOnlyCollection<ITestValidator> _validators;
 
-        public ValidationService(IReadOnlyCollection<ITestValidator> validators)
+        public ValidationService(IReadOnlyCollection<ITestValidator> validators, ICurrentUser currentUser) 
+            : base(currentUser)
         {
             _validators = validators;
             _defaultValidator = _validators.First(v => v is LineByLineValidator);

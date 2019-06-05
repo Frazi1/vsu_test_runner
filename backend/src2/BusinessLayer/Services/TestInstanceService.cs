@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.Authentication;
 using DataAccess.Model;
 using DataAccess.Repository;
 using JetBrains.Annotations;
@@ -15,8 +17,10 @@ namespace BusinessLayer.Services
         private readonly TestTemplateRepository _testTemplateRepository;
 
         public TestInstanceService(
+            ICurrentUser currentUser,
             TestInstanceRepository testInstanceRepository,
             TestTemplateRepository testTemplateRepository)
+            : base(currentUser)
         {
             _testInstanceRepository = testInstanceRepository;
             _testTemplateRepository = testTemplateRepository;
@@ -36,7 +40,7 @@ namespace BusinessLayer.Services
             dbTestInstance.QuestionInstances = dbTestTemplate.QuestionTemplates
                 .Select(t => new DbQuestionInstance {QuestionTemplateId = t.Id})
                 .ToList();
-            
+
             _testInstanceRepository.Add(dbTestInstance);
             await _testInstanceRepository.SaveChangesAsync();
             return dbTestInstance.Id;

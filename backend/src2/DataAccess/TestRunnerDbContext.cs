@@ -25,7 +25,7 @@ namespace DataAccess
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureDeleted();
+//            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 

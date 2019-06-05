@@ -55,7 +55,7 @@ namespace BusinessLayer
         public static DbQuestionTemplate ToDbQuestionTemplate(this QuestionTemplateDto d)
             => new DbQuestionTemplate
             {
-                Id = d.Id.GetValueOrDefault(),
+                Id = d.Id,
                 Name = d.Name,
                 Description = d.Description,
                 SolutionCodeSnippet = d.CodeSnippet.ToDbCodeSnippet(),

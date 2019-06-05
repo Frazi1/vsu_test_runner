@@ -13,6 +13,8 @@ using BusinessLayer.Wildcards;
 using DataAccess.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using SharedModels;
 using SharedModels.DTOs;
 
 namespace VsuTestRunnerServer
@@ -84,6 +86,36 @@ namespace VsuTestRunnerServer
             services.AddSingleton<ITestValidator, LineByLineValidator>();
             services.AddSingleton<IReadOnlyCollection<ITestValidator>>(provider =>
                 provider.GetServices<ITestValidator>().ToImmutableList());
+        }
+
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            var key = new SigningSymmetricKey(configuration.GetValue<string>("Authentication:PrivateKey"));
+            services.AddSingleton<IJwtSigningEncodingKey>(key);
+
+            var decodingKey = (IJwtSigningDecodingKey) key;
+            const string jwtSchemeName = "JwtBearer";
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = jwtSchemeName;
+                    options.DefaultChallengeScheme = jwtSchemeName;
+                })
+                .AddJwtBearer(jwtSchemeName, jwtBearerOptions =>
+                {
+                    jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = decodingKey.GetKey(),
+                        ValidateIssuer = true,
+                        ValidIssuer = "TestRunnerServer",
+                        ValidateAudience = true,
+                        ValidAudiences = new[] {"TestRunnerClient"},
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromSeconds(5)
+                    };
+                });
+
+            return services;
         }
     }
 }

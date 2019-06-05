@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DataAccess.Model;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +18,14 @@ namespace DataAccess.Repository
             Context = context;
         }
 
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression) => await Set.AnyAsync(expression);
+
         public async Task<List<T>> GetAllAsync() => await Context.Set<T>().ToListAsync();
 
-        public async Task<T> GetByIdAsync(int id) => await Context.Set<T>().FirstAsync(e => e.Id == id);
+        public async Task<T> GetByIdAsync(int id) => await GetFirstAsync(e => e.Id == id);
+
+        public async Task<T> GetFirstAsync(Expression<Func<T, bool>> expression) =>
+            await Context.Set<T>().FirstAsync(expression);
 
         public void Add(T entity) => Context.Add(entity);
         public void Remove(T entity) => Context.Remove(entity);

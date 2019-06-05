@@ -1,4 +1,5 @@
 using System;
+using BusinessLayer.Authentication;
 using Hangfire;
 using JetBrains.Annotations;
 using SharedModels.DTOs;
@@ -10,7 +11,8 @@ namespace BusinessLayer.Services
     {
         private readonly IBackgroundJobClient _jobs;
 
-        public SchedulingService(IBackgroundJobClient jobs)
+        public SchedulingService(IBackgroundJobClient jobs, ICurrentUser currentUser) 
+            : base(currentUser)
         {
             _jobs = jobs;
         }

@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Security.Claims;
+using BusinessLayer.Authentication;
 using DataAccess;
 using Hangfire;
 using Hangfire.MySql.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +27,7 @@ namespace VsuTestRunnerServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             services.AddDbContextPool<TestRunnerDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("db")));
             services.AddRepositories();
@@ -36,6 +39,29 @@ namespace VsuTestRunnerServer
                 x.UseStorage(new MySqlStorage(Configuration.GetConnectionString("Hangfire")))
             );
             services.AddHangfireServer();
+            services.AddJwtAuthentication(Configuration);
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>(provider => GetUser(provider)());
+            
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        }
+
+        private static Func<CurrentUser> GetUser(IServiceProvider provider)
+        {
+            return () =>
+            {
+                var httpContextAccessor = provider.GetService<IHttpContextAccessor>();
+                var claims = httpContextAccessor?.HttpContext?.User;
+                if (claims == null || !claims.Identity.IsAuthenticated)
+                    return null;
+                
+                var user = new CurrentUser(
+                    int.Parse(claims.FindFirstValue(CustomClaimTypes.UserId)),
+                    claims.FindFirstValue(ClaimTypes.Email),
+                    claims.FindFirstValue(ClaimTypes.Name),
+                    new string[] { });
+                return user;
+            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,6 +76,8 @@ namespace VsuTestRunnerServer
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+
+            app.UseAuthentication();
 
             app.UseMvc();
             app.UseHangfireDashboard();

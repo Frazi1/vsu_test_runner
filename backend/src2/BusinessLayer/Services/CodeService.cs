@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using BusinessLayer.Authentication;
 using BusinessLayer.Executors;
 using BusinessLayer.Executors.PipelineTasks;
 using BusinessLayer.Validators;
@@ -26,11 +28,12 @@ namespace BusinessLayer.Services
         private readonly ValidationService _validationService;
 
         public CodeService(
+            ICurrentUser currentUser,
             ExecutorsProvider executorsProvider,
             CodeSnippetRepository codeSnippetRepository,
             WildcardsFactory wildcardsFactory,
             TestingInputRepository testingInputRepository,
-            ValidationService validationService)
+            ValidationService validationService) : base(currentUser)
         {
             _executorsProvider = executorsProvider;
             _codeSnippetRepository = codeSnippetRepository;

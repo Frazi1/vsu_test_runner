@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.Authentication;
 using DataAccess.Model;
 using DataAccess.Repository;
 using JetBrains.Annotations;
@@ -17,12 +18,11 @@ namespace BusinessLayer.Services
         private readonly CodeService _codeService;
         private readonly SchedulingService _schedulingService;
 
-        public TestRunService(
+        public TestRunService(ICurrentUser currentUser,
             TestRunRepository testRunRepository,
             TestInstanceRepository testInstanceRepository,
             CodeService codeService,
-            SchedulingService schedulingService
-            )
+            SchedulingService schedulingService) : base(currentUser)
         {
             _testRunRepository = testRunRepository;
             _testInstanceRepository = testInstanceRepository;

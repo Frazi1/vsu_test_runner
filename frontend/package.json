@@ -27,6 +27,7 @@
     "class-transformer": "^0.2.0",
     "core-js": "^2.5.4",
     "marked": "^0.6.2",
+    "moment": "^2.24.0",
     "ng-pick-datetime": "^7.0.0",
     "ngx-ace-wrapper": "^7.3.0",
     "ngx-autosize": "^1.6.0",

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core'
+import { Component, Input, OnDestroy } from '@angular/core'
 import { Observable, Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import { CodeExecutionResponseDto } from '../../shared/runner/CodeExecutionResponseDto'

@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { TestTemplateEditorComponent } from './components/editor/test-template-editor/test-template-editor.component'
 import { TestQuestionTemplateEditorComponent } from './components/editor/test-question-template-editor/test-question-template-editor.component'
-import { FormsModule } from '@angular/forms'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { TestTemplateListComponent } from './components/editor/test-template-list/test-template-list.component'
 import { NavMenuComponent } from './nav-menu/nav-menu.component'
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http'
@@ -27,15 +27,18 @@ import { ClassTransformer } from 'class-transformer'
 import { ContentTypeInterceptor } from './interceptors/content-type.interceptor'
 import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
 import { QuestionAnswerResultViewerComponent } from './components/test-result/answer-result-viewer/question-answer-result-viewer.component'
-import { QuestionLinkComponent } from './components/editor/question-link/question-link.component';
-import { AnswerIterationsViewerComponent } from './components/test-result/answer-iterations-viewer/answer-iterations-viewer.component';
+import { QuestionLinkComponent } from './components/editor/question-link/question-link.component'
+import { AnswerIterationsViewerComponent } from './components/test-result/answer-iterations-viewer/answer-iterations-viewer.component'
 import { OutputViewerComponent } from './components/output-viewer/output-viewer.component'
 import { AngularSplitModule } from 'angular-split'
 import { AceConfig, AceConfigInterface, AceModule } from 'ngx-ace-wrapper'
 import { MarkdownModule } from 'ngx-markdown'
-import { AutosizeModule } from 'ngx-autosize';
-import { CodeEditorWithExecutorComponent } from './components/code-editor-with-executor/code-editor-with-executor.component';
+import { AutosizeModule } from 'ngx-autosize'
+import { CodeEditorWithExecutorComponent } from './components/code-editor-with-executor/code-editor-with-executor.component'
 import { TestingInputGeneratorEditorComponent } from './components/testing-input-generator-editor/testing-input-generator-editor.component'
+import { AuthComponent } from './components/auth/auth.component'
+import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
+import { LogoutComponent } from './components/logout/logout.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -61,9 +64,11 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     AnswerIterationsViewerComponent,
     OutputViewerComponent,
     CodeEditorWithExecutorComponent,
-    TestingInputGeneratorEditorComponent
+    TestingInputGeneratorEditorComponent,
+    AuthComponent,
+    LogoutComponent
   ],
-  imports: [
+  imports:      [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
@@ -75,7 +80,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     AngularSplitModule.forRoot(),
     AceModule,
     MarkdownModule.forRoot({loader: HttpClient}),
-    AutosizeModule
+    AutosizeModule,
+    ReactiveFormsModule
   ],
   providers:    [
     {provide: 'ITemplateService', useClass: TemplatesService},
@@ -85,6 +91,11 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     {
       provide:  HTTP_INTERCEPTORS,
       useClass: ContentTypeInterceptor,
+      multi:    true
+    },
+    {
+      provide:  HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
       multi:    true
     },
     {provide: AceConfig, useValue: DEFAULT_ACE_CONFIG}

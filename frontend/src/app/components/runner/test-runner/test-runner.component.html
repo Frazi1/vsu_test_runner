@@ -4,7 +4,12 @@
   <span (click)="router.navigate(['/result', _testRun.id])" class="g--cursor-pointer g--display-block">Просмотреть
     результаты</span>
   <div>
-    <app-question-runner [questionRun]="currentQuestion"></app-question-runner>
+    <div class="d-flex">
+      <div class="control-box flex-shrink-0 m-1">
+        <span>Осталось: {{remainingTime$ | async}}</span>
+      </div>
+      <app-question-runner class="flex-grow-1" [questionRun]="currentQuestion"></app-question-runner>
+    </div>
     <div>
       <button (click)="previousQuestion()">Предыдущий</button>
       <button (click)="nextQuestion()">Следующий</button>

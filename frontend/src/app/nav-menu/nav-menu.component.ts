@@ -11,7 +11,8 @@ export class NavMenuComponent implements OnInit {
     {name: 'Главная', path: '/'},
     {name: 'Шаблоны', path: '/template'},
     {name: 'Открытые тесты', path: '/instance'},
-    {name: 'Мои активные тесты', path: '/run'}
+    {name: 'Мои активные тесты', path: '/run'},
+    {name: 'Выйти', path: '/logout'}
   ]
 
   constructor() {

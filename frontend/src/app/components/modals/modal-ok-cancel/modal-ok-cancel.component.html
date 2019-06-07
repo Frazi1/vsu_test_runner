@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <ng-content select="[head]"></ng-content>
+  <button type="button" class="close" aria-label="Close" (click)="cancel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <ng-content select="[body]"></ng-content>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Отменить</button>
+  <button type="button" class="btn btn-outline-primary" [disabled]="canCloseSuccessInternal() === false"
+          (click)="successInternal()">
+    ОК
+  </button>
+</div>

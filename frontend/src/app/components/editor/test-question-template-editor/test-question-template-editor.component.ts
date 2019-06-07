@@ -9,6 +9,11 @@ import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionReques
 import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
 import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
 import { CodeSnippetScaffoldingDto } from '../../../shared/code/CodeSnippetScaffoldingDto'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { GeneratorListComponent } from '../../generator/generator-list/generator-list.component'
+import { GeneratorListModalComponent } from '../../generator/generator-list-modal/generator-list-modal.component'
+import { InputGeneratorDto } from '../../../shared/code/InputGeneratorDto'
+import { GeneratorRunnerModalComponent } from '../../generator/generator-runner-modal/generator-runner-modal.component'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -18,7 +23,8 @@ import { CodeSnippetScaffoldingDto } from '../../../shared/code/CodeSnippetScaff
 export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   constructor(private codeService: CodeService,
-              private testingInputParserService: TestingInputParserService) {
+              private testingInputParserService: TestingInputParserService,
+              private modalService: NgbModal) {
   }
 
   // region Getters/Setters
@@ -39,6 +45,8 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   textInput: string
 
   codeExecutionOutput$ = new Subject<CodeExecutionResponseDto>()
+
+  inputGenerator: InputGeneratorDto
 
   private _codeRunBtn$ = new Subject<void>()
   private _unsubscribe$ = new Subject<void>()
@@ -98,5 +106,17 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   public onSave(): void {
     this.question.testingInputs = this.testingInputParserService.parse(this.textInput)
+  }
+
+  public openGeneratorSelectionModal(): void {
+    const modalRef = this.modalService.open(GeneratorListModalComponent)
+    modalRef.result
+            .then(generator => this.inputGenerator = generator)
+  }
+
+  public openGeneratorRunnerModal(): void {
+    const modalRef = this.modalService.open(GeneratorRunnerModalComponent)
+    modalRef.componentInstance.generator = this.inputGenerator
+    modalRef.result.then(res => this.textInput = res)
   }
 }

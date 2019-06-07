@@ -1,5 +1,5 @@
 import { BaseApiEntityService } from './BaseApiEntity.service'
-import { TestingInputGeneratorDto } from '../shared/code/TestingInputGeneratorDto'
+import { InputGeneratorDto } from '../shared/code/InputGeneratorDto'
 import { HttpClient } from '@angular/common/http'
 import { Config } from '../shared/Config'
 import { ClassTransformer } from 'class-transformer'
@@ -13,14 +13,18 @@ import { Observable } from 'rxjs'
 @Injectable({
   providedIn: 'root'
 })
-export class TestingInputGeneratorService extends BaseApiEntityService<TestingInputGeneratorDto> {
-  protected classRef = TestingInputGeneratorDto
+export class GeneratorService extends BaseApiEntityService<InputGeneratorDto> {
+  protected classRef = InputGeneratorDto
 
   constructor(http: HttpClient, config: Config, json: ClassTransformer) {
     super(http, config, json, 'generator')
   }
 
-  public save(generator: TestingInputGeneratorDto): Observable<number> {
+  public save(generator: InputGeneratorDto): Observable<number> {
     return this.http.post<number>(this.buildUrl(), this.json.serialize(generator))
+  }
+
+  public update(generator: InputGeneratorDto): Observable<any> {
+    return this.http.put(this.buildUrl(generator.id), this.json.serialize(generator))
   }
 }

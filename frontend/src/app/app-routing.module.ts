@@ -7,7 +7,7 @@ import { TestInstanceEditorComponent } from './components/instance/test-instance
 import { TestRunnerComponent } from './components/runner/test-runner/test-runner.component'
 import { TestRunsListComponent } from './components/runner/test-runs-list/test-runs-list.component'
 import { TestResultViewerComponent } from './components/test-result/test-result-viewer/test-result-viewer.component'
-import { TestingInputGeneratorEditorComponent } from './components/testing-input-generator-editor/testing-input-generator-editor.component'
+import { GeneratorEditorComponent } from './components/generator/generator-editor/generator-editor.component'
 import { AuthComponent } from './components/auth/auth.component'
 import { AuthGuard } from './configuration/auth.guard'
 import { LogoutComponent } from './components/logout/logout.component'
@@ -16,7 +16,7 @@ const routes: Routes = [
   {path: 'auth', component: AuthComponent, data: {isSignUp: false}},
   {path: 'auth/signup', component: AuthComponent, data: {isSignUp: true}},
   {
-    path: '', canActivateChild: [AuthGuard], children: [
+    path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
       {path: 'template/new', component: TestTemplateEditorComponent},
       {path: 'template/:id', component: TestTemplateEditorComponent},
       {path: 'template', component: TestTemplateListComponent},
@@ -25,8 +25,8 @@ const routes: Routes = [
       {path: 'run/:id', component: TestRunnerComponent},
       {path: 'run', component: TestRunsListComponent},
       {path: 'result/:id', component: TestResultViewerComponent},
-      {path: 'generator/new', component: TestingInputGeneratorEditorComponent},
-      {path: 'generator/:id', component: TestingInputGeneratorEditorComponent},
+      {path: 'generator/new', component: GeneratorEditorComponent},
+      {path: 'generator/:id', component: GeneratorEditorComponent},
       {path: 'logout', component: LogoutComponent}
     ]
   }

@@ -1,0 +1,4 @@
+<app-modal-ok-cancel [canCloseSuccess]="canCloseSuccess" [success]="success">
+  <h4 head class="modal-title">Запустить генератор</h4>
+  <app-generator-runner body [generator]="generator" (resultChange)="result = $event"></app-generator-runner>
+</app-modal-ok-cancel>

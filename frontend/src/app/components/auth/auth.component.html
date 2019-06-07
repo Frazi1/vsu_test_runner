@@ -1,0 +1,27 @@
+<div class="auth-block">
+  <form [formGroup]="form" novalidate (ngSubmit)="submit()">
+    <div class="form-group">
+      <small class="validation-error" *ngIf="username.hasError('usernameTaken') ">
+        Логин занят
+      </small>
+      <small class="validation-error" *ngIf="username.hasError('required')">
+        Поле должно быть заполнено
+      </small>
+      <label for="emailInput">E-mail:</label>
+      <input id="emailInput" required type="email" class="form-control" formControlName="username"
+             placeholder="Введите e-mail">
+    </div>
+
+    <div class="form-group">
+      <small class="validation-error" *ngIf="password.hasError('required') && form.dirty">
+        Поле должно быть заполнено
+      </small>
+      <label for="passwordInput">Пароль:</label>
+      <input id="passwordInput" required type="password" class="form-control" formControlName="password"
+             placeholder="Введите пароль">
+    </div>
+    <button class="btn btn-primary"
+            type="submit" [disabled]="form.invalid">{{isSignUp ? 'Зарегистрироваться' : 'Войти'}}</button>
+    <button class="btn btn-secondary" *ngIf="isSignUp === false" (click)="signUpClick()">Зарегистрироваться</button>
+  </form>
+</div>

@@ -30,6 +30,13 @@
   </div>
   <div class="section-panel">
     <h2 class="text-left">Входные данные</h2>
+    <div class="d-flex">
+      <div *ngIf="inputGenerator">
+        Название: {{inputGenerator.name}}
+        <button class="btn btn-primary" (click)="openGeneratorRunnerModal()">Запустить генератор</button>
+      </div>
+      <button class="btn btn-primary" (click)="openGeneratorSelectionModal()">Выбрать генератор</button>
+    </div>
     <app-code-editor [(code)]="textInput"></app-code-editor>
   </div>
 </ng-container>

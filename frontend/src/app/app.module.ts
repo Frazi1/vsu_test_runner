@@ -35,15 +35,21 @@ import { AceConfig, AceConfigInterface, AceModule } from 'ngx-ace-wrapper'
 import { MarkdownModule } from 'ngx-markdown'
 import { AutosizeModule } from 'ngx-autosize'
 import { CodeEditorWithExecutorComponent } from './components/code-editor-with-executor/code-editor-with-executor.component'
-import { TestingInputGeneratorEditorComponent } from './components/testing-input-generator-editor/testing-input-generator-editor.component'
+import { GeneratorEditorComponent } from './components/generator/generator-editor/generator-editor.component'
 import { AuthComponent } from './components/auth/auth.component'
-import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
+import { AuthenticationInterceptor } from './interceptors/authentication.interceptor'
 import { LogoutComponent } from './components/logout/logout.component'
+import { GeneratorRunnerComponent } from './components/generator/generator-runner/generator-runner.component'
+import { GeneratorListComponent } from './components/generator/generator-list/generator-list.component'
+import { GeneratorListModalComponent } from './components/generator/generator-list-modal/generator-list-modal.component'
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
+import { ModalOkCancelComponent } from './components/modals/modal-ok-cancel/modal-ok-cancel.component'
+import { GeneratorRunnerModalComponent } from './components/generator/generator-runner-modal/generator-runner-modal.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
 @NgModule({
-  declarations: [
+  declarations:    [
     AppComponent,
     TestTemplateEditorComponent,
     TestQuestionTemplateEditorComponent,
@@ -64,11 +70,16 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     AnswerIterationsViewerComponent,
     OutputViewerComponent,
     CodeEditorWithExecutorComponent,
-    TestingInputGeneratorEditorComponent,
+    GeneratorEditorComponent,
     AuthComponent,
-    LogoutComponent
+    LogoutComponent,
+    GeneratorRunnerComponent,
+    GeneratorListComponent,
+    GeneratorListModalComponent,
+    ModalOkCancelComponent,
+    GeneratorRunnerModalComponent,
   ],
-  imports:      [
+  imports:         [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
@@ -81,9 +92,10 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     AceModule,
     MarkdownModule.forRoot({loader: HttpClient}),
     AutosizeModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgbModalModule
   ],
-  providers:    [
+  providers:       [
     {provide: 'ITemplateService', useClass: TemplatesService},
     // {provide: JsonConvert, useValue: jsonConvert},
     {provide: ClassTransformer, useValue: new ClassTransformer()},
@@ -100,7 +112,11 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     },
     {provide: AceConfig, useValue: DEFAULT_ACE_CONFIG}
   ],
-  bootstrap:    [AppComponent]
+  bootstrap:       [AppComponent],
+  entryComponents: [
+    GeneratorListModalComponent,
+    GeneratorRunnerModalComponent
+  ],
 })
 export class AppModule {
 }

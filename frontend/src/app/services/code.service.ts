@@ -12,6 +12,7 @@ import { CodeExecutionResponse } from '../shared/runner/CodeExecutionResponse'
 import { ClassTransformer } from 'class-transformer'
 import { ScaffoldingType } from '../shared/ScaffoldingType'
 import { CodeExecutionResponseDto } from '../shared/runner/CodeExecutionResponseDto'
+import { InputGeneratorDto } from '../shared/code/InputGeneratorDto'
 
 @Injectable({
   providedIn: 'root'
@@ -95,10 +96,18 @@ export class CodeService extends BaseService {
                )
   }
 
-  public runTests(questionAnswerId: number, codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {
+  public runTests(questionAnswerId: number,
+                  codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {
     return this.http.post(this.buildUrl('run_tests', questionAnswerId), this.json.serialize(codeExecutionRequest))
                .pipe(
                  map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object[]))
+               )
+  }
+
+  public applyGenerator(generator: InputGeneratorDto): Observable<CodeExecutionResponseDto> {
+    return this.http.post(this.buildUrl('apply_generator'), this.json.serialize(generator))
+               .pipe(
+                 map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object))
                )
   }
 }

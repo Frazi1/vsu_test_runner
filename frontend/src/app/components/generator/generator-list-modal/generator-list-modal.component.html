@@ -1,0 +1,21 @@
+<!--<div class="modal-header">-->
+<!--  <h4 class="modal-title">Список генераторов</h4>-->
+<!--  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">-->
+<!--    <span aria-hidden="true">&times;</span>-->
+<!--  </button>-->
+<!--</div>-->
+<!--<div class="modal-body">-->
+<!--  <app-generator-list [(selectedItem)]="selectedItem"></app-generator-list>-->
+<!--</div>-->
+<!--<div class="modal-footer">-->
+<!--  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss('Cancel click')">Отменить</button>-->
+<!--  <button type="button" class="btn btn-outline-primary" [disabled]="canCloseWithSuccess() === false"-->
+<!--          (click)="closeSuccess()">-->
+<!--    ОК-->
+<!--  </button>-->
+<!--</div>-->
+
+<app-modal-ok-cancel [canCloseSuccess]="canCloseWithSuccess" [success]="success">
+  <h4 head class="modal-title">Список генераторов</h4>
+  <app-generator-list body [(selectedItem)]="selectedItem"></app-generator-list>
+</app-modal-ok-cancel>

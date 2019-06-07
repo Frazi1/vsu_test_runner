@@ -1,0 +1,13 @@
+<div class="section-panel-auto">
+  <h2>{{generator.name}}</h2>
+  <div *ngFor="let arg of generator.callArguments">
+    <label>{{arg.name}}</label>
+    <input class="form-control" [(ngModel)]="arg.value">
+  </div>
+  <div>
+    <app-code-editor isReadOnly="true" [code]="result"></app-code-editor>
+  </div>
+  <div>
+    <button class="btn btn-outline-primary" (click)="apply$.next()">Применить</button>
+  </div>
+</div>

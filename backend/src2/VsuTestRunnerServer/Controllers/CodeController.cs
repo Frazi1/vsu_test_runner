@@ -47,5 +47,11 @@ namespace VsuTestRunnerServer.Controllers
         {
             return await _codeService.RunPublicTestingSetForQuestionAnswerAsync(id, codeExecutionRequest);
         }
+
+        [HttpPost("apply_generator")]
+        public async Task<CodeExecutionResponseDto> ApplyGenerator([FromBody] InputGeneratorDto generator)
+        {
+            return await _codeService.ApplyGeneratorAsync(generator);
+        }
     }
 }

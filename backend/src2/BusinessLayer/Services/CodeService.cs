@@ -128,5 +128,22 @@ namespace BusinessLayer.Services
             );
             return result;
         }
+
+        public async Task<CodeExecutionResponseDto> ApplyGeneratorAsync(InputGeneratorDto generator)
+        {
+            var testingInput = new TestingInputDto
+            {
+                Input = generator.CallArguments.Select(arg => arg.Value).JoinToString(Environment.NewLine)
+            };
+            var request = new CodeExecutionRequestWithCustomInputDto
+            {
+                Code = generator.CodeSnippet.Code,
+                Language = generator.CodeSnippet.Language,
+                TestingInputs = new List<TestingInputDto> {testingInput}
+            };
+            var result = await RunCodeForTaskResultAsync(request);
+            
+            return BuildResponsesFromTaskResult(result).First();
+        }
     }
 }

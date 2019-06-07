@@ -1,7 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Model;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace DataAccess.Repository
 {
@@ -19,12 +22,21 @@ namespace DataAccess.Repository
         {
         }
 
+        private IQueryable<DbInputGenerator> FullQuery()
+        {
+            return Set
+                .Include(g => g.CodeSnippet)
+                .Include(g => g.CreatedByUser);
+        }
+
         public async Task<DbInputGenerator> GetFullByIdAsync(int id)
         {
-            return await Set
-                .Include(g => g.CodeSnippet)
-                .Include(g => g.CreatedByUser)
-                .FirstAsync(g => g.Id == id);
+            return await FullQuery().FirstAsync(g => g.Id == id);
+        }
+
+        public async Task<List<DbInputGenerator>> GetAllFullAsync()
+        {
+            return await FullQuery().ToListAsync();
         }
 
         public override Task Update(DbInputGenerator updated)

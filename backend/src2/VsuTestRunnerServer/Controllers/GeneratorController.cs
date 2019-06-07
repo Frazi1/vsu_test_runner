@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,12 @@ namespace VsuTestRunnerServer.Controllers
         public async Task<InputGeneratorDto> GetById(int id)
         {
             return await _inputGeneratorService.GetFullByIdAsync(id);
+        }
+        
+        [HttpGet]
+        public async Task<List<InputGeneratorDto>> GetAll()
+        {
+            return await _inputGeneratorService.GetAllAsync();
         }
 
         [HttpPost]

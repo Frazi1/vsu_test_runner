@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Authentication;
@@ -65,6 +66,13 @@ namespace BusinessLayer.Services
             var dbUpdate = generator.ToUpdateDbInputGenerator();
             await _inputGeneratorRepository.Update(dbUpdate);
             await _inputGeneratorRepository.SaveChangesAsync();
+        }
+
+        public async Task<List<InputGeneratorDto>> GetAllAsync()
+        {
+            var dbGenerators = await _inputGeneratorRepository.GetAllFullAsync();
+            var dtos = dbGenerators.Select(g => g.ToInputGeneratorDto()).ToList();
+            return dtos;
         }
     }
 }

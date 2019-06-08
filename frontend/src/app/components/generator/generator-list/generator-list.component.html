@@ -1,6 +1,5 @@
-<div>FUCK YOU</div>
 <div *ngFor="let gen of generators">
-  <div class="d-flex" [class.selected]="selectedItem == gen"  (click)="setSelection(gen)">
+  <div class="d-flex" [class.selected]="selectedItem == gen && allowSelection" (click)="onClick(gen)">
     <div>Название:{{gen.name}}</div>
     <div>Описание:{{gen.description}}</div>
     <div>Язык:{{gen.codeSnippet.language.displayName}}</div>

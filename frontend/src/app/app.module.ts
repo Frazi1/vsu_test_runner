@@ -42,9 +42,13 @@ import { LogoutComponent } from './components/logout/logout.component'
 import { GeneratorRunnerComponent } from './components/generator/generator-runner/generator-runner.component'
 import { GeneratorListComponent } from './components/generator/generator-list/generator-list.component'
 import { GeneratorListModalComponent } from './components/generator/generator-list-modal/generator-list-modal.component'
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap'
+import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ModalOkCancelComponent } from './components/modals/modal-ok-cancel/modal-ok-cancel.component'
-import { GeneratorRunnerModalComponent } from './components/generator/generator-runner-modal/generator-runner-modal.component'
+import { GeneratorRunnerModalComponent } from './components/generator/generator-runner-modal/generator-runner-modal.component';
+import { GroupManagementComponent } from './components/management/group-management/group-management.component'
+import { TreeviewModule } from 'ngx-treeview';
+import { ManagementComponent } from './components/management/management/management.component';
+import { GroupEditorComponent } from './components/editor/group-editor/group-editor.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -78,8 +82,11 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     GeneratorListModalComponent,
     ModalOkCancelComponent,
     GeneratorRunnerModalComponent,
+    GroupManagementComponent,
+    ManagementComponent,
+    GroupEditorComponent,
   ],
-  imports:         [
+  imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
@@ -93,7 +100,9 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     MarkdownModule.forRoot({loader: HttpClient}),
     AutosizeModule,
     ReactiveFormsModule,
-    NgbModalModule
+    NgbModalModule,
+    TreeviewModule.forRoot(),
+    NgbModule
   ],
   providers:       [
     {provide: 'ITemplateService', useClass: TemplatesService},

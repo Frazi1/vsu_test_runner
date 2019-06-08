@@ -11,6 +11,9 @@ import { GeneratorEditorComponent } from './components/generator/generator-edito
 import { AuthComponent } from './components/auth/auth.component'
 import { AuthGuard } from './configuration/auth.guard'
 import { LogoutComponent } from './components/logout/logout.component'
+import { GeneratorListComponent } from './components/generator/generator-list/generator-list.component'
+import { ManagementComponent } from './components/management/management/management.component'
+import { GroupEditorComponent } from './components/editor/group-editor/group-editor.component'
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent, data: {isSignUp: false}},
@@ -25,8 +28,24 @@ const routes: Routes = [
       {path: 'run/:id', component: TestRunnerComponent},
       {path: 'run', component: TestRunsListComponent},
       {path: 'result/:id', component: TestResultViewerComponent},
-      {path: 'generator/new', component: GeneratorEditorComponent},
-      {path: 'generator/:id', component: GeneratorEditorComponent},
+      {
+        path: 'generator', children: [
+          {path: '', component: GeneratorListComponent},
+          {path: 'new', component: GeneratorEditorComponent},
+          {path: ':id', component: GeneratorEditorComponent},
+        ]
+      },
+      {
+        path: 'management', children: [
+          {path: '', component: ManagementComponent},
+          {
+            path: 'group', children: [
+              {path: 'new', component: GroupEditorComponent},
+              {path: 'new/:parentId', component: GroupEditorComponent}
+            ]
+          }
+        ]
+      },
       {path: 'logout', component: LogoutComponent}
     ]
   }

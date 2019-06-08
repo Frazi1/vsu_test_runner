@@ -17,5 +17,5 @@
 
 <app-modal-ok-cancel [canCloseSuccess]="canCloseWithSuccess" [success]="success">
   <h4 head class="modal-title">Список генераторов</h4>
-  <app-generator-list body [(selectedItem)]="selectedItem"></app-generator-list>
+  <app-generator-list body [(selectedItem)]="selectedItem" [allowSelection]="true"></app-generator-list>
 </app-modal-ok-cancel>

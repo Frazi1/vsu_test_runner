@@ -33,6 +33,7 @@
     "ngx-autosize": "^1.6.0",
     "ngx-markdown": "^7.1.5",
     "ngx-toastr": "^9.1.2",
+    "ngx-treeview": "^6.0.2",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"

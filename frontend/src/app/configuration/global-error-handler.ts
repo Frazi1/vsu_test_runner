@@ -15,6 +15,8 @@ export class GlobalErrorHandler implements ErrorHandler {
       this.toastr.error(error.error.message || error.message, 'Server error',
         {onActivateTick: true}
       )
+    } else {
+      setTimeout(() => this.toastr.error(error.message, 'Unexpected error', {onActivateTick: true}))
     }
     console.error(error)
   }

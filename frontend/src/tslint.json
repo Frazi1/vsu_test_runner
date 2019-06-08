@@ -17,6 +17,9 @@
       true,
       "never"
     ],
-    "prefer-const": false
+    "prefer-const": false,
+    "no-inferrable-types": {
+      "options": "ignore-properties"
+    }
   }
 }

@@ -2,7 +2,7 @@
   <h2>{{generator.name}}</h2>
   <div *ngFor="let arg of generator.callArguments">
     <label>{{arg.name}}</label>
-    <input class="form-control" [(ngModel)]="arg.value">
+    <textarea autosize class="form-control g--resize-none" [(ngModel)]="arg.value"></textarea>
   </div>
   <div>
     <app-code-editor isReadOnly="true" [code]="result"></app-code-editor>

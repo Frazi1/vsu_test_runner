@@ -23,6 +23,7 @@ namespace DataAccess
         public DbSet<DbUser> Users { get; set; }
         public DbSet<DbCodeRunIteration> CodeRunIterations { get; set; }
         public DbSet<DbInputGenerator> InputGenerators { get; set; }
+        public DbSet<DbGroup> Groups { get; set; }
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {
@@ -46,6 +47,22 @@ namespace DataAccess
                 .ForEach(e => e.ModifiedAt = DateTime.UtcNow);
 
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<DbUserToGroup>()
+                .HasKey(ug => new {ug.UserId, ug.GroupId});
+
+            modelBuilder.Entity<DbUserToGroup>()
+                .HasOne(ug => ug.User)
+                .WithMany(u => u.Groups)
+                .HasForeignKey(ug => ug.UserId);
+
+            modelBuilder.Entity<DbUserToGroup>()
+                .HasOne(ug => ug.Group)
+                .WithMany(g => g.Users)
+                .HasForeignKey(ug => ug.GroupId);
         }
     }
 }

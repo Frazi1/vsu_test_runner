@@ -193,5 +193,34 @@ namespace BusinessLayer
                     .Select(a => a.Name)
                     .JoinToString(","),
             };
+
+        public static GroupDto ToGroupDto(this DbGroup d)
+            => new GroupDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                ParentGroupId = d.ParentGroupId,
+                ParentGroup = d.ParentGroup?.ToGroupDto(),
+                Users = d.Users.OrEmptyCollection().Select(u => u.User).Select(u => u.ToUserDto()).ToList()
+            };
+
+        public static UserDto ToUserDto(this DbUser d)
+            => new UserDto
+            {
+                Id = d.Id,
+                Email = d.Email,
+                UserName = d.UserName.OrIfNullOrEmpty(d.Email),
+                Groups = d.Groups.OrEmptyCollection().Select(g => g.Group).Select(g => g.ToGroupDto()).ToList()
+            };
+
+        public static DbGroup ToDbGroup(this GroupDto d)
+            => new DbGroup
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                ParentGroupId = d.ParentGroupId ?? d.ParentGroup?.Id
+            };
     }
 }

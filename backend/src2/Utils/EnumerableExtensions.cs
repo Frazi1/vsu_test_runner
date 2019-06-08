@@ -15,5 +15,10 @@ namespace Utils
 
         public static string JoinToString<T>(this IEnumerable<T> enumerable, string separator)
             => string.Join(separator, enumerable);
+
+        public static List<T> OrEmptyList<T>(this List<T> list) => list ?? new List<T>();
+
+        public static ICollection<T> OrEmptyCollection<T>(this ICollection<T> collection)
+            => collection ?? new List<T>();
     }
 }

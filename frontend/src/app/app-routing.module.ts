@@ -41,7 +41,7 @@ const routes: Routes = [
           {
             path: 'group', children: [
               {path: 'new', component: GroupEditorComponent},
-              {path: 'new/:parentId', component: GroupEditorComponent}
+              {path: 'new/:id', component: GroupEditorComponent}
             ]
           }
         ]

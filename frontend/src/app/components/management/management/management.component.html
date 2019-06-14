@@ -3,7 +3,8 @@
     <ng-template ngbTabContent>
       <div>
         <button class="btn btn-info" (click)="addGroupClick()">Добавить группу</button>
-        <app-group-management *ngIf="groups" [groups]="groups"></app-group-management>
+        <app-group-management *ngIf="groups" [groups]="groups"
+                              (selectedGroupChange)="selectedGroupChange($event)"></app-group-management>
       </div>
     </ng-template>
   </ngb-tab>

@@ -3,6 +3,8 @@ import { InstanceService } from '../../../services/instance.service'
 import { TestInstance } from '../../../shared/instance/TestInstance'
 import { ActivatedRoute, Router } from '@angular/router'
 import { TestInstanceUpdate } from '../../../shared/instance/TestInstanceUpdate'
+import { TestInstanceAssigneeDto } from '../../../shared/TestInstanceAssigneeDto'
+import { switchMap, tap } from 'rxjs/operators'
 
 @Component({
   selector:    'app-test-instance-editor',
@@ -38,6 +40,10 @@ export class TestInstanceEditorComponent implements OnInit {
     this.testInstance.disabledAfter = new Date(endStr)
   }
 
+  private onAssigneesChange(newAssignees: TestInstanceAssigneeDto[]) {
+    this.testInstance.assignees = newAssignees
+  }
+
   private getDuration(): string {
     if (!this.testInstance.disabledAfter || !this.testInstance.availableAfter) {
       return null
@@ -49,10 +55,13 @@ export class TestInstanceEditorComponent implements OnInit {
   private save(): void {
     const testInstanceUpdate = new TestInstanceUpdate(this.testInstance.availableAfter,
       this.testInstance.disabledAfter,
-      this.testInstance.timeLimit
+      this.testInstance.timeLimit,
+      this.testInstance.assignees
     )
 
-    this.instanceService.updateTestInstance(this.testInstance.id, testInstanceUpdate)
-        .subscribe(updatedInstance => this.testInstance = updatedInstance)
+    this.instanceService.updateTestInstance(this.testInstance.id, testInstanceUpdate).pipe(
+      switchMap(() => this.instanceService.getTestInstance(this.testInstance.id)),
+      tap(res => this.testInstance = res)
+    ).subscribe()
   }
 }

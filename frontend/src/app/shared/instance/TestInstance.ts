@@ -1,5 +1,6 @@
 import { QuestionInstance } from './QuestionInstance'
 import { Type } from 'class-transformer'
+import { TestInstanceAssigneeDto } from '../TestInstanceAssigneeDto'
 
 export class TestInstance {
 
@@ -17,4 +18,7 @@ export class TestInstance {
 
   @Type(() => QuestionInstance)
   questions: QuestionInstance[] = undefined
+
+  @Type(() => TestInstanceAssigneeDto)
+  assignees: TestInstanceAssigneeDto[] = undefined
 }

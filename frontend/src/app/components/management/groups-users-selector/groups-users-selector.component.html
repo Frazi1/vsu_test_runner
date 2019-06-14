@@ -1,0 +1,23 @@
+<div class="d-flex">
+  <div class="items-source">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item g--cursor-pointer" *ngFor="let u of groupUsers$ | async as users" (click)="selectGroupUser(u)"
+          [class.selected]="u?.id == selectedGroupUser?.id">
+        {{u.userName}}
+      </li>
+    </ul>
+  </div>
+  <div class="controls">
+    <button [disabled]="!selectedAvailableUser" (click)="moveLeft()">Влево</button>
+    <button [disabled]="!selectedGroupUser" (click)="moveRight()">Вправо</button>
+  </div>
+  <div class="items-source">
+    <ul class="list-group">
+      <li class="list-group-item g--cursor-pointer" *ngFor="let u of availableUsers$ | async as users"
+          (click)="selectAvailableUser(u)"
+          [class.active]="u?.id == selectedAvailableUser?.id">
+        {{u.userName}}
+      </li>
+    </ul>
+  </div>
+</div>

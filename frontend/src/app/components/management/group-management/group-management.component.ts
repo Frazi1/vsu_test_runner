@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
 import { BaseComponent } from '../../base.component'
 import { GroupDto } from '../../../shared/GroupDto'
-import { TreeviewConfig, TreeviewItem } from 'ngx-treeview'
+import { Observable, of } from 'rxjs'
+import { map, switchMap} from 'rxjs/operators'
+import { ITreeNode } from 'angular-tree-component/dist/defs/api'
 
 @Component({
   selector:    'app-group-management',
@@ -11,39 +13,38 @@ import { TreeviewConfig, TreeviewItem } from 'ngx-treeview'
 export class GroupManagementComponent extends BaseComponent implements OnInit {
 
   @Input()
-  groups: GroupDto[]
+  groups: Observable<GroupDto[]>
 
-  items: TreeviewItem[]
-  treeConfig = TreeviewConfig.create({
-    hasCollapseExpand: true,
-    hasAllCheckBox: true,
-    decoupleChildFromParent: false,
-    maxHeight: 400,
-    hasFilter: true
-  })
+  nodes$: Observable<any[]>
+
+  @Output()
+  selectedGroupChange = new EventEmitter<GroupDto>()
 
   constructor() {
     super()
   }
 
   ngOnInit() {
-    this.items = this.createTreeViewItems(this.groups)
+    this.nodes$ = this.createTreeNodes(this.groups)
   }
 
-  private createTreeViewItems(groups: GroupDto[]): TreeviewItem[] {
-    return groups
-      .filter(g => g.parentGroupId == null)
-      .map(g => this.createTreeViewItemFromGroup(g))
+  selectionChange(node: ITreeNode) {
+    this.selectedGroupChange.emit(node.data)
   }
 
-  private createTreeViewItemFromGroup = (group: GroupDto): TreeviewItem => {
-    return new TreeviewItem({
+  private createTreeNodes(groupsObs: Observable<GroupDto[]>) {
+    return groupsObs.pipe(
+      switchMap(groups => of(groups.filter(g => g.parentGroupId == null))),
+      map(groups => groups.map(g => this.createTreeNodeFromGroup(g)))
+    )
+  }
+
+  private createTreeNodeFromGroup(group: GroupDto): any {
+    return {
+      id:       group.id,
+      name:     group.name,
       value:    group,
-      text:     group.name || '',
-      children: group.childrenGroups.map(this.createTreeViewItemFromGroup),
-      collapsed: true
-    })
+      children: group.childrenGroups.map(g => this.createTreeNodeFromGroup(g))
+    }
   }
-
-
 }

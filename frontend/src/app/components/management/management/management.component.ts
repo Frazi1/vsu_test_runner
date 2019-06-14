@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { BaseComponent } from '../../base.component'
 import { GroupDto } from '../../../shared/GroupDto'
-import { takeUntil, tap } from 'rxjs/operators'
+import { takeUntil } from 'rxjs/operators'
 import { GroupCacheService } from '../../../services/cache/group-cache.service'
 import { Router } from '@angular/router'
+import { Observable } from 'rxjs'
 
 @Component({
   selector:    'app-management',
@@ -12,7 +13,8 @@ import { Router } from '@angular/router'
 })
 export class ManagementComponent extends BaseComponent implements OnInit {
 
-  groups: GroupDto[]
+  groups: Observable<GroupDto[]>
+  selectedGroup: GroupDto
 
   constructor(private groupCache: GroupCacheService,
               private router: Router) {
@@ -20,17 +22,18 @@ export class ManagementComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groupCache.groups.pipe(
+    this.groups = this.groupCache.getCached(true).pipe(
       takeUntil(this.onDestroy$),
-      tap(groups => this.groups = groups)
-    ).subscribe()
+    )
   }
 
-  public addGroupClick(parentId: number | undefined | null) {
-    let path = ['management', 'group', 'new']
-    if (typeof parentId === 'number') {
-      path.push(parentId.toString())
-    }
-    this.router.navigate(path)
+  public addGroupClick() {
+    this.router.navigate(['management', 'group', 'new'],
+      {queryParams: {parentId: this.selectedGroup ? this.selectedGroup.id : null}}
+    )
+  }
+
+  selectedGroupChange(group: GroupDto) {
+    this.selectedGroup = group
   }
 }

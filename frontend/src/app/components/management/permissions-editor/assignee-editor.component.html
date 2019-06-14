@@ -1,0 +1,9 @@
+<div class="list-group">
+  <div class="list-group-item" *ngFor="let assignee of allAssigneeModels">
+    <a>
+      {{assignee.assigneeDto.displayName()}}
+      <input class="float-right" type="checkbox" [(ngModel)]="assignee.isSelected"
+             (ngModelChange)="onSelectionChange()">
+    </a>
+  </div>
+</div>

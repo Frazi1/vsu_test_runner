@@ -9,8 +9,12 @@
 <div>
   <label>Родительская группа</label>
   <select [(ngModel)]="group.parentGroup">
+    <option [ngValue]="null">Нет</option>
     <option *ngFor="let g of allGroups$ | async" [ngValue]="g">{{g.name}}</option>
   </select>
+</div>
+<div class="section-panel-auto">
+  <app-groups-users-selector [group]="group"></app-groups-users-selector>
 </div>
 <div>
   <button class="btn btn-primary" (click)="mainBtn$.next()">Сохранить</button>

@@ -44,11 +44,14 @@ import { GeneratorListComponent } from './components/generator/generator-list/ge
 import { GeneratorListModalComponent } from './components/generator/generator-list-modal/generator-list-modal.component'
 import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ModalOkCancelComponent } from './components/modals/modal-ok-cancel/modal-ok-cancel.component'
-import { GeneratorRunnerModalComponent } from './components/generator/generator-runner-modal/generator-runner-modal.component';
+import { GeneratorRunnerModalComponent } from './components/generator/generator-runner-modal/generator-runner-modal.component'
 import { GroupManagementComponent } from './components/management/group-management/group-management.component'
-import { TreeviewModule } from 'ngx-treeview';
-import { ManagementComponent } from './components/management/management/management.component';
+import { TreeviewModule } from 'ngx-treeview'
+import { ManagementComponent } from './components/management/management/management.component'
 import { GroupEditorComponent } from './components/editor/group-editor/group-editor.component'
+import { TreeModel, TreeModule } from 'angular-tree-component'
+import { GroupsUsersSelectorComponent } from './components/management/groups-users-selector/groups-users-selector.component'
+import { AssigneeEditorComponent } from './components/management/permissions-editor/assignee-editor.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -85,8 +88,10 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     GroupManagementComponent,
     ManagementComponent,
     GroupEditorComponent,
+    GroupsUsersSelectorComponent,
+    AssigneeEditorComponent,
   ],
-  imports: [
+  imports:         [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
@@ -101,8 +106,9 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     AutosizeModule,
     ReactiveFormsModule,
     NgbModalModule,
+    NgbModule,
     TreeviewModule.forRoot(),
-    NgbModule
+    TreeModule.forRoot()
   ],
   providers:       [
     {provide: 'ITemplateService', useClass: TemplatesService},

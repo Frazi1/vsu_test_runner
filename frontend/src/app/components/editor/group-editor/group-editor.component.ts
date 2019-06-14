@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { GroupDto } from '../../../shared/GroupDto'
 import { ActivatedRoute, Router } from '@angular/router'
 import { mergeMap, retry, switchMap, takeUntil, tap } from 'rxjs/operators'
@@ -13,7 +13,7 @@ import { Location } from '@angular/common'
   templateUrl: './group-editor.component.html',
   styleUrls:   ['./group-editor.component.scss']
 })
-export class GroupEditorComponent extends BaseComponent implements OnInit {
+export class GroupEditorComponent extends BaseComponent implements OnInit, OnDestroy {
 
   @Input()
   group: GroupDto
@@ -26,13 +26,14 @@ export class GroupEditorComponent extends BaseComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private groupCache: GroupCacheService,
               private groupService: GroupService,
-              private location: Location) {
+              private location: Location,
+              private router: Router) {
     super()
   }
 
   ngOnInit() {
     this.group = new GroupDto()
-    this.allGroups$ = this.groupCache.groups
+    this.allGroups$ = this.groupCache.getCached(true)
     this.initSub()
 
     this.mainBtnSub()
@@ -40,16 +41,25 @@ export class GroupEditorComponent extends BaseComponent implements OnInit {
 
   private mainBtnSub() {
     this.mainBtn$.pipe(
+      mergeMap(() => this.groupService.addGroup(this.group)),
+      mergeMap(() => this.groupCache.invalidate()),
+      tap(() => {
+        this.router.navigate(['management'])
+        // this.location.back()
+      }),
       takeUntil(this.onDestroy$),
       retry(),
-      switchMap(() => this.groupService.addGroup(this.group)),
-      switchMap(() => this.groupCache.invalidate()),
-      tap(() => this.location.back())
     ).subscribe()
   }
 
+
+  public ngOnDestroy(): void {
+    console.log('GroupEditor ondestroy!')
+    super.ngOnDestroy()
+  }
+
   private initSub() {
-    this.activatedRoute.params.pipe(
+    this.activatedRoute.queryParams.pipe(
       switchMap(params => {
         let parentId = params['parentId']
         return parentId != null ? of(+parentId) : of()

@@ -1,16 +1,23 @@
 <div *ngIf="testInstance">
   {{testInstance.name}}
-  <div>
-    <label for="">Время:</label>
-    <input #timeInput [owlDateTime]="time" [owlDateTimeTrigger]="time" placeholder="Выберите время теста"
-           [selectMode]="'range'" [(ngModel)]="selectedRange"
-           (ngModelChange)="onSelectedRangedValueChange($event, selectedRange)">
-    <owl-date-time #time></owl-date-time>
+  <div class="section-panel-auto">
+    <div>
+      <label for="">Время:</label>
+      <input #timeInput [owlDateTime]="time" [owlDateTimeTrigger]="time" placeholder="Выберите время теста"
+             [selectMode]="'range'" [(ngModel)]="selectedRange"
+             (ngModelChange)="onSelectedRangedValueChange($event, selectedRange)">
+      <owl-date-time #time></owl-date-time>
+    </div>
+    <div>Начало: {{testInstance.availableAfter}}</div>
+    <div>Окончание: {{testInstance.disabledAfter}}</div>
+    <div>Длительность: {{getDuration()}}</div>
+    <div>
+      <button (click)="save()">Сохранить</button>
+    </div>
   </div>
-  <div>Начало: {{testInstance.availableAfter}}</div>
-  <div>Окончание: {{testInstance.disabledAfter}}</div>
-  <div>Длительность: {{getDuration()}}</div>
-  <div>
-    <button (click)="save()">Сохранить</button>
+
+  <div class="section-panel-auto assignees-editor-container">
+    <h2 class="mb-3">Назначенные пользователи:</h2>
+    <app-assignee-editor [(assignees)]="testInstance.assignees"></app-assignee-editor>
   </div>
 </div>

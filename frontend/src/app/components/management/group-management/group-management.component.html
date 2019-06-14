@@ -1,1 +1,1 @@
-<ngx-dropdown-treeview [items]="items" [config]="treeConfig" ></ngx-dropdown-treeview>
+<tree-root *ngIf="nodes$ | async as nodes" [nodes]="nodes" (nodeActivate)="selectionChange($event.node)"></tree-root>

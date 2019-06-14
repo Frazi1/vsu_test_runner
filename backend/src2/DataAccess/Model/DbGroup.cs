@@ -4,6 +4,11 @@ namespace DataAccess.Model
 {
     public class DbGroup: IEntityWithId
     {
+        public DbGroup()
+        {
+            Users = new List<DbUserToGroup>();
+        }
+        
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

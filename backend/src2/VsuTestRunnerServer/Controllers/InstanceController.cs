@@ -32,5 +32,11 @@ namespace VsuTestRunnerServer.Controllers
         {
             return await _testInstanceService.CreateTestInstanceByIdAsync(id);
         }
+
+        [HttpPut("{id}")]
+        public async Task Update(int id, [FromBody] TestInstanceDto updateDto)
+        {
+            await _testInstanceService.UpdateTestInstanceByIdAsync(id, updateDto);
+        }
     }
 }

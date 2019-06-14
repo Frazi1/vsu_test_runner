@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Authentication;
@@ -50,6 +51,15 @@ namespace BusinessLayer.Services
         {
             var dbTestInstance = await _testInstanceRepository.GetTestsInstanceWithTemplateByIdAsync(id);
             return dbTestInstance.ToTestInstanceDto();
+        }
+
+        public async Task UpdateTestInstanceByIdAsync(int id, TestInstanceDto dto)
+        {
+            var dbTestInstance = await _testInstanceRepository.GetTestInstanceWithAssigneesByIdAsync(id);
+            _testInstanceRepository.Update(dbTestInstance,
+                dto.Assignees.Where(a => a.User != null).Select(a => a.User.Id).ToImmutableList(),
+                dto.Assignees.Where(a => a.Group != null).Select(a => a.Group.Id).ToImmutableList());
+            await _testInstanceRepository.SaveChangesAsync();
         }
     }
 }

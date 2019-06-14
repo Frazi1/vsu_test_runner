@@ -21,6 +21,8 @@ namespace DataAccess.Repository
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression) => await Set.AnyAsync(expression);
 
         public async Task<List<T>> GetAllAsync() => await Context.Set<T>().ToListAsync();
+        public async Task<List<T>> GetByIdsAsync(ICollection<int> ids) =>
+            await Set.Where(u => ids.Contains(u.Id)).ToListAsync();
 
         public async Task<T> GetByIdAsync(int id) => await GetFirstAsync(e => e.Id == id);
 

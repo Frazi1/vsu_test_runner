@@ -22,6 +22,8 @@ namespace DataAccess.Model
         
         public virtual DbTestTemplate TestTemplate { get; set; }
         public virtual ICollection<DbQuestionInstance> QuestionInstances { get; set; }
+        public virtual ICollection<DbTestInstanceUserAssignee> AssignedUsers { get; set; }
+        public virtual ICollection<DbTestInstanceGroupAssignee> AssignedGroups { get; set; }
         
     }
 }

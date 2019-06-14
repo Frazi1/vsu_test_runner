@@ -12,5 +12,6 @@ namespace SharedModels.DTOs
         public DateTime? DisabledAfter { get; set; }
         
         public List<QuestionInstanceDto> Questions { get; set; }
+        public List<TestInstanceAssigneeDto> Assignees { get; set; }
     }
 }

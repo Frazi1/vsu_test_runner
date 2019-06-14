@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DataAccess.Model;
 using JetBrains.Annotations;
 

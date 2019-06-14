@@ -24,6 +24,8 @@ namespace DataAccess
         public DbSet<DbCodeRunIteration> CodeRunIterations { get; set; }
         public DbSet<DbInputGenerator> InputGenerators { get; set; }
         public DbSet<DbGroup> Groups { get; set; }
+        public DbSet<DbTestInstanceUserAssignee> TestInstanceUserAssignees { get; set; }
+        public DbSet<DbTestInstanceGroupAssignee> TestInstanceGroupAssignees { get; set; }
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {
@@ -63,6 +65,21 @@ namespace DataAccess
                 .HasOne(ug => ug.Group)
                 .WithMany(g => g.Users)
                 .HasForeignKey(ug => ug.GroupId);
+
+            modelBuilder.Entity<DbTestInstanceAssignee>().ToTable("TestInstanceAssignees")
+                .HasDiscriminator<InstanceAssigneeType>("AssigneeType")
+                .HasValue<DbTestInstanceUserAssignee>(InstanceAssigneeType.User)
+                .HasValue<DbTestInstanceGroupAssignee>(InstanceAssigneeType.Group);
+
+            modelBuilder.Entity<DbTestInstance>()
+                .HasMany(a => a.AssignedUsers)
+                .WithOne(a => a.TestInstance)
+                .HasForeignKey(a => a.TestInstanceId);
+
+            modelBuilder.Entity<DbTestInstance>()
+                .HasMany(a => a.AssignedGroups)
+                .WithOne(a => a.TestInstance)
+                .HasForeignKey(a => a.TestInstanceId);
         }
     }
 }

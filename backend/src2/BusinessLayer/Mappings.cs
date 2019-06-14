@@ -92,7 +92,10 @@ namespace BusinessLayer
                 CreatedAt = d.CreatedAt,
                 DisabledAfter = d.DisabledAfter,
                 AvailableAfter = d.AvailableAfter,
-                Questions = d.QuestionInstances.Select(ToQuestionInstanceDto).ToList()
+                Questions = d.QuestionInstances.Select(ToQuestionInstanceDto).ToList(),
+                Assignees = d.AssignedUsers.Select(a => a.ToTestInstanceUserAssigneeDto())
+                    .Concat(d.AssignedGroups.Select(a => a.ToTestInstanceGroupAssigneeDto()))
+                    .ToList()
             };
 
         public static QuestionInstanceDto ToQuestionInstanceDto(this DbQuestionInstance d)
@@ -194,25 +197,42 @@ namespace BusinessLayer
                     .JoinToString(","),
             };
 
-        public static GroupDto ToGroupDto(this DbGroup d)
+        public static GroupDto ToGroupDtoWithoutUsers(this DbGroup d)
             => new GroupDto
             {
                 Id = d.Id,
                 Name = d.Name,
                 Description = d.Description,
                 ParentGroupId = d.ParentGroupId,
-                ParentGroup = d.ParentGroup?.ToGroupDto(),
-                Users = d.Users.OrEmptyCollection().Select(u => u.User).Select(u => u.ToUserDto()).ToList()
+                ParentGroup = d.ParentGroup?.ToGroupDto()
             };
 
-        public static UserDto ToUserDto(this DbUser d)
+
+        public static GroupDto ToGroupDto(this DbGroup d)
+        {
+            var res = d.ToGroupDtoWithoutUsers();
+            res.Users = d.Users.OrEmptyCollection()
+                .Select(u => u.User.ToUserDtoWithoutGroups())
+                .ToList();
+            return res;
+        }
+
+
+        public static UserDto ToUserDtoWithoutGroups(this DbUser d)
             => new UserDto
             {
                 Id = d.Id,
                 Email = d.Email,
                 UserName = d.UserName.OrIfNullOrEmpty(d.Email),
-                Groups = d.Groups.OrEmptyCollection().Select(g => g.Group).Select(g => g.ToGroupDto()).ToList()
             };
+
+        public static UserDto ToUserDto(this DbUser d)
+        {
+            var u = d.ToUserDtoWithoutGroups();
+            u.Groups = d.Groups.OrEmptyCollection().Select(g => g.Group).Select(g => g.ToGroupDto()).ToList();
+
+            return u;
+        }
 
         public static DbGroup ToDbGroup(this GroupDto d)
             => new DbGroup
@@ -222,5 +242,32 @@ namespace BusinessLayer
                 Description = d.Description,
                 ParentGroupId = d.ParentGroupId ?? d.ParentGroup?.Id
             };
+
+        public static TestInstanceAssigneeDto ToTestInstanceAssigneeDto(this DbTestInstanceAssignee d)
+        {
+            switch (d.AssigneeType)
+            {
+                case InstanceAssigneeType.User:
+                    return ToTestInstanceUserAssigneeDto((DbTestInstanceUserAssignee) d);
+                case InstanceAssigneeType.Group:
+                    return ToTestInstanceGroupAssigneeDto((DbTestInstanceGroupAssignee) d);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private static TestInstanceAssigneeDto ToTestInstanceGroupAssigneeDto(this DbTestInstanceGroupAssignee d)
+        {
+            return new TestInstanceAssigneeDto
+            {
+                Id = d.Id,
+                Group = d.Group.ToGroupDtoWithoutUsers()
+            };
+        }
+
+        private static TestInstanceAssigneeDto ToTestInstanceUserAssigneeDto(this DbTestInstanceUserAssignee d)
+        {
+            return new TestInstanceAssigneeDto {Id = d.Id, User = d.User.ToUserDtoWithoutGroups()};
+        }
     }
 }

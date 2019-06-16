@@ -4,13 +4,19 @@ using SharedModels.DTOs;
 
 namespace BusinessLayer.Executors.PipelineTasks
 {
-    public class NoCompileCodeTask: IPipeLineTask
+    public class NoCompileCodeTask : IConditionalPipeLineTask
     {
         public Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
         {
             state.ExecutableFileName = state.SourceFileName;
             return Task.CompletedTask;
+        }
+
+        public bool ShouldExecute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
+            LanguageConfiguration config)
+        {
+            return !config.CompilationRequired;
         }
     }
 }

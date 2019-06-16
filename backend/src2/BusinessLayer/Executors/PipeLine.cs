@@ -25,11 +25,23 @@ namespace BusinessLayer.Executors
             return this;
         }
 
+        public PipeLine Add(params IPipeLineTask[] tasks)
+        {
+            Tasks.AddRange(tasks);
+            return this;
+        }
+
         public async Task<TaskResult> ExecuteTasks(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration languageConfiguration)
         {
             foreach (var task in Tasks)
             {
+                if (task is IConditionalPipeLineTask conditionalTask &&
+                    !conditionalTask.ShouldExecute(state, request, languageConfiguration))
+                {
+                    continue;
+                }
+                
                 try
                 {
                     await task.Execute(state, request, languageConfiguration);

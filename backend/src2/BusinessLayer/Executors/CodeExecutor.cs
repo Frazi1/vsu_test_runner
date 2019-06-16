@@ -19,7 +19,7 @@ namespace BusinessLayer.Executors
             PipeLine = new PipeLine()
                     .Add(PipelineTasksProvider.CreateOsWorkspaceTask())
                     .Add(PipelineTasksProvider.CreateSaveSourceCodeTask())
-                    .Add(PipelineTasksProvider.CreateNoCompileCodeTask())
+                    .Add(PipelineTasksProvider.CreateNoCompileCodeTask(), PipelineTasksProvider.CreateCompileCodeTask())
                     .Add(PipelineTasksProvider.CreateRunOsApplicationTask())
                 ;
         }
@@ -30,22 +30,6 @@ namespace BusinessLayer.Executors
             {
                 return await PipeLine.ExecuteTasks(pipelineState, request, LanguageConfiguration);
             }
-        }
-    }
-
-    public class CompileCodeExecutor : CodeExecutor
-    {
-        public CompileCodeExecutor(
-            LanguageConfiguration languageConfiguration,
-            PipeLineTasksProvider pipePipelineTasksProvider)
-            : base(languageConfiguration, pipePipelineTasksProvider)
-        {
-            PipeLine = new PipeLine()
-                .Add(PipelineTasksProvider.CreateOsWorkspaceTask())
-                .Add(PipelineTasksProvider.CreateSaveSourceCodeTask())
-                .Add(PipelineTasksProvider.CreateCompileCodeTask())
-                .Add(PipelineTasksProvider.CreateRunOsApplicationTask())
-                ;
         }
     }
 }

@@ -7,7 +7,7 @@ using SharedModels.DTOs;
 
 namespace BusinessLayer.Executors.PipelineTasks
 {
-    public class CompileCodeTask : IPipeLineTask
+    public class CompileCodeTask : IConditionalPipeLineTask
     {
         public async Task Execute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
             LanguageConfiguration config)
@@ -38,6 +38,12 @@ namespace BusinessLayer.Executors.PipelineTasks
             {
                 throw new CompilationException(await process.StandardOutput.ReadToEndAsync());
             }
+        }
+
+        public bool ShouldExecute(IPipeLineState state, CodeExecutionRequestWithCustomInputDto request,
+            LanguageConfiguration config)
+        {
+            return config.CompilationRequired;
         }
     }
 }

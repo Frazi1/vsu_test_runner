@@ -67,10 +67,8 @@ namespace VsuTestRunnerServer
 
                 var executors = languages
                     .Select(l => l.Value)
-                    .Select(conf => (Language: conf.LanguageIdentifier,
-                        Executor: conf.CompilationRequired
-                            ? new CompileCodeExecutor(conf, pipeLineTasksProvider)
-                            : new CodeExecutor(conf, pipeLineTasksProvider)))
+                    .Select(conf =>
+                        (Language: conf.LanguageIdentifier, Executor: new CodeExecutor(conf, pipeLineTasksProvider)))
                     .ToImmutableDictionary(a => a.Language, a => a.Executor);
                 return new ExecutorsProvider(executors);
             });
@@ -88,7 +86,8 @@ namespace VsuTestRunnerServer
                 provider.GetServices<ITestValidator>().ToImmutableList());
         }
 
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
+            IConfiguration configuration)
         {
             var key = new SigningSymmetricKey(configuration.GetValue<string>("Authentication:PrivateKey"));
             services.AddSingleton<IJwtSigningEncodingKey>(key);

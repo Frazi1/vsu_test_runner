@@ -225,7 +225,10 @@ namespace BusinessLayer
                 Id = d.Id,
                 Email = d.Email,
                 UserName = d.UserName.OrIfNullOrEmpty(d.Email),
-                Type = d.Type
+                Type = d.Type,
+                FirstName = d.FirstName,
+                MiddleName = d.MiddleName,
+                LastName = d.LastName
             };
 
         public static UserDto ToUserDto(this DbUser d)

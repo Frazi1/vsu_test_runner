@@ -1,3 +1,11 @@
+@import "~src/styles";
+
 .permissions-container {
   max-height: 500px;
+}
+
+.controls-hover-only {
+  & > .controls-container {
+    @extend .g--hover-only;
+  }
 }

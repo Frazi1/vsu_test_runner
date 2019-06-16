@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3BF673F0-F100-42E7-92D9-27B74FFBD29C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LDAPServices", "LDAPServices\LDAPServices.csproj", "{F2E4A258-D9A0-453E-8C6D-4A0EDDD8436A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{3BF673F0-F100-42E7-92D9-27B74FFBD29C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BF673F0-F100-42E7-92D9-27B74FFBD29C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BF673F0-F100-42E7-92D9-27B74FFBD29C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2E4A258-D9A0-453E-8C6D-4A0EDDD8436A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2E4A258-D9A0-453E-8C6D-4A0EDDD8436A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2E4A258-D9A0-453E-8C6D-4A0EDDD8436A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2E4A258-D9A0-453E-8C6D-4A0EDDD8436A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

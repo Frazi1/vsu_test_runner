@@ -6,6 +6,7 @@ import { mergeMap, retry, startWith, takeUntil, tap } from 'rxjs/internal/operat
 import { Observable, Subject } from 'rxjs/index'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { TestTemplatePermissionsModalComponent } from '../../modals/test-template-permissions-modal/test-template-permissions-modal.component'
+import { TimeUtils } from '../../../utils/TimeUtils'
 
 @Component({
   selector:    'app-test-template-list',
@@ -66,8 +67,12 @@ export class TestTemplateListComponent implements OnInit, OnDestroy {
         })
   }
 
-  public openPermissionsModal(templateId: number) {
+  public openPermissionsModal(testTemplate: TestTemplate) {
     const modalRef = this.modalService.open(TestTemplatePermissionsModalComponent)
-    modalRef.componentInstance.testTemplateId = templateId
+    modalRef.componentInstance.testTemplate = testTemplate
+  }
+
+  public getFormattedTime(timeInSeconds: number): string {
+    return TimeUtils.getFormatterDurationString(timeInSeconds)
   }
 }

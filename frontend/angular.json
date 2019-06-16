@@ -27,7 +27,7 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap/scss/bootstrap.scss",
               "node_modules/ng-pick-datetime/assets/style/picker.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/angular-tree-component/dist/angular-tree-component.css",

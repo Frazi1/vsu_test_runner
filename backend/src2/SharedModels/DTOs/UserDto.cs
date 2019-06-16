@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using SharedModels.Enum;
 
 namespace SharedModels.DTOs
 {
@@ -8,7 +11,9 @@ namespace SharedModels.DTOs
         public string Email { get; set; }
         public string UserName { get; set; }
 
-        public List<GroupDto> Groups { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public UserType Type { get; set; }
 
+        public List<GroupDto> Groups { get; set; }
     }
 }

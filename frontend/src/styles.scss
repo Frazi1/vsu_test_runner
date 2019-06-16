@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/scss/bootstrap";
 
 $sectionPanelBorderRadius: 5px;
 
@@ -50,6 +51,12 @@ body {
       &px-5 {
         margin-right: 5px;
       }
+    }
+  }
+
+  &padding- {
+    &0 {
+      padding: 0;
     }
   }
 }
@@ -108,9 +115,11 @@ as-split.simple-split {
 
 .section-panel {
   @extend .section-panel-auto;
+
   & > h2 {
     text-align: left;
   }
+
   min-height: 600px;
 }
 
@@ -123,7 +132,29 @@ as-split.simple-split {
   margin-bottom: 25px;
 }
 
+.section-controls {
+  @extend .d-flex, .flex-md-row, .flex-column, .flex-grow-1, .m-md-2, .m-1;
+}
+
+.section-controls__item {
+  @extend .mr-md-1, .mb-1, .mb-md-0;
+
+  &:not(button) {
+    @extend .col-md-3, .g--padding-0;
+  }
+}
+
 .validation-error {
   color: #a50303;
   display: block;
+}
+
+.select-width- {
+  &px-450 {
+    & {
+      select {
+        width: 450px;
+      }
+    }
+  }
 }

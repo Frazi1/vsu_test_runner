@@ -20,7 +20,7 @@ export class TestRun {
   questionAnswers: QuestionAnswer[] = undefined
 
   @Type(() => Date)
-  @Transform(value => moment.utc(value), {toClassOnly: true})
+  @Transform(value => value != null ? moment.utc(value) : null, {toClassOnly: true})
   finishedAt: Date = undefined
 
   @Exclude()

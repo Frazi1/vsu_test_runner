@@ -26,6 +26,7 @@ namespace DataAccess
         public DbSet<DbGroup> Groups { get; set; }
         public DbSet<DbTestInstanceUserAssignee> TestInstanceUserAssignees { get; set; }
         public DbSet<DbTestInstanceGroupAssignee> TestInstanceGroupAssignees { get; set; }
+        public DbSet<DbUserFeature> UserFeatures { get; set; }
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {
@@ -80,6 +81,9 @@ namespace DataAccess
                 .HasMany(a => a.AssignedGroups)
                 .WithOne(a => a.TestInstance)
                 .HasForeignKey(a => a.TestInstanceId);
+
+            modelBuilder.Entity<DbUserFeature>()
+                .HasKey(uf => new {uf.UserId, uf.FeatureType});
         }
     }
 }

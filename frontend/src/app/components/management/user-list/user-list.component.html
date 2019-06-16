@@ -1,0 +1,5 @@
+<div class="list-group" *ngIf="users">
+  <div class="list-group-item list-group-item-action" *ngFor="let user of users">
+    <div>{{user.id}} {{user.email}}- {{user.type}}</div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
-<select [compareWith]="valueComparer" [(ngModel)]="value" (ngModelChange)="onValueChange($event, value)"
+<select class="custom-select" [compareWith]="valueComparer" [(ngModel)]="value"
+        (ngModelChange)="onValueChange($event,value)"
         [disabled]="isReadOnly">
   <option [ngValue]="defaultValue" disabled
           *ngIf="value == defaultValue || value == undefined">{{defaultValue.id}}

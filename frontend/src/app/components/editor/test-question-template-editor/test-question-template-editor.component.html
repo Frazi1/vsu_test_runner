@@ -19,9 +19,12 @@
   </div>
   <div class="section-panel">
     <h2 class="text-left">Код решения</h2>
-    <div>
-      <app-code-language-selector [(value)]="question.codeSnippet.language"></app-code-language-selector>
-      <button (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
+    <div class="section-controls">
+      <div class="section-controls__item">
+        <app-code-language-selector
+          [(value)]="question.codeSnippet.language"></app-code-language-selector>
+      </div>
+      <button class="btn btn-outline-primary" (click)="scaffoldSolutionFunction()">Сгенерировать код</button>
     </div>
     <div>
       <app-code-editor-with-executor [codeSnippet]="question.codeSnippet" [onRunTestsClick]="runTestsClosure">
@@ -30,12 +33,14 @@
   </div>
   <div class="section-panel">
     <h2 class="text-left">Входные данные</h2>
-    <div class="d-flex">
-      <div *ngIf="inputGenerator">
-        Название: {{inputGenerator.name}}
-        <button class="btn btn-primary" (click)="openGeneratorRunnerModal()">Запустить генератор</button>
-      </div>
-      <button class="btn btn-primary" (click)="openGeneratorSelectionModal()">Выбрать генератор</button>
+    <div class="text-left" *ngIf="inputGenerator">Генератор: {{inputGenerator.name}} </div>
+    <div class="section-controls">
+      <button class="section-controls__item btn btn-outline-primary" (click)="openGeneratorSelectionModal()">Выбрать
+        генератор
+      </button>
+      <button class="section-controls__item btn btn-outline-primary" *ngIf="inputGenerator"
+              (click)="openGeneratorRunnerModal()">Запустить генератор
+      </button>
     </div>
     <app-code-editor [(code)]="textInput"></app-code-editor>
   </div>

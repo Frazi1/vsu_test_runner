@@ -8,5 +8,9 @@
       </div>
     </ng-template>
   </ngb-tab>
-  <ngb-tab title="Пользователи"></ngb-tab>
+  <ngb-tab title="Пользователи">
+    <ng-template ngbTabContent>
+      <app-user-list></app-user-list>
+    </ng-template>
+  </ngb-tab>
 </ngb-tabset>

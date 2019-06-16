@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Converters;
 
 namespace VsuTestRunnerServer
 {
@@ -42,8 +43,9 @@ namespace VsuTestRunnerServer
             services.AddJwtAuthentication(Configuration);
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUser, CurrentUser>(provider => GetUser(provider)());
-            
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
         }
 
         private static Func<CurrentUser> GetUser(IServiceProvider provider)
@@ -54,7 +56,7 @@ namespace VsuTestRunnerServer
                 var claims = httpContextAccessor?.HttpContext?.User;
                 if (claims == null || !claims.Identity.IsAuthenticated)
                     return null;
-                
+
                 var user = new CurrentUser(
                     int.Parse(claims.FindFirstValue(CustomClaimTypes.UserId)),
                     claims.FindFirstValue(ClaimTypes.Email),

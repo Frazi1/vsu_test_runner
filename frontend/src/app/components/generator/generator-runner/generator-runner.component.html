@@ -1,13 +1,14 @@
 <div class="section-panel-auto">
   <h2>{{generator.name}}</h2>
-  <div *ngFor="let arg of generator.callArguments">
+  <div class="mb-1" *ngFor="let arg of generator.callArguments">
     <label>{{arg.name}}</label>
     <textarea autosize class="form-control g--resize-none" [(ngModel)]="arg.value"></textarea>
   </div>
-  <div>
+  <div class="mb-1 img-thumbnail">
+    <label class="font-weight-bold">Результат генерации</label>
     <app-code-editor isReadOnly="true" [code]="result"></app-code-editor>
   </div>
-  <div>
-    <button class="btn btn-outline-primary" (click)="apply$.next()">Применить</button>
+  <div class="d-flex flex-column align-items-end">
+    <button class="btn btn-outline-primary" (click)="apply$.next()">Запустить</button>
   </div>
 </div>

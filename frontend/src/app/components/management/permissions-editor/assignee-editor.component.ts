@@ -45,7 +45,7 @@ export class AssigneeEditorComponent implements OnInit {
     const users = this.users.map(u => new AssigneeModel(TestInstanceAssigneeDto.FromUser(u),
       this.assignees.filter(i => i.user != null).find(a => a.user.id === u.id) != null))
     const groups = this.groups.map(g => new AssigneeModel(TestInstanceAssigneeDto.FromGroup(g),
-      this.assignees.filter(i => i.group != null).find(a => a.group.id === i.id) != null))
+      this.assignees.filter(i => i.group != null).find(a => a.group.id === a.id) != null))
     return users.concat(groups)
   }
 

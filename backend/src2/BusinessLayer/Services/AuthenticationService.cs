@@ -10,6 +10,7 @@ using JetBrains.Annotations;
 using Microsoft.IdentityModel.Tokens;
 using SharedModels;
 using SharedModels.DTOs;
+using SharedModels.Enum;
 
 namespace BusinessLayer.Services
 {
@@ -70,7 +71,8 @@ namespace BusinessLayer.Services
             var dbUser = new DbUser
             {
                 Email = request.Email,
-                PasswordHash = request.Password
+                PasswordHash = request.Password,
+                Type = UserType.Standard
             };
             _userRepository.Add(dbUser);
             await _userRepository.SaveChangesAsync();

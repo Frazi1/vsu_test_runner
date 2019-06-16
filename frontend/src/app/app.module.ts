@@ -51,7 +51,8 @@ import { ManagementComponent } from './components/management/management/manageme
 import { GroupEditorComponent } from './components/editor/group-editor/group-editor.component'
 import { TreeModel, TreeModule } from 'angular-tree-component'
 import { GroupsUsersSelectorComponent } from './components/management/groups-users-selector/groups-users-selector.component'
-import { AssigneeEditorComponent } from './components/management/permissions-editor/assignee-editor.component'
+import { AssigneeEditorComponent } from './components/management/permissions-editor/assignee-editor.component';
+import { UserListComponent } from './components/management/user-list/user-list.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -90,6 +91,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     GroupEditorComponent,
     GroupsUsersSelectorComponent,
     AssigneeEditorComponent,
+    UserListComponent,
   ],
   imports:         [
     BrowserModule,

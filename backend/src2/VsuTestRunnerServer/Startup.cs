@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Converters;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace VsuTestRunnerServer
 {
@@ -46,6 +47,11 @@ namespace VsuTestRunnerServer
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info {Title = "Test runner API", Version = "v1"});
+            });
         }
 
         private static Func<CurrentUser> GetUser(IServiceProvider provider)
@@ -83,6 +89,8 @@ namespace VsuTestRunnerServer
 
             app.UseMvc();
             app.UseHangfireDashboard();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test runner API"); });
         }
     }
 }

@@ -5,13 +5,30 @@
          (change)="includeDeleted$.next(includeDeleted)">
 </label>
 <ng-container *ngIf="_testTemplates$ | async as testTemplates; else loading">
-  <div *ngFor="let t of testTemplates">
-    <div [routerLink]="['/template', t.id]">
-      <span>{{t.id}}. Название: {{t.name}}  Вопросов: {{t.questionTemplates.length}}</span>
-      <button *ngIf="!t.isDeleted" (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить</button>
-      <button *ngIf="t.isDeleted"
-              (click)="restore$.next(t.id);$event.stopPropagation()">Восстановить
-      </button>
+  <div class="list-group" *ngFor="let t of testTemplates">
+    <div class="list-group-item list-group-item-action d-flex" [routerLink]="['/template', t.id]">
+      <div class="col-2 g--padding-0 text-left">
+        <div>
+          <span class="font-weight-bold">{{t.id}}. {{t.name}}</span>
+        </div>
+        <div>Количество вопросов: {{t.questionTemplates.length}}</div>
+      </div>
+      <div class="col-2 g--padding-0">
+        <span class="font-weight-bold">Длительность:</span>{{t.timeLimit}} сек.
+      </div>
+      <div class="flex-grow-1 g--padding-0">
+        <div class="float-right">
+          <button class="btn btn-outline-secondary mr-1"
+                  (click)="openPermissionsModal(t.id);$event.stopPropagation()">Разрешения
+          </button>
+          <button class="btn btn-outline-primary" *ngIf="!t.isDeleted"
+                  (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить
+          </button>
+          <button *ngIf="t.isDeleted"
+                  (click)="restore$.next(t.id);$event.stopPropagation()">Восстановить
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </ng-container>

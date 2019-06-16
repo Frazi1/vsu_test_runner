@@ -4,6 +4,8 @@ import { ITemplateService } from '../../../services/interfaces'
 import { InstanceService } from '../../../services/instance.service'
 import { mergeMap, retry, startWith, takeUntil, tap } from 'rxjs/internal/operators'
 import { Observable, Subject } from 'rxjs/index'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
+import { TestTemplatePermissionsModalComponent } from '../../modals/test-template-permissions-modal/test-template-permissions-modal.component'
 
 @Component({
   selector:    'app-test-template-list',
@@ -21,7 +23,8 @@ export class TestTemplateListComponent implements OnInit, OnDestroy {
 
 
   constructor(@Inject('ITemplateService') private templatesService: ITemplateService,
-              private instanceService: InstanceService) {
+              private instanceService: InstanceService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -61,5 +64,10 @@ export class TestTemplateListComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           console.log(`Instance created. ID: ${res}`)
         })
+  }
+
+  public openPermissionsModal(templateId: number) {
+    const modalRef = this.modalService.open(TestTemplatePermissionsModalComponent)
+    modalRef.componentInstance.testTemplateId = templateId
   }
 }

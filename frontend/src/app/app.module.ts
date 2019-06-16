@@ -52,7 +52,10 @@ import { GroupEditorComponent } from './components/editor/group-editor/group-edi
 import { TreeModel, TreeModule } from 'angular-tree-component'
 import { GroupsUsersSelectorComponent } from './components/management/groups-users-selector/groups-users-selector.component'
 import { AssigneeEditorComponent } from './components/management/permissions-editor/assignee-editor.component';
-import { UserListComponent } from './components/management/user-list/user-list.component'
+import { UserListComponent } from './components/management/user-list/user-list.component';
+import { TestTemplatePermissionsEditorComponent } from './components/management/test-permissions-editor/test-template-permissions-editor.component';
+import { TestTemplatePermissionsModalComponent } from './components/modals/test-template-permissions-modal/test-template-permissions-modal.component';
+import { ModalCloseOnlyComponent } from './components/modals/modal-close-only/modal-close-only.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -92,6 +95,9 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     GroupsUsersSelectorComponent,
     AssigneeEditorComponent,
     UserListComponent,
+    TestTemplatePermissionsEditorComponent,
+    TestTemplatePermissionsModalComponent,
+    ModalCloseOnlyComponent,
   ],
   imports:         [
     BrowserModule,
@@ -132,7 +138,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
   bootstrap:       [AppComponent],
   entryComponents: [
     GeneratorListModalComponent,
-    GeneratorRunnerModalComponent
+    GeneratorRunnerModalComponent,
+    TestTemplatePermissionsModalComponent
   ],
 })
 export class AppModule {

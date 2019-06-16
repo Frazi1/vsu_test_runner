@@ -24,9 +24,12 @@ namespace DataAccess
         public DbSet<DbCodeRunIteration> CodeRunIterations { get; set; }
         public DbSet<DbInputGenerator> InputGenerators { get; set; }
         public DbSet<DbGroup> Groups { get; set; }
+        public DbSet<DbUserToGroup> UserToGroups { get; set; }
         public DbSet<DbTestInstanceUserAssignee> TestInstanceUserAssignees { get; set; }
         public DbSet<DbTestInstanceGroupAssignee> TestInstanceGroupAssignees { get; set; }
         public DbSet<DbUserFeature> UserFeatures { get; set; }
+        public DbSet<DbTestTemplateUserPermission> TestUserPermissions { get; set; }
+        
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {
@@ -84,6 +87,9 @@ namespace DataAccess
 
             modelBuilder.Entity<DbUserFeature>()
                 .HasKey(uf => new {uf.UserId, uf.FeatureType});
+
+            modelBuilder.Entity<DbTestTemplateUserPermission>()
+                .HasKey(up => new {up.UserId, up.TestTemplateId});
         }
     }
 }

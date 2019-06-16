@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -33,6 +34,7 @@ namespace DataAccess.Repository
             => await Context.Set<T>().FirstOrDefaultAsync(expression);
 
         public void Add(T entity) => Context.Add(entity);
+        public void AddRange(IEnumerable<T> items) => Context.AddRange(items);
         public void Remove(T entity) => Context.Remove(entity);
 
         public async Task SaveChangesAsync() => await Context.SaveChangesAsync();

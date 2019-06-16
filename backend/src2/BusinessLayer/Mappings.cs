@@ -6,6 +6,7 @@ using BusinessLayer.Executors;
 using DataAccess.Model;
 using SharedModels.DTOs;
 using SharedModels.Enum;
+using SharedModels.Extensions;
 using Utils;
 
 namespace BusinessLayer
@@ -269,6 +270,30 @@ namespace BusinessLayer
         private static TestInstanceAssigneeDto ToTestInstanceUserAssigneeDto(this DbTestInstanceUserAssignee d)
         {
             return new TestInstanceAssigneeDto {Id = d.Id, User = d.User.ToUserDtoWithoutGroups()};
+        }
+
+        public static TestTemplateUserPermissionsDto ToTestTemplateUserPermissionDto(
+            this DbTestTemplateUserPermission d)
+        {
+            var res = new TestTemplateUserPermissionsDto
+            {
+                UserId = d.UserId,
+                User = d.User.ToUserDtoWithoutGroups(),
+                TestTemplateId = d.TestTemplateId,
+            };
+            d.CopyPermissionsTo(res);
+            return res;
+        }
+
+        public static DbTestTemplateUserPermission ToDbTestTemplateUserPermission(this TestTemplateUserPermissionsDto d)
+        {
+            var res = new DbTestTemplateUserPermission
+            {
+                UserId = d.UserId,
+                TestTemplateId = d.TestTemplateId,
+            };
+            d.CopyPermissionsTo(res);
+            return res;
         }
     }
 }

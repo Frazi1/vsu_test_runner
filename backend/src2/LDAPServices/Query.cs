@@ -13,9 +13,9 @@ namespace LDAPServices
             _connection.Bind(dn, password);
         }
 
-        public LdapSearchResults GetUsers(string baseSearch, string searchFilter)
+        public LdapSearchResults GetUsers(string baseSearch, string searchFilter, string[] attrs)
         {
-            var res = _connection.Search(baseSearch, LdapConnection.SCOPE_ONE, searchFilter, null, false);
+            var res = _connection.Search(baseSearch, LdapConnection.SCOPE_ONE, searchFilter, attrs, false);
             int c = res.Count;
             return res;
         }

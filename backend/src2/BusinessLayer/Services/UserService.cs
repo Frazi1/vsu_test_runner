@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using BusinessLayer.Authentication;
 using DataAccess.Repository;
@@ -26,6 +27,14 @@ namespace BusinessLayer.Services
             var dbUsers = await _userRepository.GetAllAsync();
             var dtos = dbUsers.Select(u => u.ToUserDto()).ToList();
             return dtos;
+        }
+
+        public List<string> GetUserProperties()
+        {
+            return typeof(UserDto)
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Select(p => p.Name)
+                .ToList();
         }
     }
 }

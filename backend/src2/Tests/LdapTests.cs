@@ -17,7 +17,7 @@ namespace Tests
         [Test]
         public void TestSearch()
         {
-            var res = _query.GetUsers("ou=scientists,dc=example,dc=com", "");
+            var res = _query.GetUsers("dc=example,dc=com", "objectClass=person", new []{"uid", "mail"});
             var ldapEntries = res.ToList();
             Assert.IsTrue( ldapEntries.Any());
         }

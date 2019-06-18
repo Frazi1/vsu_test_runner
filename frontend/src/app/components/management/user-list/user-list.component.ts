@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Input, OnInit } from '@angular/core'
 import { UsersCacheService } from '../../../services/cache/users-cache.service'
 import { UserDto } from '../../../shared/UserDto'
 import { BaseComponent } from '../../base.component'
 import { takeUntil, tap } from 'rxjs/operators'
+import { Observable } from 'rxjs'
 
 @Component({
   selector:    'app-user-list',
@@ -10,15 +11,14 @@ import { takeUntil, tap } from 'rxjs/operators'
   styleUrls:   ['./user-list.component.scss']
 })
 export class UserListComponent extends BaseComponent implements OnInit {
+
+  @Input()
   users: UserDto[]
 
-  constructor(private userCache: UsersCacheService) {super() }
+
+  constructor() {super() }
 
   ngOnInit() {
-    this.userCache.getCached(true).pipe(
-      takeUntil(this.onDestroy$),
-      tap(res => this.users = res)
-    ).subscribe()
   }
 
 }

@@ -5,6 +5,8 @@ import { takeUntil } from 'rxjs/operators'
 import { GroupCacheService } from '../../../services/cache/group-cache.service'
 import { Router } from '@angular/router'
 import { Observable } from 'rxjs'
+import { UserDto } from '../../../shared/UserDto'
+import { UsersCacheService } from '../../../services/cache/users-cache.service'
 
 @Component({
   selector:    'app-management',
@@ -16,7 +18,10 @@ export class ManagementComponent extends BaseComponent implements OnInit {
   groups: Observable<GroupDto[]>
   selectedGroup: GroupDto
 
+  usersSource: Observable<UserDto[]>
+
   constructor(private groupCache: GroupCacheService,
+              private usersCache: UsersCacheService,
               private router: Router) {
     super()
   }
@@ -25,6 +30,8 @@ export class ManagementComponent extends BaseComponent implements OnInit {
     this.groups = this.groupCache.getCached(true).pipe(
       takeUntil(this.onDestroy$),
     )
+
+    this.usersSource = this.usersCache.getCached(true)
   }
 
   public addGroupClick() {

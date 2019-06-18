@@ -10,7 +10,12 @@
   </ngb-tab>
   <ngb-tab title="Пользователи">
     <ng-template ngbTabContent>
-      <app-user-list></app-user-list>
+      <app-user-list [users]="usersSource | async"></app-user-list>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Импорт пользователей из ActiveDirectory">
+    <ng-template ngbTabContent>
+      <app-active-directory-query></app-active-directory-query>
     </ng-template>
   </ngb-tab>
 </ngb-tabset>

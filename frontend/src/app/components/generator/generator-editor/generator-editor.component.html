@@ -1,18 +1,15 @@
 <ng-container *ngIf="generator">
-  <div class="section-panel-auto">
-    <h2>Описание</h2>
-    <div class="text-left ml-2 mb-2">
+  <div class="section-panel-auto pb-1">
+    <h2>Генератор - {{generator.name}}</h2>
+    <div class="text-left ml-2 mb-2 col-md-6 col-12">
       <label class="m-0 font-weight-bold">Название</label>
-      <input type="text" [(ngModel)]="generator.name" class="form-control w-25">
+      <input type="text" [(ngModel)]="generator.name" class="form-control">
     </div>
-    <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
-      <as-split-area size="50">
-        <app-code-editor [(code)]="generator.description" [language]="'markdown'"></app-code-editor>
-      </as-split-area>
-      <as-split-area size="50">
-        <markdown [data]="generator.description"></markdown>
-      </as-split-area>
-    </as-split>
+
+    <div class="text-left ml-2 mr-2 mb-2 col-md-6 col-12">
+      <label class="m-0 font-weight-bold">Описание генератора</label>
+      <textarea class="form-control g--resize-both" [(ngModel)]="generator.description"></textarea>
+    </div>
   </div>
   <div class="section-panel">
     <h2>Исходный код</h2>
@@ -22,8 +19,8 @@
     </div>
     <app-code-editor-with-executor [codeSnippet]="generator.codeSnippet"></app-code-editor-with-executor>
     <div class="d-flex m-2 justify-content-end">
-      <button class="btn btn-success align-self-end" *ngIf="isCreatingNew" (click)="add$.next()">Сохранить</button>
-      <button class="btn btn-success align-self-end" *ngIf="!isCreatingNew" (click)="update$.next()">
+      <button class="btn btn-primary align-self-end" *ngIf="isCreatingNew" (click)="add$.next()">Сохранить</button>
+      <button class="btn btn-primary align-self-end" *ngIf="!isCreatingNew" (click)="update$.next()">
         Обновить
       </button>
     </div>

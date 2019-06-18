@@ -25,17 +25,17 @@ export class CodeEditorComponent implements OnInit {
   @Input()
   language: CodeLanguage | string
 
-  @Output()
-  private codeChange = new EventEmitter<String>()
-
   @Input()
   isReadOnly = false
 
-  public config: AceConfigInterface = {
-    autoScrollEditorIntoView: true,
-    minLines:                 10,
-    maxLines:                 50
-  }
+  @Input()
+  minLines = 20
+
+  @Output()
+  private codeChange = new EventEmitter<String>()
+
+
+  config: AceConfigInterface
 
   public getAceLanguageId(codeLanguage: CodeLanguage | string): string {
     let languageName = (codeLanguage instanceof CodeLanguage)
@@ -55,6 +55,12 @@ export class CodeEditorComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.config = {
+      autoScrollEditorIntoView: true,
+      minLines:                 this.minLines,
+      maxLines:                 50
+    }
+
   }
 
   public textChanged() {

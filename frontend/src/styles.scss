@@ -42,6 +42,7 @@ body {
     }
 
     &both {
+      //max-width: max-content !important;
       resize: both;
     }
   }
@@ -59,12 +60,24 @@ body {
       padding: 0;
     }
   }
+
   &hover-only {
     opacity: 0;
+
     &:hover {
       opacity: 1;
     }
   }
+
+  &min-height- {
+    &px- {
+      &350 {
+        min-height: 350px;
+      }
+    }
+  }
+
+
 }
 
 

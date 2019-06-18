@@ -31,7 +31,7 @@
                     (click)="openPermissionsModal(t);$event.stopPropagation()">Разрешения
             </button>
             <button class="btn btn-outline-primary" *ngIf="!t.isDeleted"
-                    (click)="createTestInstance(t.id);$event.stopPropagation()">Запустить
+                    (click)="createTestInstance(t.id);$event.stopPropagation()">Создать событие
             </button>
             <button *ngIf="t.isDeleted"
                     (click)="restore$.next(t.id);$event.stopPropagation()">Восстановить

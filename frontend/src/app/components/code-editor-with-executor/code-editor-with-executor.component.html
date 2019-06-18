@@ -13,7 +13,7 @@
       <div class="d-flex m-1">
         <button class="btn btn-success g--margin-right-px-5" (click)="_codeRunBtn$.next()">Запуcтить</button>
         <button class="btn btn-success g--margin-right-px-5" (click)="_codeRunTestsBtn$.next()"
-                [disabled]="!onRunTestsClick">
+                *ngIf="onRunTestsClick" [disabled]="!onRunTestsClick">
           Запустить тесты
         </button>
         <button class="btn btn-dark" (click)="outputViewer.clear()">Очистить</button>

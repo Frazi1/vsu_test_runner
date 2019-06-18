@@ -19,7 +19,7 @@
     ],
     "prefer-const": false,
     "no-inferrable-types": {
-      "options": "ignore-properties"
+      "options": ["ignore-properties", "ignore-params"]
     }
   }
 }

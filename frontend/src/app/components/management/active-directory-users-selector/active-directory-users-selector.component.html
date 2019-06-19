@@ -1,0 +1,23 @@
+<table class="table tableFixHead">
+  <thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">E-mail</th>
+    <th scope="col">Логин</th>
+    <th scope="col">Имя</th>
+<!--    <th scope="col">Отчество</th>-->
+    <th scope="col">Фамилия</th>
+<!--    <th scope="col">Тип</th>-->
+  </tr>
+  </thead>
+  <tbody *ngIf="users">
+  <tr *ngFor="let user of users; index as i">
+    <th scope="row">{{i + 1}}</th>
+    <td><input class="form-control" [(ngModel)]="user.email"></td>
+    <td><input class="form-control" [(ngModel)]="user.userName"></td>
+    <td><input class="form-control" [(ngModel)]="user.firstName"></td>
+<!--    <td><input class="form-control" [(ngModel)]="user.middleName"></td>-->
+    <td><input class="form-control" [(ngModel)]="user.lastName"></td>
+  </tr>
+  </tbody>
+</table>

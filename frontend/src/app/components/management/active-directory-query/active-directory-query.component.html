@@ -1,0 +1,77 @@
+<div>
+  <h3 class="text-left">Авторизация</h3>
+  <div class="d-md-flex text-left mt-1">
+    <div class="col-md-4">
+      <label for="url" class="mb-0">Адрес сервера:</label>
+      <input id="url" class="form-control" [(ngModel)]="searchRequest.connectionData.host"
+             placeholder="ldap.forumsys.com">
+    </div>
+
+    <div class="col-md-4">
+      <label for="port" class="mb-0">Порт сервера:</label>
+      <input id="port" class="form-control" [(ngModel)]="searchRequest.connectionData.port" placeholder="389">
+    </div>
+  </div>
+
+  <div class="d-md-flex text-left mt-1">
+    <div class="col-md-4">
+      <label for="dn" class="mb-0">DN:</label>
+      <input id="dn" class="form-control" [(ngModel)]="searchRequest.connectionData.distinguishedName"
+             placeholder="cn=read-only-admin,dc=example,dc=com">
+    </div>
+
+    <div class="col-md-4">
+      <label for="password" class="mb-0">Пароль:</label>
+      <input type="password" id="password" class="form-control" [(ngModel)]="searchRequest.connectionData.password"
+             placeholder="Введите пароль">
+    </div>
+  </div>
+</div>
+
+<div class="text-left mt-2">
+  <h3>Параметры поиска</h3>
+  <div class="d-md-flex text-left mt-1">
+    <div class="col-md-4">
+      <label for="dn-for-search" class="mb-0">Поиск внутри DN:</label>
+      <input id="dn-for-search" class="form-control" [(ngModel)]="searchRequest.baseSearch"
+             placeholder="dc=example,dc=com">
+    </div>
+
+    <div class="col-md-4">
+      <label for="search-filter" class="mb-0">Фильтр поиска:</label>
+      <input id="search-filter" class="form-control" [(ngModel)]="searchRequest.filterQuery"
+             placeholder="objectClass=person">
+    </div>
+  </div>
+</div>
+
+<div class="text-left mt-2">
+  <h3>Маппинг объектов</h3>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-4 mt-1" *ngFor="let prop of userProperties">
+        <label class="mb-0">{{prop}}</label>
+        <input class="form-control" placeholder="Аттрибут Active Directory для {{prop}}"
+               [(ngModel)]="searchRequest.userFieldToActiveDirectoryAttributeMapping[prop]">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-left mt-2">
+  <div class="d-flex">
+    <h3 class="mr-3">Поиск</h3>
+    <button class="btn btn-outline-primary col-md-4 col-lg-3" (click)="search$.next()">Найти</button>
+  </div>
+  <div class="mt-1">
+    <app-active-directory-users-selector [users]="foundUsersObs | async"></app-active-directory-users-selector>
+  </div>
+</div>
+
+<div class="float-md-right mb-2">
+  <div class="d-flex col-md-3">
+    <button class="btn btn-outline-success flex-grow-1" [disabled]="!canImportUsers()"
+            (click)="search$.next()">Импортировать
+    </button>
+  </div>
+</div>

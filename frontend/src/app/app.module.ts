@@ -56,7 +56,8 @@ import { UserListComponent } from './components/management/user-list/user-list.c
 import { TestTemplatePermissionsEditorComponent } from './components/management/test-permissions-editor/test-template-permissions-editor.component';
 import { TestTemplatePermissionsModalComponent } from './components/modals/test-template-permissions-modal/test-template-permissions-modal.component';
 import { ModalCloseOnlyComponent } from './components/modals/modal-close-only/modal-close-only.component';
-import { ActiveDirectoryQueryComponent } from './components/management/active-directory-query/active-directory-query.component'
+import { ActiveDirectoryQueryComponent } from './components/management/active-directory-query/active-directory-query.component';
+import { ActiveDirectoryUsersSelectorComponent } from './components/management/active-directory-users-selector/active-directory-users-selector.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -100,6 +101,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     TestTemplatePermissionsModalComponent,
     ModalCloseOnlyComponent,
     ActiveDirectoryQueryComponent,
+    ActiveDirectoryUsersSelectorComponent,
   ],
   imports:         [
     BrowserModule,

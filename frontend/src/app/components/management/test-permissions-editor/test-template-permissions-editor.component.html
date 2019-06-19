@@ -1,0 +1,21 @@
+<table class="table tableFixHead">
+  <thead>
+  <tr>
+    <th scope="col">Пользователь</th>
+    <th scope="col">Чтение</th>
+    <th scope="col">Запись</th>
+    <th scope="col">Выполнение</th>
+  </tr>
+  </thead>
+  <tbody *ngIf="allPermissions">
+  <tr *ngFor="let perm of allPermissions">
+    <th scope="row">{{perm.user.displayName()}}</th>
+    <td><input type="checkbox" [(ngModel)]="perm.read"></td>
+    <td><input type="checkbox" [(ngModel)]="perm.write"></td>
+    <td><input type="checkbox" [(ngModel)]="perm.execute"></td>
+  </tr>
+  </tbody>
+</table>
+<div>
+  <button class="btn btn-outline-primary" *ngIf="showSaveButton" (click)="saveClick$.next()">Сохранить</button>
+</div>

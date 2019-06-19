@@ -1,0 +1,5 @@
+<app-modal-close-only *ngIf="testTemplate">
+  <h2 head>Разрешения - {{testTemplate.name}}</h2>
+  <app-test-template-permissions-editor body showSaveButton="false"
+                               [testTemplateId]="testTemplate.id"></app-test-template-permissions-editor>
+</app-modal-close-only>

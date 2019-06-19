@@ -1,5 +1,4 @@
 <div class="header">
-  <button class="btn btn-primary" (click)="displayContent = !displayContent">Переключить</button>
   <h3 (click)="editingName = !editingName">Вопрос:
     <span *ngIf="!editingName">{{question.name}}</span>
     <input (click)="$event.stopPropagation()" *ngIf="editingName" [(ngModel)]="question.name">
@@ -7,7 +6,7 @@
 </div>
 
 <ng-container *ngIf="displayContent && question">
-  <div class="section-description section-panel">
+  <div class="section-description section-panel-auto">
     <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
       <as-split-area size="50">
         <app-code-editor [(code)]="question.description" [language]="'markdown'"></app-code-editor>

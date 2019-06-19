@@ -1,22 +1,46 @@
-<div class="container-fluid" *ngIf="testTemplate != null">
-  <h1>{{testTemplate.name}}</h1>
-  <input [(ngModel)]="testTemplate.name">
-  <button (click)="addQuestion()">Добавить вопрос</button>
+<div class="container-fluid d-flex flex-md-row flex-column position-relative" *ngIf="testTemplate != null">
 
-  <div class="section-panel-auto">
+  <div class="section-panel-auto col-md-4 col-lg-3">
     <h2>Настройки</h2>
-    <div class="settings">
-      <label class="settings__item">
-        <span>Длительность, сек:</span>
-        <input type="number" [(ngModel)]="testTemplate.timeLimit">
-      </label>
+    <div class="text-left mb-1">
+      <label for="name" class="mb-0 font-weight-bolder">Название теста:</label>
+      <input id="name" class="form-control" [(ngModel)]="testTemplate.name">
+    </div>
+
+    <div class="text-left mb-1">
+      <label for="duration" class="mb-0 font-weight-bolder">Длительность, сек:</label>
+      <input id="duration" class="form-control" [(ngModel)]="testTemplate.timeLimit">
+    </div>
+
+    <div class="mb-1">
+      <h2 class="text-left">Вопросы</h2>
+      <button class="btn btn-outline-primary mb-1 float-left" (click)="addQuestion()">Добавить вопрос</button>
+      <input class="form-control mb-1" [(ngModel)]="questionSearchQuery" (ngModelChange)="search$.next($event)"
+             placeholder="Поиск...">
+      <ul class="question-list list-group text-left">
+        <li class="list-group-item list-group-item-info" *ngIf="displayQuestions.length === 0">Нет результатов...</li>
+        <li
+          class="question-list__item list-group-item list-group-item-action items-control-host"
+          *ngFor="let q of displayQuestions; index as i"
+          [class.active]="q == currentQuestion" (click)="selectQuestion(q)">
+          <span class="font-weight-bold mr-1">{{i + 1}}.</span>
+          <span>{{q.name}}</span>
+          <div class="item-controls">
+            <button class="close" (click)="$event.stopPropagation();removeQuestion(q);">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="d-flex">
+      <button class="btn btn-outline-danger mr-2" *ngIf="isCreating === false" (click)="deleteTemplate()">Удалить
+      </button>
+      <button class="btn btn-outline-success flex-grow-1" (click)="save()">Сохранить</button>
     </div>
   </div>
 
-  <div class="g--flex-column" *ngFor="let q of testTemplate.questionTemplates">
-    <button (click)="removeQuestion(q)">Удалить</button>
-    <app-test-question-template-editor [question]="q"></app-test-question-template-editor>
+  <div class="col-md-8 g--flex-column" *ngIf="currentQuestion">
+    <app-test-question-template-editor [question]="currentQuestion"></app-test-question-template-editor>
   </div>
-  <button (click)="save()">Сохранить</button>
-  <button *ngIf="isCreating === false" (click)="deleteTemplate()">Удалить</button>
 </div>

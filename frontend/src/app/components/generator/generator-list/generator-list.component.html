@@ -1,8 +1,8 @@
 <div class="list-group" *ngFor="let gen of generators; index as i">
   <div class="list-group-item list-group-item-action" [class.active]="selectedItem == gen && allowSelection" (click)="onClick(gen)">
     <h2>{{i + 1}}. {{gen.name}}</h2>
-    <div>Описание:{{gen.description}}</div>
-    <div>Язык:{{gen.codeSnippet.language.displayName}}</div>
+    <div>{{gen.description}}</div>
+<!--    <div>Язык:{{gen.codeSnippet.language.displayName}}</div>-->
     <div>Кол-во аргументов: {{gen.callArguments.length}}</div>
   </div>
 </div>

@@ -12,3 +12,16 @@
     margin-right: 5px;
   }
 }
+
+
+.question-list {
+  $question-list-item-height: 40px;
+  max-height: $question-list-item-height * 6;
+  overflow: auto;
+
+  .question-list__item {
+    //height: $question-list-item-height;
+  }
+}
+
+

@@ -178,3 +178,17 @@ as-split.simple-split {
     }
   }
 }
+
+.items-control-host {
+  & > .item-controls {
+    opacity: 0;
+  }
+
+  &:hover > .item-controls {
+    opacity: 1;
+  }
+}
+
+.item-controls {
+  @extend .d-inline;
+}

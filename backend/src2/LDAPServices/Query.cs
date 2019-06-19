@@ -1,10 +1,11 @@
-﻿using Novell.Directory.Ldap;
+﻿using System;
+using Novell.Directory.Ldap;
 
 namespace LDAPServices
 {
-    public class Query
+    public class Query: IDisposable
     {
-        private LdapConnection _connection;
+        private readonly LdapConnection _connection;
 
         public Query(string host, int port, string dn, string password)
         {
@@ -18,6 +19,11 @@ namespace LDAPServices
             var res = _connection.Search(baseSearch, LdapConnection.SCOPE_ONE, searchFilter, attrs, false);
             int c = res.Count;
             return res;
+        }
+
+        public void Dispose()
+        {
+            _connection?.Dispose();
         }
     }
 }

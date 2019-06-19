@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using BusinessLayer.Authentication;
 using JetBrains.Annotations;
 using LDAPServices;
+using Novell.Directory.Ldap;
 using SharedModels.DTOs;
+using SharedModels.Enum;
 using Utils.Helpers;
 
 namespace BusinessLayer.Services
@@ -13,23 +15,26 @@ namespace BusinessLayer.Services
     [UsedImplicitly]
     public class LdapIntegrationService : BaseService
     {
-        public LdapIntegrationService(ICurrentUser currentUser) 
+        public LdapIntegrationService(ICurrentUser currentUser)
             : base(currentUser)
         {
         }
 
         public async Task<List<UserDto>> SearchForUsers(ActiveDirectorySearchRequestDto request)
         {
-            var conn = Connect(request);
-
             var attrsToQuery = request.UserFieldToActiveDirectoryAttributeMapping.Values.ToArray();
-            var results = conn.GetUsers(request.BaseSearch, request.FilterQuery, attrsToQuery).ToImmutableList();
+            ImmutableList<LdapEntry> results;
+            using (var conn = Connect(request))
+            {
+                results = conn.GetUsers(request.BaseSearch, request.FilterQuery, attrsToQuery).ToImmutableList();
+            }
+
             var users = results.Select(r =>
             {
-                var user = new UserDto();
+                var user = new UserDto {Type = UserType.Standard};
                 foreach (var kvp in request.UserFieldToActiveDirectoryAttributeMapping)
                 {
-                    var attrValue = r.getAttribute(kvp.Value);
+                    var attrValue = r.getAttribute(kvp.Value)?.StringValue;
                     user.SetPropertyValue(kvp.Key, attrValue);
                 }
 

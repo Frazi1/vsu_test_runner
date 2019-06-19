@@ -6,7 +6,7 @@ namespace Tests
 {
     public class LdapTests
     {
-        private LDAPServices.Query _query;
+        private Query _query;
 
         [SetUp]
         public void SetUp()
@@ -20,6 +20,12 @@ namespace Tests
             var res = _query.GetUsers("dc=example,dc=com", "objectClass=person", new []{"uid", "mail"});
             var ldapEntries = res.ToList();
             Assert.IsTrue( ldapEntries.Any());
+        }
+        
+        [TearDown]
+        public void TearDown()
+        {
+            _query?.Dispose();
         }
     }
 }

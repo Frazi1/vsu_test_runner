@@ -56,17 +56,6 @@ export class TestTemplateEditorComponent extends BaseComponent implements OnInit
       }),
       tap(() => this.displayQuestions = this.testTemplate.questionTemplates)
     ).subscribe()
-
-    this.search$.pipe(
-      takeUntil(this.onDestroy$),
-      // debounceTime(100),
-      switchMap(query => of(this.searchQuestions(query, this.testTemplate.questionTemplates))),
-      tap(res => this.displayQuestions = res)
-    ).subscribe()
-  }
-
-  private searchQuestions(query: string, questions: TestQuestionTemplate[]): TestQuestionTemplate[] {
-    return questions.filter(q => (q.name || '').toLowerCase().includes((query || '').toLowerCase()))
   }
 
   private addQuestion(): void {
@@ -74,16 +63,6 @@ export class TestTemplateEditorComponent extends BaseComponent implements OnInit
     testQuestionTemplate.name = 'Новый вопрос'
     testQuestionTemplate.codeSnippet = new CodeSnippet()
     this.testTemplate.questionTemplates.push(testQuestionTemplate)
-    this.search$.next(this.questionSearchQuery)
-  }
-
-  private removeQuestion(q: TestQuestionTemplate) {
-    this.testTemplate.questionTemplates = this.testTemplate.questionTemplates.filter(i => i !== q)
-    if (this.currentQuestion === q) {
-      this.selectQuestion(this.testTemplate.questionTemplates.length > 0
-        ? this.testTemplate.questionTemplates[0]
-        : null)
-    }
     this.search$.next(this.questionSearchQuery)
   }
 

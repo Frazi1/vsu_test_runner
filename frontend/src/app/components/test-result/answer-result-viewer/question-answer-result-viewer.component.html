@@ -1,17 +1,17 @@
 <ng-container *ngIf="questionAnswer">
-  <div class="section-panel">
-    <h2 class="text-left">Вопрос</h2>
+  <div class="section-panel-auto">
+    <h2 class="text-left">Вопрос: {{questionAnswer.name}}</h2>
     <markdown [data]="questionAnswer.description"></markdown>
   </div>
 
-  <div class="section-panel">
+  <div class="section-panel-auto">
     <h2 class="text-left">Код решения</h2>
     <app-code-editor [(code)]="questionAnswer.answerCodeSnippet.code"
                      [language]="questionAnswer.answerCodeSnippet.language" isReadOnly="true">
 
     </app-code-editor>
   </div>
-  <div class="section-panel">
+  <div class="section-panel-auto">
     <h2 class="text-left">Результат:{{questionAnswer.validationPassed ? "Верно" : "Неверно"}}</h2>
     <app-answer-iterations-viewer [iterations]="questionAnswer.iterations"></app-answer-iterations-viewer>
   </div>

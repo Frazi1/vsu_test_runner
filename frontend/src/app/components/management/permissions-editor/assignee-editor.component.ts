@@ -7,6 +7,9 @@ import { GroupDto } from '../../../shared/GroupDto'
 import { mergeAll, tap } from 'rxjs/operators'
 import { combineLatest, concat, merge } from 'rxjs'
 import { AssigneeModel } from './AssigneeModel'
+import { IQuestion } from '../../../shared/IQuestion'
+
+export type AssigneeType = 'all' | 'user' | 'group'
 
 @Component({
   selector:    'app-assignee-editor',
@@ -17,6 +20,12 @@ export class AssigneeEditorComponent implements OnInit {
 
   @Input()
   assignees: TestInstanceAssigneeDto[]
+
+  @Input()
+  availableQuestions: IQuestion[]
+
+  @Input()
+  assigneeType: AssigneeType = 'all'
 
   allAssigneeModels: AssigneeModel[]
 
@@ -37,15 +46,23 @@ export class AssigneeEditorComponent implements OnInit {
       tap(g => this.groups = g)
     )
     combineLatest(getGroups$, getUsers$).pipe(
-      tap(() => this.allAssigneeModels = this.createAllAssignees())
+      tap(() => this.allAssigneeModels = this.createAllAssignees(this.assigneeType))
     ).subscribe()
   }
 
-  private createAllAssignees(): AssigneeModel[] {
+  private createAllAssignees(assigneeType: AssigneeType): AssigneeModel[] {
     const users = this.users.map(u => new AssigneeModel(TestInstanceAssigneeDto.FromUser(u),
-      this.assignees.filter(i => i.user != null).find(a => a.user.id === u.id) != null))
+      this.assignees.filter(i => i.user != null).find(a => a.user.id === u.id) != null
+    ))
+    if (assigneeType === 'user') {
+      return users
+    }
     const groups = this.groups.map(g => new AssigneeModel(TestInstanceAssigneeDto.FromGroup(g),
-      this.assignees.filter(i => i.group != null).find(a => a.group.id === a.id) != null))
+      this.assignees.filter(i => i.group != null).find(a => a.group.id === a.id) != null
+    ))
+    if (assigneeType === 'group') {
+      return groups
+    }
     return users.concat(groups)
   }
 
@@ -54,5 +71,9 @@ export class AssigneeEditorComponent implements OnInit {
                                   .filter(m => m.isSelected)
                                   .map(m => m.assigneeDto)
     )
+  }
+
+  public hasItems(): boolean {
+    return this.allAssigneeModels && this.allAssigneeModels.length > 0
   }
 }

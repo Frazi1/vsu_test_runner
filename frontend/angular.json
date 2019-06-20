@@ -31,7 +31,8 @@
               "node_modules/ng-pick-datetime/assets/style/picker.min.css",
               "node_modules/ngx-toastr/toastr.css",
               "node_modules/angular-tree-component/dist/angular-tree-component.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/@icon/open-iconic/open-iconic.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

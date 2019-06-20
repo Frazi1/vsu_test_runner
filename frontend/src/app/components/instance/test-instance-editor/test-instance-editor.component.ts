@@ -41,7 +41,7 @@ export class TestInstanceEditorComponent implements OnInit {
   }
 
   private onAssigneesChange(newAssignees: TestInstanceAssigneeDto[]) {
-    this.testInstance.assignees = newAssignees
+    this.testInstance.userAssignees = newAssignees
   }
 
   private getDuration(): string {
@@ -56,7 +56,7 @@ export class TestInstanceEditorComponent implements OnInit {
     const testInstanceUpdate = new TestInstanceUpdate(this.testInstance.availableAfter,
       this.testInstance.disabledAfter,
       this.testInstance.timeLimit,
-      this.testInstance.assignees
+      this.testInstance.userAssignees
     )
 
     this.instanceService.updateTestInstance(this.testInstance.id, testInstanceUpdate).pipe(

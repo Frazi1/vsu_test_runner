@@ -21,19 +21,14 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
   private $finish = new Subject()
   private _unsubscribe$ = new Subject()
 
-  private _testRun: TestRun
-  private _currentQuestionIndex = 0
-  private _currentId: number
+  testRun: TestRun
+  currentQuestion: QuestionAnswer
 
   remainingTime$: Observable<string>
 
   constructor(private runService: RunService,
               private activatedRoute: ActivatedRoute,
               private router: Router) {
-  }
-
-  get currentQuestion(): QuestionAnswer {
-    return this._testRun.questionAnswers[this._currentQuestionIndex]
   }
 
   ngOnInit() {
@@ -46,13 +41,13 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
   private remainingTimeObs() {
     let timeDiffObs = timer(1, 1).pipe(
       takeUntil(this._unsubscribe$),
-      filter(() => this._testRun != null),
+      filter(() => this.testRun != null),
       distinctUntilChanged(),
-      map(() => this._testRun.endsAt.diff(moment.utc()))
+      map(() => this.testRun.endsAt.diff(moment.utc()))
     )
     this.remainingTime$ = timeDiffObs.pipe(
       map(remaining =>
-        (remaining < 0 || this._testRun.finishedAt != null) ? 'Завершено' : moment.utc(remaining).format('HH:mm:ss')
+        (remaining < 0 || this.testRun.finishedAt != null) ? 'Завершено' : moment.utc(remaining).format('HH:mm:ss')
       )
     )
     this.timeIsUpSub(timeDiffObs)
@@ -62,7 +57,7 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
     timeDiffObs.pipe(
       takeUntil(this._unsubscribe$),
       takeUntil(this.$finish),
-      takeWhile(() => this._testRun.finishedAt == null),
+      takeWhile(() => this.testRun.finishedAt == null),
       filter(diff => diff < 0),
       tap(() => this.$finish.next())
     ).subscribe()
@@ -72,7 +67,6 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
     const $params: Observable<number> = this.activatedRoute.params.pipe(
       map(params => +params['id']),
       tap(route => console.log(`ROUTE: ${route}`)),
-      tap(id => this._currentId = id)
     )
     const $reload: Observable<number> = this.$save.pipe(
       mergeMap(() => this.save())
@@ -83,9 +77,20 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
         retry(),
         takeUntil(this._unsubscribe$),
         mergeMap(id => this.runService.getTestRun(id)),
-        tap(res => this._testRun = res),
+        tap(res => this.testRun = res),
+        tap(res  => this.updateCurrentQuestionSelection(res.questionAnswers)),
         filter(() => this.currentQuestion.answerCodeSnippet.code === '' || this.currentQuestion.answerCodeSnippet.code == null),
       ).subscribe()
+  }
+
+  private updateCurrentQuestionSelection(answers: QuestionAnswer[]) {
+    let current = this.currentQuestion
+    if (current) {
+      current = answers.find(a => a.id === current.id)
+    } else {
+      current = answers[0]
+    }
+    this.currentQuestion = current
   }
 
   private finishSub() {
@@ -93,40 +98,28 @@ export class TestRunnerComponent implements OnInit, OnDestroy {
       retry(),
       takeUntil(this._unsubscribe$),
       concatMap(() => this.finish())
-    ).subscribe(() => this.router.navigate(['/result', this._currentId]))
+    ).subscribe(() => this.router.navigate(['/result', this.testRun.id]))
   }
 
   public ngOnDestroy(): void {
     this._unsubscribe$.next()
   }
 
-  private nextQuestion(): void {
-    if (this._currentQuestionIndex < this._testRun.questionAnswers.length - 1) {
-      this._currentQuestionIndex++
-    }
-  }
-
-  private previousQuestion(): void {
-    if (this._currentQuestionIndex > 0) {
-      this._currentQuestionIndex--
-    }
-  }
-
   private getAnswerUpdates() {
-    return this._testRun.questionAnswers.map(a => new TestRunAnswerUpdate(a.id, a.answerCodeSnippet))
+    return this.testRun.questionAnswers.map(a => new TestRunAnswerUpdate(a.id, a.answerCodeSnippet))
   }
 
   private save(): Observable<number> {
     const updates = this.getAnswerUpdates()
-    return this.runService.updateTestRunAnswers(this._testRun.id, updates).pipe(
-      map(() => this._testRun.id)
+    return this.runService.updateTestRunAnswers(this.testRun.id, updates).pipe(
+      map(() => this.testRun.id)
     )
   }
 
   private finish(): Observable<number> {
     const updates = this.getAnswerUpdates()
-    return this.runService.finishTestRun(this._testRun.id, updates).pipe(
-      map(() => this._testRun.id)
+    return this.runService.finishTestRun(this.testRun.id, updates).pipe(
+      map(() => this.testRun.id)
     )
   }
 }

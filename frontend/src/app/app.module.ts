@@ -14,7 +14,7 @@ import { FunctionEditorComponent } from './components/editor/function-signature-
 import { CodeTypeSelectorComponent } from './components/editor/code-type-selector/code-type-selector.component'
 import { TestInstanceListComponent } from './components/instance/test-instance-list/test-instance-list.component'
 import { TestInstanceEditorComponent } from './components/instance/test-instance-editor/test-instance-editor.component'
-import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
+import { OWL_DATE_TIME_LOCALE, OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { ToastrModule } from 'ngx-toastr'
 import { GlobalErrorHandler } from './configuration/global-error-handler'
@@ -46,18 +46,18 @@ import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap'
 import { ModalOkCancelComponent } from './components/modals/modal-ok-cancel/modal-ok-cancel.component'
 import { GeneratorRunnerModalComponent } from './components/generator/generator-runner-modal/generator-runner-modal.component'
 import { GroupManagementComponent } from './components/management/group-management/group-management.component'
-import { TreeviewModule } from 'ngx-treeview'
 import { ManagementComponent } from './components/management/management/management.component'
 import { GroupEditorComponent } from './components/editor/group-editor/group-editor.component'
-import { TreeModel, TreeModule } from 'angular-tree-component'
+import { TreeModule } from 'angular-tree-component'
 import { GroupsUsersSelectorComponent } from './components/management/groups-users-selector/groups-users-selector.component'
-import { AssigneeEditorComponent } from './components/management/permissions-editor/assignee-editor.component';
-import { UserListComponent } from './components/management/user-list/user-list.component';
-import { TestTemplatePermissionsEditorComponent } from './components/management/test-permissions-editor/test-template-permissions-editor.component';
-import { TestTemplatePermissionsModalComponent } from './components/modals/test-template-permissions-modal/test-template-permissions-modal.component';
-import { ModalCloseOnlyComponent } from './components/modals/modal-close-only/modal-close-only.component';
-import { ActiveDirectoryQueryComponent } from './components/management/active-directory-query/active-directory-query.component';
+import { AssigneeEditorComponent } from './components/management/permissions-editor/assignee-editor.component'
+import { UserListComponent } from './components/management/user-list/user-list.component'
+import { TestTemplatePermissionsEditorComponent } from './components/management/test-permissions-editor/test-template-permissions-editor.component'
+import { TestTemplatePermissionsModalComponent } from './components/modals/test-template-permissions-modal/test-template-permissions-modal.component'
+import { ModalCloseOnlyComponent } from './components/modals/modal-close-only/modal-close-only.component'
+import { ActiveDirectoryQueryComponent } from './components/management/active-directory-query/active-directory-query.component'
 import { ActiveDirectoryUsersSelectorComponent } from './components/management/active-directory-users-selector/active-directory-users-selector.component'
+import { QuestionListComponent } from './components/question-list/question-list.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -102,6 +102,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     ModalCloseOnlyComponent,
     ActiveDirectoryQueryComponent,
     ActiveDirectoryUsersSelectorComponent,
+    QuestionListComponent,
   ],
   imports:         [
     BrowserModule,
@@ -119,7 +120,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     ReactiveFormsModule,
     NgbModalModule,
     NgbModule,
-    TreeviewModule.forRoot(),
+    // TreeviewModule.forRoot(),
     TreeModule.forRoot()
   ],
   providers:       [
@@ -137,7 +138,8 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
       useClass: AuthenticationInterceptor,
       multi:    true
     },
-    {provide: AceConfig, useValue: DEFAULT_ACE_CONFIG}
+    {provide: AceConfig, useValue: DEFAULT_ACE_CONFIG},
+    {provide: OWL_DATE_TIME_LOCALE, useValue: 'ru'}
   ],
   bootstrap:       [AppComponent],
   entryComponents: [

@@ -15,23 +15,8 @@
     <div class="mb-1">
       <h2 class="text-left">Вопросы</h2>
       <button class="btn btn-outline-primary mb-1 float-left" (click)="addQuestion()">Добавить вопрос</button>
-      <input class="form-control mb-1" [(ngModel)]="questionSearchQuery" (ngModelChange)="search$.next($event)"
-             placeholder="Поиск...">
-      <ul class="question-list list-group text-left">
-        <li class="list-group-item list-group-item-info" *ngIf="displayQuestions.length === 0">Нет результатов...</li>
-        <li
-          class="question-list__item list-group-item list-group-item-action items-control-host"
-          *ngFor="let q of displayQuestions; index as i"
-          [class.active]="q == currentQuestion" (click)="selectQuestion(q)">
-          <span class="font-weight-bold mr-1">{{i + 1}}.</span>
-          <span>{{q.name}}</span>
-          <div class="item-controls">
-            <button class="close" (click)="$event.stopPropagation();removeQuestion(q);">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        </li>
-      </ul>
+      <app-question-list [(questions)]="testTemplate.questionTemplates" [(selectedQuestions)]="currentQuestion"
+                         [multiSelection]="false" [allowDeletion]="true"></app-question-list>
     </div>
     <div class="d-flex">
       <button class="btn btn-outline-danger mr-2" *ngIf="isCreating === false" (click)="deleteTemplate()">Удалить
@@ -40,7 +25,7 @@
     </div>
   </div>
 
-  <div class="col-md-8 g--flex-column" *ngIf="currentQuestion">
+  <div class="col-md-8 col-lg-9 g--flex-column" *ngIf="currentQuestion">
     <app-test-question-template-editor [question]="currentQuestion"></app-test-question-template-editor>
   </div>
 </div>

@@ -1,12 +1,15 @@
 <div *ngIf="questionRun">
-  <h1>{{_questionRun.name}}</h1>
   <div class="section-panel-auto">
+    <h2 class="text-left">Вопрос: {{_questionRun.name}}</h2>
     <markdown [data]="questionRun.description"></markdown>
   </div>
 
-  <div class="section-panel">
-    <h3 class="text-left">Код Решения</h3>
-    <button class="btn btn-danger" (click)="resetBtnClick$.next()">Сбросить код</button>
+  <div class="section-panel-auto">
+    <h2 class="text-left">Код Решения</h2>
+    <div class="section-controls">
+      <button class="section-controls__item btn btn-outline-danger " (click)="resetBtnClick$.next()">Сбросить код
+      </button>
+    </div>
     <app-code-editor-with-executor [codeSnippet]="questionRun.answerCodeSnippet" [onRunTestsClick]="runTestsClosure">
     </app-code-editor-with-executor>
   </div>

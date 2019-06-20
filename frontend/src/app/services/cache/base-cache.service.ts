@@ -22,7 +22,7 @@ export abstract class BaseCacheService<T> {
 
   public invalidate(): Observable<any> {
     if (this.ensureCacheExists()) {
-      this._invalidate$.next()
+      setTimeout(() => this._invalidate$.next())
     }
     return this._invalidateSuccess$.asObservable()
   }

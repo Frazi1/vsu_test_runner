@@ -69,11 +69,33 @@ body {
     }
   }
 
+  &opacity- {
+    &0 {
+      opacity: 0;
+    }
+
+    &1 {
+      opacity: 1;
+    }
+  }
+
   &min-height- {
     &px- {
       &350 {
         min-height: 350px;
       }
+    }
+  }
+
+  &white-space- {
+    &nowrap {
+      white-space: nowrap;
+    }
+  }
+
+  &color- {
+    &white {
+      color: white;
     }
   }
 
@@ -180,15 +202,15 @@ as-split.simple-split {
 }
 
 .items-control-host {
-  & > .item-controls {
+  & > .items-control {
     opacity: 0;
   }
 
-  &:hover > .item-controls {
+  &:hover > .items-control {
     opacity: 1;
   }
 }
 
-.item-controls {
+.items-control {
   @extend .d-inline;
 }

@@ -1,3 +1,5 @@
+@import "~src/styles";
+
 .passed {
   background: green;
 }
@@ -5,3 +7,41 @@
 .failed {
   background: indianred;
 }
+
+.iteration-result {
+  @extend .alert;
+}
+
+.iteration-result__item {
+  @extend .alert;
+}
+
+.iteration-result-success {
+  @extend .alert-success;
+
+  & > .iteration-result__item {
+    @extend .alert-success;
+  }
+}
+
+.iteration-result-error {
+  @extend .alert-warning;
+
+  & > .iteration-result__item {
+    @extend .alert-warning;;
+  }
+}
+
+.iteration-result-fail {
+  @extend .alert-danger;
+
+  & > .iteration-result__item {
+    @extend .alert-danger;;
+  }
+}
+
+.form-control.answer-data-item[disabled] {
+  background: #f7f7f7;
+}
+
+

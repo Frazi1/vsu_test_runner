@@ -1,9 +1,10 @@
 import { CodeSnippet } from '../CodeSnippet'
 import { Type } from 'class-transformer'
 import { CodeExecutionResponseDto } from './CodeExecutionResponseDto'
+import { IQuestion } from '../IQuestion'
 
 
-export class QuestionAnswer {
+export class QuestionAnswer implements IQuestion {
   id: number = undefined
   name: string = undefined
   description: string = undefined

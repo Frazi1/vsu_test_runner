@@ -1,7 +1,35 @@
-<div class="nav-menu">
-  <div class="nav-item" *ngFor="let item of items"
-       [routerLink]="item.path" routerLinkActive="nav-item-active"
-       [routerLinkActiveOptions]="{exact: true}">
-    <span>{{item.name}}</span>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark w-100 justify-content-between">
+  <!--  <a class="navbar-brand" href="#">Главная</a>-->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" *ngFor="let item of items" [routerLink]="item.path" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: false}">
+        <a class="nav-link">{{item.name}}</a>
+      </li>
+    </ul>
   </div>
-</div>
+  <div>
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link nav-link-white">{{currentUserName}}</a>
+      </li>
+      <li class="nav-item" *ngFor="let item of itemsRight" [routerLink]="item.path" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: false}">
+        <a class="nav-link">{{item.name}}</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!--<div class="nav-menu">-->
+<!--  <div class="nav-item" *ngFor="let item of items"-->
+<!--       [routerLink]="item.path" routerLinkActive="nav-item-active"-->
+<!--       [routerLinkActiveOptions]="{exact: true}">-->
+<!--    <span>{{item.name}}</span>-->
+<!--  </div>-->
+<!--</div>-->

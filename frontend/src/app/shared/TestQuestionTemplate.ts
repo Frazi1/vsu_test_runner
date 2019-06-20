@@ -1,10 +1,11 @@
 import { CodeSnippet } from './CodeSnippet'
 import { Type } from 'class-transformer'
 import { TestingInputDto } from './input/FunctionInputDto'
+import { IQuestion } from './IQuestion'
 
 
-export class TestQuestionTemplate {
-
+export class TestQuestionTemplate implements IQuestion {
+  id: number
   name: string
 
   description: string

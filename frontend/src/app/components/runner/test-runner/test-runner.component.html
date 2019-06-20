@@ -1,22 +1,34 @@
-<div *ngIf="_testRun">
-  <h1>{{_testRun.name}}</h1>
-  <span>Заканчивается в: {{(_testRun.endsAt | date: 'dd/MM/yyyy HH:mm:ss Z')|| "Не указано"}}</span>
-  <span (click)="router.navigate(['/result', _testRun.id])" class="g--cursor-pointer g--display-block">Просмотреть
-    результаты</span>
-  <div>
-    <div class="d-flex">
-      <div class="control-box flex-shrink-0 m-1">
-        <span>Осталось: {{remainingTime$ | async}}</span>
-      </div>
-      <app-question-runner class="flex-grow-1" [questionRun]="currentQuestion"></app-question-runner>
-    </div>
+<div class="container-fluid d-md-flex" *ngIf="testRun">
+  <div class="section-panel-auto col-md-4 col-lg-3 text-left">
+    <h1>{{testRun.name}}</h1>
     <div>
-      <button (click)="previousQuestion()">Предыдущий</button>
-      <button (click)="nextQuestion()">Следующий</button>
+      <div *ngIf="!testRun.isFinished">
+        <span class="font-weight-bold mr-1">Осталось:</span>
+        <span>{{remainingTime$ | async}}</span>
+      </div>
+      <span *ngIf="testRun.isFinished" class="font-weight-bold">Тестирование окончено</span>
     </div>
-    <ng-container *ngIf="!_testRun.isFinished">
-      <button (click)="$save.next()">Сохранить</button>
-      <button (click)="$finish.next()">Завершить</button>
-    </ng-container>
+    <!--    <span>Заканчивается в: {{(testRun.endsAt | date: 'dd/MM/yyyy HH:mm:ss Z') || "Не указано"}}</span>-->
+    <div class="d-flex">
+      <div>
+      </div>
+      <button class="btn btn-outline-info flex-grow-1" *ngIf="testRun.isFinished"
+              (click)="router.navigate(['/result', testRun.id])">Просмотреть
+        результаты
+      </button>
+    </div>
+    <div class="mb-1">
+      <h2 class="text-left">Вопросы</h2>
+      <app-question-list [(questions)]="testRun.questionAnswers" [showSearch]="false"
+                         [(selectedQuestions)]="currentQuestion"></app-question-list>
+    </div>
+    <div class="d-flex" *ngIf="!testRun.isFinished">
+      <button class="btn btn-outline-success flex-grow-1 mr-2" (click)="$save.next()">Сохранить</button>
+      <button class="btn btn-outline-primary flex-grow-0" (click)="$finish.next()">Завершить</button>
+    </div>
+  </div>
+
+  <div class="col-md-8 col-lg-9">
+    <app-question-runner [questionRun]="currentQuestion"></app-question-runner>
   </div>
 </div>

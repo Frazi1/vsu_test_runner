@@ -1,7 +1,22 @@
 <div class="list-group">
-  <div class="list-group-item list-group-item-action" *ngFor="let assignee of allAssigneeModels; index as i">
-      <label for="checkbox-{{i}}">{{assignee.assigneeDto.displayName()}}</label>
-      <input id="checkbox-{{i}}" class="float-right" type="checkbox" [(ngModel)]="assignee.isSelected"
+  <div *ngIf="!hasItems()" class="list-group-item list-group-item-light text-left">
+    Пусто...
+  </div>
+  <div class="list-group-item list-group-item-action text-left d-flex items-control-host"
+       *ngFor="let assignee of allAssigneeModels; index as i">
+    <ng-template #questionsPop>
+      <app-question-list [(questions)]="availableQuestions" [allowDeletion]="false"
+                         [multiSelection]="true"></app-question-list>
+    </ng-template>
+    <div class="d-flex align-items-center flex-grow-1">
+      <label class="mb-0">{{assignee.assigneeDto.displayName()}}</label>
+    </div>
+    <button class="btn btn-outline-primary mr-3 items-control" [ngbPopover]="questionsPop" [autoClose]="'outside'"
+            container="body"
+            [placement]="'bottom'">Вопросы</button>
+    <div class="d-flex align-items-center">
+      <input class="float-right" type="checkbox" [(ngModel)]="assignee.isSelected"
              (ngModelChange)="onSelectionChange()">
+    </div>
   </div>
 </div>

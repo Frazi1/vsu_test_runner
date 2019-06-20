@@ -14,8 +14,21 @@ export class AnswerIterationsViewerComponent implements OnInit {
   iterations: CodeExecutionResponseDto[]
 
 
-  private isPassed(iteration: CodeExecutionResponseDto): boolean {
+  public isPassed(iteration: CodeExecutionResponseDto): boolean {
     return iteration.isValid === true
+  }
+
+  public isFailed(iteration: CodeExecutionResponseDto): boolean {
+    return iteration.isValid === false
+  }
+
+  public isError(iteration: CodeExecutionResponseDto): boolean {
+    const errors = [
+      'CompileError',
+      'RuntimeError',
+      'TimeOutExceeded'
+    ]
+    return errors.some(e => iteration.status.toString() === e.toString())
   }
 
   ngOnInit() {

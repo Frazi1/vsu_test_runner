@@ -19,7 +19,7 @@ namespace Tests
         [Test]
         public void ReplaceEmpty()
         {
-            const string x = "//SolutionStart//SolutionEnd";
+            const string x = "//@SolutionStart//@SolutionEnd";
             RunTestWithInput(x);
         }
 
@@ -32,16 +32,16 @@ namespace Tests
         [Test]
         public void ReplaceWithText()
         {
-            const string x = "//SolutionStart hello this is my code to replace //SolutionEnd";
+            const string x = "//@SolutionStart hello this is my code to replace //@SolutionEnd";
             RunTestWithInput(x);
         }
 
         [Test]
         public void ReplaceWithNewLine()
         {
-            const string x = @"//SolutionStart
+            const string x = @"//@SolutionStart
 hello this is my code to replace    
-  //SolutionEnd";
+  //@SolutionEnd";
             RunTestWithInput(x);
         }
     }

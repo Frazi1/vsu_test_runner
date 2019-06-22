@@ -98,7 +98,17 @@ export class CodeService extends BaseService {
 
   public runTests(questionAnswerId: number,
                   codeExecutionRequest: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {
-    return this.http.post(this.buildUrl('run_tests', questionAnswerId), this.json.serialize(codeExecutionRequest))
+    return this.http.post(this.buildUrl('run_tests', 'answer', questionAnswerId),
+      this.json.serialize(codeExecutionRequest)
+               )
+               .pipe(
+                 map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object[]))
+               )
+  }
+
+  public runTestsByQuestionTemplateId(questionTemplateId: number,
+                                      request: CodeExecutionRequest): Observable<CodeExecutionResponseDto[]> {
+    return this.http.post(this.buildUrl('run_tests', 'template', questionTemplateId), this.json.serialize(request))
                .pipe(
                  map(res => this.json.plainToClass(CodeExecutionResponseDto, res as Object[]))
                )

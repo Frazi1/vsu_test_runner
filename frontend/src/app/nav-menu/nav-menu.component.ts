@@ -13,6 +13,7 @@ export class NavMenuComponent implements OnInit {
     {name: 'Шаблоны', path: '/template'},
     {name: 'Генераторы', path: '/generator'},
     {name: 'Менеджмент', path: '/management'},
+    {name: 'Банк вопросов', path: '/questionBank'},
     {name: 'События', path: '/instance'},
     {name: 'Мои тесты', path: '/run'},
     // {name: 'Выйти', path: '/logout'}
@@ -32,7 +33,7 @@ export class NavMenuComponent implements OnInit {
   }
 
   public get currentUserName(): string {
-    return 'Администратор'
-    // return 'Александр С.'
+    // return 'Администратор'
+    return 'Александр С.'
   }
 }

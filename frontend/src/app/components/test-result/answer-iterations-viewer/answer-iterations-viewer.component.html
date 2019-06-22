@@ -4,7 +4,7 @@
          [class.iteration-result-success]="isPassed(iter)"
          [class.iteration-result-error]="isError(iter)"
          [class.iteration-result-fail]="isFailed(iter) && !isError(iter)"
-         *ngFor="let iter of iterations; index as i">
+         *ngFor="let iter of items; index as i">
       <div class="text-left iteration-result__item">
         <div class="d-flex">
           <h4 class="mr-2">Тест №{{i + 1}}</h4>
@@ -25,7 +25,7 @@
           <textarea id="actualOutput-{{i}}" class="form-control g--resize-none answer-data-item" disabled
                     [(ngModel)]="iter.actualOutput"></textarea>
         </div>
-        <div class="mb-1">
+        <div class="mb-1" *ngIf="iter.expectedOutput">
           <label for="expectedOutput-{{i}}" class="mb-0">Ожидаемый результат</label>
           <textarea id="expectedOutput-{{i}}" class="form-control g--resize-none answer-data-item" disabled
                     [(ngModel)]="iter.expectedOutput"></textarea>

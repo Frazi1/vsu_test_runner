@@ -11,8 +11,8 @@ export class TestQuestionTemplate implements IQuestion {
   description: string
 
   timeLimit: number
-
-
+  isOpen: boolean = false
+  questionBankSectionId: number | null
   @Type(() => CodeSnippet)
   codeSnippet: CodeSnippet
 

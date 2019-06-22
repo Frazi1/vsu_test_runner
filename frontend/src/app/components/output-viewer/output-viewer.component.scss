@@ -1,6 +1,8 @@
+@import "~src/styles";
+
 $bubbleTriangleSize: 13px;
-$bubbleValidColor: green;
-$bubbleInvalidColor: red;
+$bubbleValidColor: #70de8a;
+$bubbleInvalidColor: #ff5d6c;
 $bubbleDefaultColor: gainsboro;
 
 #output-container {
@@ -21,6 +23,8 @@ textarea {
   padding-right: 5px;
   min-width: 30px;
   flex-basis: $bubbleTriangleSize * 4;
+
+  @extend .alert;
 }
 
 .bubble-valid {
@@ -34,6 +38,7 @@ textarea {
 .bubble-invalid {
   background: $bubbleInvalidColor;
 
+  //@extend .alert-danger;
   &:after {
     border-right-color: $bubbleInvalidColor !important;
   }

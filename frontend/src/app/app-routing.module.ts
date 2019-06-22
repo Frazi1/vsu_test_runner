@@ -14,15 +14,26 @@ import { LogoutComponent } from './components/logout/logout.component'
 import { GeneratorListComponent } from './components/generator/generator-list/generator-list.component'
 import { ManagementComponent } from './components/management/management/management.component'
 import { GroupEditorComponent } from './components/editor/group-editor/group-editor.component'
+import { QuestionBankListComponent } from './components/question-bank/question-bank-list/question-bank-list.component'
+import { TestQuestionTemplateEditorComponent } from './components/editor/test-question-template-editor/test-question-template-editor.component'
+import { QuestionTemplateResolver } from './resolvers/QuestionTemplateResolver'
+import { QuestionBankQuestionEditorComponent } from './components/question-bank/question-bank-question-editor/question-bank-question-editor.component'
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent, data: {isSignUp: false}},
   {path: 'auth/signup', component: AuthComponent, data: {isSignUp: true}},
   {
     path: '', canActivate: [AuthGuard], canActivateChild: [AuthGuard], children: [
-      {path: 'template/new', component: TestTemplateEditorComponent},
-      {path: 'template/:id', component: TestTemplateEditorComponent},
-      {path: 'template', component: TestTemplateListComponent},
+      {
+        path: 'template', children: [
+          {path: 'new', component: TestTemplateEditorComponent},
+          {path: ':id', component: TestTemplateEditorComponent},
+          {path: '', component: TestTemplateListComponent}
+        ]
+      },
+      // {path: 'template/new', component: TestTemplateEditorComponent},
+      // {path: 'template/:id', component: TestTemplateEditorComponent},
+      // {path: 'template', component: TestTemplateListComponent},
       {path: 'instance', component: TestInstanceListComponent},
       {path: 'instance/:id', component: TestInstanceEditorComponent},
       {path: 'run/:id', component: TestRunnerComponent},
@@ -46,15 +57,38 @@ const routes: Routes = [
           }
         ]
       },
-      {path: 'logout', component: LogoutComponent}
+      {path: 'logout', component: LogoutComponent},
+      {
+        path: 'questionBank', children: [
+          {path: 'new', component: QuestionBankQuestionEditorComponent, data: {creatingNew: true}},
+          {
+            path: ':questionTemplateId', children: [
+              {
+                path:      'edit',
+                component: QuestionBankQuestionEditorComponent,
+                resolve:   {question: QuestionTemplateResolver},
+                data: {creatingNew: false}
+              },
+              {
+                path:      '',
+                component: TestQuestionTemplateEditorComponent,
+                resolve:   {question: QuestionTemplateResolver},
+                data:      {canEdit: false}
+              }
+            ]
+          },
+          {path: '', component: QuestionBankListComponent}
+        ]
+      }
     ]
   }
 
 ]
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports:   [RouterModule.forRoot(routes, {enableTracing: true})],
+  exports:   [RouterModule],
+  providers: [QuestionTemplateResolver]
 })
 export class AppRoutingModule {
 }

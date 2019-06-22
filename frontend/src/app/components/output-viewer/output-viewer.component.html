@@ -14,27 +14,9 @@
   </div>
   <div *ngIf="detailedItem" class="position-absolute details bg-white h-100 overflow-auto"
        (click)="$event.stopPropagation()">
-    <div class="position-sticky">
+    <div class="position-sticky text-left p-1">
       <h1>Детали</h1>
-      <ng-container *ngIf="detailedItem.actualInput != null">
-        <h3>Входные данные:</h3>
-        <span class="d-inline-block">{{detailedItem.actualInput}}</span>
-      </ng-container>
-
-      <ng-container *ngIf="detailedItem.expectedOutput != null">
-        <h3>Ожидалось:</h3>
-        <span class="d-inline-block">{{detailedItem.expectedOutput}}</span>
-      </ng-container>
-
-      <ng-container>
-        <h3>Результат:</h3>
-        <span class="d-inline-block">{{detailedItem.actualOutput}}</span>
-      </ng-container>
-
-      <ng-container *ngIf="detailedItem.isValid != null">
-        <h3>Проверка:</h3>
-        <span class="d-inline-block">{{detailedItem.isValid}}</span>
-      </ng-container>
+      <app-answer-iterations-viewer [iterations]="detailedItem"></app-answer-iterations-viewer>
     </div>
   </div>
 

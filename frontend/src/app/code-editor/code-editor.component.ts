@@ -3,6 +3,7 @@ import 'brace'
 import 'brace/mode/text'
 import 'brace/mode/csharp'
 import 'brace/mode/python'
+import 'brace/mode/java'
 import 'brace/mode/markdown'
 import 'brace/theme/github'
 import { CodeLanguage } from '../shared/CodeLanguage'
@@ -49,6 +50,8 @@ export class CodeEditorComponent implements OnInit {
     switch (languageName) {
       case 'CSHARP':
         return 'csharp'
+      case 'JAVA':
+        return 'java'
       default:
         return 'text'
     }

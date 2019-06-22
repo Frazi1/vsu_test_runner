@@ -214,3 +214,18 @@ as-split.simple-split {
 .items-control {
   @extend .d-inline;
 }
+
+.editor-container {
+  @extend .d-flex, .flex-md-row, .flex-column
+}
+
+.editor__settings {
+  @extend .section-panel-auto, .col-md-4, .col-lg-3;
+}
+.editor__settings__item {
+  @extend .text-left, .mb-1;
+}
+.editor__body {
+  @extend .col-md-8, .col-lg-9;
+}
+

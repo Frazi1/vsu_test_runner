@@ -11,7 +11,9 @@ export class AnswerIterationsViewerComponent implements OnInit {
   constructor() { }
 
   @Input()
-  iterations: CodeExecutionResponseDto[]
+  iterations: CodeExecutionResponseDto[] | CodeExecutionResponseDto
+
+  items: CodeExecutionResponseDto[]
 
 
   public isPassed(iteration: CodeExecutionResponseDto): boolean {
@@ -32,6 +34,11 @@ export class AnswerIterationsViewerComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.iterations instanceof CodeExecutionResponseDto) {
+      this.items = [this.iterations]
+    } else {
+      this.items = this.iterations
+    }
   }
 
 

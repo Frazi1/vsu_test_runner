@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
@@ -10,10 +10,10 @@ import { TestingInputParserService } from '../../../services/logic/testing-input
 import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
 import { CodeSnippetScaffoldingDto } from '../../../shared/code/CodeSnippetScaffoldingDto'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
-import { GeneratorListComponent } from '../../generator/generator-list/generator-list.component'
 import { GeneratorListModalComponent } from '../../generator/generator-list-modal/generator-list-modal.component'
 import { InputGeneratorDto } from '../../../shared/code/InputGeneratorDto'
 import { GeneratorRunnerModalComponent } from '../../generator/generator-runner-modal/generator-runner-modal.component'
+import { ActivatedRoute } from '@angular/router'
 
 @Component({
   selector:    'app-test-question-template-editor',
@@ -24,23 +24,17 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   constructor(private codeService: CodeService,
               private testingInputParserService: TestingInputParserService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private route: ActivatedRoute) {
   }
 
   // region Getters/Setters
-  get editingName(): boolean {
-    return this._editingName
-  }
-
-  set editingName(value: boolean) {
-    this._editingName = value
-  }
-
-  private _editingName = false
-  displayContent = true
 
   @Input()
   question: TestQuestionTemplate
+
+  @Input()
+  canEdit: boolean
 
   textInput: string
 
@@ -51,19 +45,39 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   private _codeRunBtn$ = new Subject<void>()
   private _unsubscribe$ = new Subject<void>()
 
-  public runTestsClosure = this.runTests.bind(this)
+  public runTestsClosure = this.runTestsFromInput.bind(this)
 
   ngOnInit() {
+    if (this.canEdit == null) {
+      this.route.data.subscribe(d => this.canEdit = d['canEdit'] === 'true')
+    }
+
+    if (this.question == null) {
+      this.question = this.route.snapshot.data['question']
+    }
     if (this.question.codeSnippet == null) {
       this.question.codeSnippet = CodeSnippet.EMPTY()
     }
 
-    if (this.question.testingInputs) {
+    if (this.question.testingInputs && this.canEdit) {
       this.textInput = this.testingInputParserService.dump(this.question.testingInputs)
     }
 
-    console.log(this.question)
 
+    console.log(this.question)
+    this.bindTestRunnerFunction()
+    this.codeRunSub()
+  }
+
+  private bindTestRunnerFunction() {
+    if (this.canEdit) {
+      this.runTestsClosure = this.runTestsFromInput.bind(this)
+    } else {
+      this.runTestsClosure = this.runTestsByQuestionId.bind(this)
+    }
+  }
+
+  private codeRunSub() {
     this._codeRunBtn$.pipe(
       takeUntil(this._unsubscribe$),
       tap(() => console.log('_codeRunBtn$ clicked')),
@@ -95,13 +109,19 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
     this.question.codeSnippet.code = snippetScaffoldingDto.code
   }
 
-  public runTests(): Observable<CodeExecutionResponseDto[]> {
+  public runTestsFromInput(): Observable<CodeExecutionResponseDto[]> {
     this.onSave()
     const req = CodeExecutionRequest.fromSnippet(this.question.codeSnippet,
       ScaffoldingType.FULL_TEMPLATE,
       this.question.testingInputs
     )
     return this.codeService.runCode(req)
+  }
+
+  public runTestsByQuestionId(): Observable<CodeExecutionResponseDto[]> {
+    return this.codeService.runTestsByQuestionTemplateId(this.question.id,
+      CodeExecutionRequest.fromSnippet(this.question.codeSnippet, ScaffoldingType.FULL_TEMPLATE, null)
+    )
   }
 
   public onSave(): void {

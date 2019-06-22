@@ -1,0 +1,4 @@
+<select class="custom-select" [(ngModel)]="value" (ngModelChange)="onChange($event)">
+  <option [ngValue]="nullSection">{{nullSection.name}}</option>
+  <option *ngFor="let section of sections$ | async" [ngValue]="section">{{section.name}}</option>
+</select>

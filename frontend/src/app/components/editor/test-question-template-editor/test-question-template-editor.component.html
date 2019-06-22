@@ -1,14 +1,19 @@
-<ng-container *ngIf="displayContent && question">
+<ng-container *ngIf="question">
   <div class="section-description section-panel-auto">
 
-    <h2>Название вопроса</h2>
-    <div class="col-md-5">
-      <input class="form-control" [(ngModel)]="question.name">
-    </div>
+    <ng-container *ngIf="canEdit">
+      <h2>Название вопроса</h2>
+      <div class="col-md-5">
+        <input class="form-control" *ngIf="canEdit" [(ngModel)]="question.name">
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!canEdit">
+      <h1 class="text-left ml-2 mb-3">{{question.name}}</h1>
+    </ng-container>
 
     <h2>Описание</h2>
     <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
-      <as-split-area size="50">
+      <as-split-area *ngIf="canEdit" size="50">
         <app-code-editor [(code)]="question.description" [language]="'markdown'"></app-code-editor>
       </as-split-area>
       <as-split-area size="50">
@@ -30,7 +35,7 @@
       </app-code-editor-with-executor>
     </div>
   </div>
-  <div class="section-panel-auto g--min-height-px-350">
+  <div class="section-panel-auto g--min-height-px-350" *ngIf="canEdit">
     <h2 class="text-left">Входные данные</h2>
     <div class="text-left" *ngIf="inputGenerator">Генератор: {{inputGenerator.name}} </div>
     <div class="section-controls">

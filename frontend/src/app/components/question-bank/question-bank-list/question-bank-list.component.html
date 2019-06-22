@@ -1,0 +1,12 @@
+<div class="list-group text-left">
+  <div class="list-group-item" *ngFor="let section of sections$ | async; index as sectionIndex">
+    <div class="list-group">
+      <div class="h2">{{sectionIndex + 1}}. Секция - {{section.name}}</div>
+      <div class="list-group-item ml-2" *ngFor="let question of section.questionTemplates; index as questionIndex">
+        <a [routerLink]="[question.id]">
+          <div class="h3">{{questionIndex + 1}}. {{question.name}}</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -57,7 +57,10 @@ import { TestTemplatePermissionsModalComponent } from './components/modals/test-
 import { ModalCloseOnlyComponent } from './components/modals/modal-close-only/modal-close-only.component'
 import { ActiveDirectoryQueryComponent } from './components/management/active-directory-query/active-directory-query.component'
 import { ActiveDirectoryUsersSelectorComponent } from './components/management/active-directory-users-selector/active-directory-users-selector.component'
-import { QuestionListComponent } from './components/question-list/question-list.component'
+import { QuestionListComponent } from './components/question-list/question-list.component';
+import { QuestionBankListComponent } from './components/question-bank/question-bank-list/question-bank-list.component';
+import { QuestionBankQuestionEditorComponent } from './components/question-bank/question-bank-question-editor/question-bank-question-editor.component';
+import { SectionSelectorComponent } from './components/question-bank/section-selector/section-selector.component'
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
 
@@ -103,6 +106,9 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {}
     ActiveDirectoryQueryComponent,
     ActiveDirectoryUsersSelectorComponent,
     QuestionListComponent,
+    QuestionBankListComponent,
+    QuestionBankQuestionEditorComponent,
+    SectionSelectorComponent,
   ],
   imports:         [
     BrowserModule,

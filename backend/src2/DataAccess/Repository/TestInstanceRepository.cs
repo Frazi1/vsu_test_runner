@@ -9,7 +9,7 @@ using SharedModels.DTOs;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class TestInstanceRepository : BaseRepository<DbTestInstance>
+    public class TestInstanceRepository : BaseEntityWithIdRepository<DbTestInstance>
     {
         public TestInstanceRepository(TestRunnerDbContext context) : base(context)
         {

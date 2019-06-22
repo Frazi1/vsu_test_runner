@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class UserRepository: BaseRepository<DbUser>
+    public class UserRepository: BaseEntityWithIdRepository<DbUser>
     {
         public UserRepository(TestRunnerDbContext context) : base(context)
         {

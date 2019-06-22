@@ -46,14 +46,14 @@ namespace BusinessLayer
             };
 
         public static QuestionTemplateDto ToQuestionTemplateDto(this DbQuestionTemplate e)
-            => new QuestionTemplateDto
-            {
-                Id = e.Id,
-                Name = e.Name,
-                Description = e.Description,
-                CodeSnippet = e.SolutionCodeSnippet.ToCodeSnippetDto(),
-                TestingInputs = e.TestingInputs.Select(ToTestingInputDto).ToList()
-            };
+            => new QuestionTemplateDto(
+                e.Id,
+                e.Name,
+                e.Description,
+                e.IsOpen,
+                e.QuestionBankSectionId,
+                e.SolutionCodeSnippet.ToCodeSnippetDto(),
+                e.TestingInputs.Select(ToTestingInputDto).ToList());
 
         public static DbQuestionTemplate ToDbQuestionTemplate(this QuestionTemplateDto d)
             => new DbQuestionTemplate
@@ -72,18 +72,30 @@ namespace BusinessLayer
                 Description = e.Description,
                 Name = e.Name,
                 TimeLimit = e.TimeLimit,
-                QuestionTemplates = e.QuestionTemplates.Select(ToQuestionTemplateDto).ToList()
+                QuestionTemplates = e.QuestionTemplates.Select(a => a.QuestionTemplate).Select(ToQuestionTemplateDto)
+                    .ToList()
             };
 
         public static DbTestTemplate ToDbTestTemplate(this TestTemplateDto d)
-            => new DbTestTemplate
+        {
+            DbTestTemplate dbTestTemplate = new DbTestTemplate
             {
                 Id = d.Id,
                 Description = d.Description,
                 Name = d.Name,
-                TimeLimit = d.TimeLimit,
-                QuestionTemplates = d.QuestionTemplates.Select(ToDbQuestionTemplate).ToList()
+                TimeLimit = d.TimeLimit
             };
+            var dbTestTemplateToQuestions = d.QuestionTemplates
+                .Select(q => new DbTestTemplateToQuestion
+                {
+                    TestTemplate = dbTestTemplate,
+                    TestTemplateId = dbTestTemplate.Id,
+                    QuestionTemplateId = q.Id,
+                    QuestionTemplate = q.ToDbQuestionTemplate()
+                }).ToList();
+            dbTestTemplate.QuestionTemplates = dbTestTemplateToQuestions;
+            return dbTestTemplate;
+        }
 
         public static TestInstanceDto ToTestInstanceDto(this DbTestInstance d)
             => new TestInstanceDto
@@ -297,6 +309,15 @@ namespace BusinessLayer
             };
             d.CopyPermissionsTo(res);
             return res;
+        }
+
+        public static QuestionBankSectionDto ToQuestionBankSectionDto(this DbQuestionBankSection d)
+        {
+            return new QuestionBankSectionDto(d.Id,
+                d.Name,
+                d.ParentSectionId,
+                d.QuestionTemplates?.Select(a => a.ToQuestionTemplateDto())?.ToList()
+            );
         }
     }
 }

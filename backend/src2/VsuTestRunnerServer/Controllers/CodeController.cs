@@ -28,7 +28,8 @@ namespace VsuTestRunnerServer.Controllers
         }
 
         [HttpPost("run")]
-        public async Task<List<CodeExecutionResponseDto>> ExecuteCode([FromBody] CodeExecutionRequestWithCustomInputDto codeExecutionRequest)
+        public async Task<List<CodeExecutionResponseDto>> ExecuteCode(
+            [FromBody] CodeExecutionRequestWithCustomInputDto codeExecutionRequest)
         {
             return await _codeService.RunCodeAsync(codeExecutionRequest);
         }
@@ -41,12 +42,20 @@ namespace VsuTestRunnerServer.Controllers
                 LanguageIdentifier.FromString(language));
         }
 
-        [HttpPost("run_tests/{id}")]
+        [HttpPost("run_tests/answer/{id}")]
         public async Task<List<CodeExecutionResponseDto>> RunAvailableTestsForQuestionAnswerAsync(int id,
             [FromBody] CodeExecutionRequestDto codeExecutionRequest)
         {
             return await _codeService.RunPublicTestingSetForQuestionAnswerAsync(id, codeExecutionRequest);
         }
+
+        [HttpPost("run_tests/template/{id}")]
+        public async Task<List<CodeExecutionResponseDto>> RunTestsForQuestionTemplateAsync(int id,
+            [FromBody] CodeExecutionRequestDto codeExecutionRequest)
+        {
+            return await _codeService.RunTemplateQuestionTestingSetAsync(id, codeExecutionRequest);
+        }
+
 
         [HttpPost("apply_generator")]
         public async Task<CodeExecutionResponseDto> ApplyGenerator([FromBody] InputGeneratorDto generator)

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class TestRunRepository: BaseRepository<DbTestRun>
+    public class TestRunRepository: BaseEntityWithIdRepository<DbTestRun>
     {
         public TestRunRepository(TestRunnerDbContext context) : base(context)
         {
@@ -27,7 +27,8 @@ namespace DataAccess.Repository
                         .ThenInclude(i => i.TestingInput)
                 .Include(r => r.TestInstance)
                     .ThenInclude(i => i.TestTemplate)
-                        .ThenInclude(t => t.QuestionTemplates);
+                        .ThenInclude(t => t.QuestionTemplates)
+                            .ThenInclude(t => t.QuestionTemplate);
         }
         
         public async Task<List<DbTestRun>> GetAllFullAsync()

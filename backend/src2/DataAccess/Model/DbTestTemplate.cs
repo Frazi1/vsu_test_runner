@@ -6,7 +6,7 @@ namespace DataAccess.Model
     {
         public DbTestTemplate()
         {
-            QuestionTemplates = new List<DbQuestionTemplate>();
+            QuestionTemplates = new List<DbTestTemplateToQuestion>();
             Permissions = new HashSet<DbTestTemplateUserPermission>();
         }
 
@@ -15,7 +15,7 @@ namespace DataAccess.Model
         public string Description { get; set; }
         public int TimeLimit { get; set; }
 
-        public virtual ICollection<DbQuestionTemplate> QuestionTemplates { get; set; }
+        public virtual ICollection<DbTestTemplateToQuestion> QuestionTemplates { get; set; }
         public virtual ICollection<DbTestTemplateUserPermission> Permissions { get; set; }
     }
 }

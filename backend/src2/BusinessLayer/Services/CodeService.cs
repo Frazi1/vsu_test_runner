@@ -111,9 +111,22 @@ namespace BusinessLayer.Services
             return BuildResponsesFromTaskResult(result);
         }
 
+        public async Task<List<CodeExecutionResponseDto>> RunTemplateQuestionTestingSetAsync(int questionTemplateId,
+            CodeExecutionRequestDto request)
+        {
+            var dbTestingInputs = await _testingInputRepository.GetByQuestionTemplateIdAsync(questionTemplateId);
+            var taskResult = await RunTestingSetAsync(request, dbTestingInputs);
+            return BuildResponsesFromTaskResult(taskResult);
+        }
+        
         public async Task<TaskResult> RunQuestionTestingSetAsync(int questionAnswerId, CodeExecutionRequestDto request)
         {
             var dbTestingInputs = await _testingInputRepository.GetByQuestionAnswerId(questionAnswerId);
+            return await RunTestingSetAsync(request, dbTestingInputs);
+        }
+
+        private async Task<TaskResult> RunTestingSetAsync(CodeExecutionRequestDto request, List<DbTestingInput> dbTestingInputs)
+        {
             var requestWithInputs = new CodeExecutionRequestWithCustomInputDto
             {
                 Code = request.Code,

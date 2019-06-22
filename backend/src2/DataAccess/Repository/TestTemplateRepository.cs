@@ -11,7 +11,7 @@ using Utils;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class TestTemplateRepository : BaseRepository<DbTestTemplate>
+    public class TestTemplateRepository : BaseEntityWithIdRepository<DbTestTemplate>
     {
         public TestTemplateRepository(TestRunnerDbContext context) : base(context)
         {
@@ -19,8 +19,11 @@ namespace DataAccess.Repository
 
         private IIncludableQueryable<DbTestTemplate, DbCodeSnippet> GetFullQuery()
             => Context.TestTemplates
-                .Include(t => t.QuestionTemplates).ThenInclude(t => t.TestingInputs)
-                .Include(t => t.QuestionTemplates).ThenInclude(q => q.SolutionCodeSnippet);
+                .Include(t => t.QuestionTemplates)
+                    .ThenInclude(t => t.QuestionTemplate)
+                        .ThenInclude(t => t.TestingInputs)
+                .Include(t => t.QuestionTemplates)
+                    .ThenInclude(t => t.QuestionTemplate.SolutionCodeSnippet);
 
 
         public async Task<DbTestTemplate> GetFullByIdAsync(int id)

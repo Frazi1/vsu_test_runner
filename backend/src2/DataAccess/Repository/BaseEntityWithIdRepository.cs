@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,23 +8,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository
 {
-    public class BaseRepository<T> where T : class, IEntityWithId
-    {
-        protected TestRunnerDbContext Context { get; }
-        protected DbSet<T> Set => Context.Set<T>();
+    public class BaseRepository<T> where T : class
 
+    {
         protected BaseRepository(TestRunnerDbContext context)
         {
             Context = context;
         }
 
+        protected TestRunnerDbContext Context { get; }
+        protected DbSet<T> Set => Context.Set<T>();
+
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression) => await Set.AnyAsync(expression);
 
         public async Task<List<T>> GetAllAsync() => await Context.Set<T>().ToListAsync();
-        public async Task<List<T>> GetByIdsAsync(ICollection<int> ids) =>
-            await Set.Where(u => ids.Contains(u.Id)).ToListAsync();
-
-        public async Task<T> GetByIdAsync(int id) => await GetFirstAsync(e => e.Id == id);
 
         public async Task<T> GetFirstAsync(Expression<Func<T, bool>> expression) =>
             await Context.Set<T>().FirstAsync(expression);
@@ -44,5 +40,18 @@ namespace DataAccess.Repository
             Context.Update(updated);
             return Task.CompletedTask;
         }
+    }
+
+    public class BaseEntityWithIdRepository<T> : BaseRepository<T> where T : class, IEntityWithId
+    {
+        protected BaseEntityWithIdRepository(TestRunnerDbContext context)
+            : base(context)
+        {
+        }
+
+        public async Task<List<T>> GetByIdsAsync(ICollection<int> ids) =>
+            await Set.Where(u => ids.Contains(u.Id)).ToListAsync();
+
+        public async Task<T> GetByIdAsync(int id) => await GetFirstAsync(e => e.Id == id);
     }
 }

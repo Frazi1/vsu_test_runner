@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Executors.Interfaces;
 using BusinessLayer.Executors.PipelineTasks.Exceptions;
 using SharedModels.DTOs;
+using Utils;
 
 namespace BusinessLayer.Executors.PipelineTasks
 {
@@ -34,9 +35,16 @@ namespace BusinessLayer.Executors.PipelineTasks
             await Task.Run(() => process.WaitForExit());
             state.ExecutableFileName = compiledFileName;
 
-            if (!File.Exists(state.GetExecutableFilePath()))
+            string output = await process.StandardOutput.ReadToEndAsync();
+            string error = await process.StandardError.ReadToEndAsync();
+            if (config.CheckCompiledFiles && !File.Exists(state.GetExecutableFilePath()))
             {
-                throw new CompilationException(await process.StandardOutput.ReadToEndAsync());
+                throw new CompilationException(error.OrIfNullOrEmpty(output));
+            }
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                throw new CompilationException(error);
             }
         }
 

@@ -39,7 +39,7 @@ namespace BusinessLayer.Services
             var dbTestInstance = new DbTestInstance {TestTemplateId = testTemplateId};
             var dbTestTemplate = await _testTemplateRepository.GetFullByIdAsync(testTemplateId);
             dbTestInstance.QuestionInstances = dbTestTemplate.QuestionTemplates
-                .Select(t => new DbQuestionInstance {QuestionTemplateId = t.Id})
+                .Select(t => new DbQuestionInstance {QuestionTemplateId = t.QuestionTemplateId})
                 .ToList();
 
             _testInstanceRepository.Add(dbTestInstance);

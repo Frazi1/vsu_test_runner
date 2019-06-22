@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class GroupRepository : BaseRepository<DbGroup>
+    public class GroupRepository : BaseEntityWithIdRepository<DbGroup>
     {
         public GroupRepository(TestRunnerDbContext context) : base(context)
         {

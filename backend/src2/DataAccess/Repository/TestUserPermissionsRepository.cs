@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class TestUserPermissionsRepository : BaseRepository<DbTestTemplateUserPermission>
+    public class TestUserPermissionsRepository : BaseEntityWithIdRepository<DbTestTemplateUserPermission>
     {
         public TestUserPermissionsRepository(TestRunnerDbContext context) : base(context)
         {

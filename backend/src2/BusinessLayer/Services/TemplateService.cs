@@ -15,17 +15,21 @@ namespace BusinessLayer.Services
     public class TemplateService : BaseService
     {
         private readonly TestTemplateRepository _repository;
+        private readonly QuestionTemplateRepository _questionTemplateRepository;
 
         private readonly CodeService _codeService;
 
         public TemplateService(
             ICurrentUser currentUser,
             TestTemplateRepository repository,
+            QuestionTemplateRepository questionTemplateRepository,
             CodeService codeService)
             : base(currentUser)
         {
             _repository = repository;
+            _questionTemplateRepository = questionTemplateRepository;
             _codeService = codeService;
+            
         }
 
         public async Task<TestTemplateDto> GetTemplateByIdAsync(int id)
@@ -52,23 +56,35 @@ namespace BusinessLayer.Services
             return dbTemplate.ToTestTemplateDto();
         }
 
+        public async Task<QuestionTemplateDto> GetQuestionTemplateByIdAsync(int questionId)
+        {
+            var dbQuestion = await _questionTemplateRepository.GetWithSolutionByIdAsync(questionId);
+            return dbQuestion.ToQuestionTemplateDto();
+        }
+
         private async Task ExecuteSolutionsAndSetResults(DbTestTemplate testTemplate)
         {
-            foreach (var questionTemplate in testTemplate.QuestionTemplates)
+            foreach (var questionTemplate in testTemplate.QuestionTemplates.Select(a => a.QuestionTemplate))
             {
-                var request = new CodeExecutionRequestWithCustomInputDto
-                {
-                    Code = questionTemplate.SolutionCodeSnippet.Code,
-                    Language = LanguageIdentifier.FromString(questionTemplate.SolutionCodeSnippet.Language),
-                    TestingInputs = questionTemplate.TestingInputs.Select(x => x.ToTestingInputDto()).ToList()
-                };
-                var taskResult = await _codeService.RunCodeForTaskResultAsync(request);
-                if (taskResult.Status != CodeRunStatus.Success)
-                    return;
-
-                taskResult.ProcessRunResults.ForEach(r =>
-                    questionTemplate.TestingInputs.First(i => i.Id == r.TestingInputId).ExpectedOutput = r.Output);
+                if (await ExecuteQuestionSolutionAndSetResults(questionTemplate)) return;
             }
+        }
+
+        private async Task<bool> ExecuteQuestionSolutionAndSetResults(DbQuestionTemplate questionTemplate)
+        {
+            var request = new CodeExecutionRequestWithCustomInputDto
+            {
+                Code = questionTemplate.SolutionCodeSnippet.Code,
+                Language = LanguageIdentifier.FromString(questionTemplate.SolutionCodeSnippet.Language),
+                TestingInputs = questionTemplate.TestingInputs.Select(x => x.ToTestingInputDto()).ToList()
+            };
+            var taskResult = await _codeService.RunCodeForTaskResultAsync(request);
+            if (taskResult.Status != CodeRunStatus.Success)
+                return true;
+
+            taskResult.ProcessRunResults.ForEach(r =>
+                questionTemplate.TestingInputs.First(i => i.Id == r.TestingInputId).ExpectedOutput = r.Output);
+            return false;
         }
 
         public async Task DeleteTemplateByIdAsync(int id)
@@ -85,6 +101,16 @@ namespace BusinessLayer.Services
             await _repository.SaveChangesAsync();
             await ExecuteSolutionsAndSetResults(dbTestTemplate);
             await _repository.SaveChangesAsync();
+        }
+
+        public async Task<int> AddQuestionAsync(QuestionTemplateDto question)
+        {
+            var dbQuestion = question.ToDbQuestionTemplate();
+            _questionTemplateRepository.Add(dbQuestion);
+            await _questionTemplateRepository.SaveChangesAsync();
+            await ExecuteQuestionSolutionAndSetResults(dbQuestion);
+            await _questionTemplateRepository.SaveChangesAsync();
+            return dbQuestion.Id;
         }
     }
 }

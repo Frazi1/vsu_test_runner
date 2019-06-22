@@ -34,7 +34,7 @@ namespace VsuTestRunnerServer
         public static void AddRepositories(this IServiceCollection services)
         {
             foreach (var type in Assembly
-                .GetAssembly(typeof(BaseRepository<>))
+                .GetAssembly(typeof(BaseEntityWithIdRepository<>))
                 .GetTypes()
                 .Where(t => t.Name.EndsWith("Repository"))
                 .Where(t => !t.IsAbstract))

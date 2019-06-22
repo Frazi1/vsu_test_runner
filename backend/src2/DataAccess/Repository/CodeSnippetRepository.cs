@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class CodeSnippetRepository : BaseRepository<DbCodeSnippet>
+    public class CodeSnippetRepository : BaseEntityWithIdRepository<DbCodeSnippet>
     {
         public CodeSnippetRepository(TestRunnerDbContext context)
             : base(context)

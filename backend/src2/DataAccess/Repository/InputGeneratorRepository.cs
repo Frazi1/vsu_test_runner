@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Query;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class InputGeneratorRepository : BaseRepository<DbInputGenerator>
+    public class InputGeneratorRepository : BaseEntityWithIdRepository<DbInputGenerator>
     {
         private static readonly string[] UpdatePropertiesNames = {
             nameof(DbInputGenerator.Name),

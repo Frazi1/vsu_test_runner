@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class TestingInputRepository: BaseRepository<DbTestingInput>
+    public class TestingInputRepository: BaseEntityWithIdRepository<DbTestingInput>
     {
         public TestingInputRepository(TestRunnerDbContext context) : base(context)
         {
@@ -22,6 +22,11 @@ namespace DataAccess.Repository
                 .Select(i => i.QuestionTemplate)
                 .SelectMany(t => t.TestingInputs)
                 .ToListAsync();
+        }
+
+        public async Task<List<DbTestingInput>> GetByQuestionTemplateIdAsync(int questionTemplateId)
+        {
+            return await Set.Where(a => a.QuestionTemplateId == questionTemplateId).ToListAsync();
         }
     }
 }

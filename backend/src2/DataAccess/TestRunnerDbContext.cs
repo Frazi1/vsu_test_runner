@@ -29,7 +29,8 @@ namespace DataAccess
         public DbSet<DbTestInstanceGroupAssignee> TestInstanceGroupAssignees { get; set; }
         public DbSet<DbUserFeature> UserFeatures { get; set; }
         public DbSet<DbTestTemplateUserPermission> TestUserPermissions { get; set; }
-        
+        public DbSet<DbTestTemplateToQuestion> TestTemplateQuestions { get; set; }
+        public DbSet<DbQuestionBankSection> QuestionBankSections { get; set; }
 
         public TestRunnerDbContext(DbContextOptions options) : base(options)
         {
@@ -90,6 +91,19 @@ namespace DataAccess
 
             modelBuilder.Entity<DbTestTemplateUserPermission>()
                 .HasKey(up => new {up.UserId, up.TestTemplateId});
+
+            modelBuilder.Entity<DbTestTemplateToQuestion>()
+                .HasKey(a => new {a.TestTemplateId, a.QuestionTemplateId});
+
+            modelBuilder.Entity<DbTestTemplateToQuestion>()
+                .HasOne(a => a.TestTemplate)
+                .WithMany(a => a.QuestionTemplates)
+                .HasForeignKey(a => a.TestTemplateId);
+
+            modelBuilder.Entity<DbTestTemplateToQuestion>()
+                .HasOne(a => a.QuestionTemplate)
+                .WithMany(a => a.TestTemplates)
+                .HasForeignKey(a => a.QuestionTemplateId);
         }
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DataAccess.Repository
 {
     [UsedImplicitly]
-    public class QuestionAnswerRepository: BaseRepository<DbQuestionAnswer>
+    public class QuestionAnswerRepository: BaseEntityWithIdRepository<DbQuestionAnswer>
     {
         public QuestionAnswerRepository(TestRunnerDbContext context) : base(context)
         {

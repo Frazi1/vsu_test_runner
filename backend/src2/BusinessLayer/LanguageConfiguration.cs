@@ -13,6 +13,7 @@ namespace BusinessLayer
         public string SingleLineComment { get; set; }
         public string CompileCmd { get; set; }
         public string CompileCmdArgs { get; set; }
+        public bool CheckCompiledFiles { get; set; }
         public string StartingCodeSnippet { get; set; }
         public string SourceFileExt { get; set; }
         public string ExecutableFileExt { get; set; }

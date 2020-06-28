@@ -4,7 +4,7 @@ import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
 import { merge, Observable, Subject } from 'rxjs'
-import { concatMap, retryWhen, takeUntil, tap } from 'rxjs/operators'
+import { concatMap, filter, retryWhen, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
 import { CodeExecutionResponseDto } from '../../../shared/runner/CodeExecutionResponseDto'
@@ -117,6 +117,7 @@ export class TestQuestionTemplateEditorComponent extends BaseComponent implement
   private textInputChangeSub(): void {
     merge(this._canEdit$, this._question$).pipe(
       takeUntil(this.onDestroy$),
+      filter(() => this.question != null),
       tap(() => {
         if (this.question.testingInputs && this.canEdit) {
           this.textInput = this.testingInputParserService.dump(this.question.testingInputs)

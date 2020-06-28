@@ -1,11 +1,34 @@
-<div class="list-group text-left">
-  <div class="list-group-item" *ngFor="let section of sections$ | async; index as sectionIndex">
-    <div class="list-group">
-      <div class="h2">{{sectionIndex + 1}}. Секция - {{section.name}}</div>
-      <div class="list-group-item ml-2" *ngFor="let question of section.questionTemplates; index as questionIndex">
-        <a [routerLink]="[question.id]">
-          <div class="h3">{{questionIndex + 1}}. {{question.name}}</div>
-        </a>
+<div class="position-relative">
+  <div class="controls-container">
+    <ng-template #addPopover>
+      <div>
+        <label for="newSectionName">Название</label>
+        <input id="newSectionName" type="text" class="form-control" [(ngModel)]="newSectionName">
+      </div>
+      <button class="btn btn-outline-success" (click)="newSection$.next()">ОК</button>
+    </ng-template>
+    <button class="btn btn-outline-primary" [ngbPopover]="addPopover" [autoClose]="'outside'">Добавить секцию</button>
+  </div>
+  <div class="list-group text-left">
+    <div class="list-group-item" *ngFor="let section of sections$ | async; index as sectionIndex">
+      <div class="list-group">
+        <div class="h2">{{sectionIndex + 1}}. Секция - {{section.name}}</div>
+        <div class="list-group-item ml-2" *ngFor="let question of section.questionTemplates; index as
+        questionIndex">
+          <div class="d-flex items-control-host">
+            <a [routerLink]="[question.id]">
+              <div class="h3">{{questionIndex + 1}}. {{question.name}}</div>
+            </a>
+            <div class="items-control">
+              <a [routerLink]="[question.id, 'edit']">
+                <span class="oi oi-pencil ml-2"></span>
+              </a>
+              <a>
+                <span class="oi oi-x ml-2" (click)="questionDelete$.next(question.id)"></span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

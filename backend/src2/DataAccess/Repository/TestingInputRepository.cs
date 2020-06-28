@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Model;
+using DataAccess.Repository.Interfaces;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 

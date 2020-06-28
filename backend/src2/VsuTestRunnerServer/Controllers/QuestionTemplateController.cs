@@ -25,5 +25,17 @@ namespace VsuTestRunnerServer.Controllers
         {
             return await _templateService.AddQuestionAsync(question);
         }
+
+        [HttpPut("{id}")]
+        public async Task Update(int id, [FromBody] QuestionTemplateDto question)
+        {
+            await _templateService.UpdateQuestionTemplateAsync(id, question);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task Delete(int id)
+        {
+            await _templateService.DeleteQuestionTemplateAsync(id);
+        }
     }
 }

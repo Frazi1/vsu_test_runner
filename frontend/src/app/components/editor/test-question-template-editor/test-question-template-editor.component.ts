@@ -3,7 +3,7 @@ import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
 import { CodeService } from '../../../services/code.service'
 import { ScaffoldingType } from '../../../shared/ScaffoldingType'
-import { Observable, Subject } from 'rxjs'
+import { merge, Observable, Subject } from 'rxjs'
 import { concatMap, retryWhen, takeUntil, tap } from 'rxjs/operators'
 import { CodeExecutionRequest } from '../../../shared/runner/CodeExecutionRequest'
 import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
@@ -14,27 +14,51 @@ import { GeneratorListModalComponent } from '../../generator/generator-list-moda
 import { InputGeneratorDto } from '../../../shared/code/InputGeneratorDto'
 import { GeneratorRunnerModalComponent } from '../../generator/generator-runner-modal/generator-runner-modal.component'
 import { ActivatedRoute } from '@angular/router'
+import { BaseComponent } from '../../base.component'
 
 @Component({
   selector:    'app-test-question-template-editor',
   templateUrl: './test-question-template-editor.component.html',
   styleUrls:   ['./test-question-template-editor.component.scss']
 })
-export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
+export class TestQuestionTemplateEditorComponent extends BaseComponent implements OnInit, OnDestroy {
 
   constructor(private codeService: CodeService,
               private testingInputParserService: TestingInputParserService,
               private modalService: NgbModal,
               private route: ActivatedRoute) {
+    super()
+
+    this.textInputChangeSub()
   }
 
-  // region Getters/Setters
+// region Getters/Setters
+
+  private _question: TestQuestionTemplate
+  private _question$ = new Subject()
+
+  get question(): TestQuestionTemplate {
+    return this._question
+  }
+
+  private _canEdit: boolean
+
+  @Input() set question(value: TestQuestionTemplate) {
+    this._question = value
+    this._question$.next(value)
+  }
+
+  get canEdit(): boolean {
+    return this._canEdit
+  }
 
   @Input()
-  question: TestQuestionTemplate
+  set canEdit(value: boolean) {
+    this._canEdit = value
+    this._canEdit$.next(value)
+  }
 
-  @Input()
-  canEdit: boolean
+  private _canEdit$ = new Subject()
 
   textInput: string
 
@@ -43,7 +67,6 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
   inputGenerator: InputGeneratorDto
 
   private _codeRunBtn$ = new Subject<void>()
-  private _unsubscribe$ = new Subject<void>()
 
   public runTestsClosure = this.runTestsFromInput.bind(this)
 
@@ -58,11 +81,6 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
     if (this.question.codeSnippet == null) {
       this.question.codeSnippet = CodeSnippet.EMPTY()
     }
-
-    if (this.question.testingInputs && this.canEdit) {
-      this.textInput = this.testingInputParserService.dump(this.question.testingInputs)
-    }
-
 
     console.log(this.question)
     this.bindTestRunnerFunction()
@@ -79,7 +97,7 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
 
   private codeRunSub() {
     this._codeRunBtn$.pipe(
-      takeUntil(this._unsubscribe$),
+      takeUntil(this.onDestroy$),
       tap(() => console.log('_codeRunBtn$ clicked')),
       concatMap(() => {
           return this.codeService.runCode(
@@ -96,10 +114,16 @@ export class TestQuestionTemplateEditorComponent implements OnInit, OnDestroy {
     ).subscribe()
   }
 
-  public ngOnDestroy(): void {
-    this._unsubscribe$.next()
+  private textInputChangeSub(): void {
+    merge(this._canEdit$, this._question$).pipe(
+      takeUntil(this.onDestroy$),
+      tap(() => {
+        if (this.question.testingInputs && this.canEdit) {
+          this.textInput = this.testingInputParserService.dump(this.question.testingInputs)
+        }
+      })
+    ).subscribe()
   }
-
 
   private async scaffoldSolutionFunction(): Promise<void> {
     const language = this.question.codeSnippet.language

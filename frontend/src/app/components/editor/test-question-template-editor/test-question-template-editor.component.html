@@ -1,5 +1,5 @@
 <ng-container *ngIf="question">
-  <div class="section-description section-panel-auto">
+  <div class="section-panel-auto">
 
     <ng-container *ngIf="canEdit">
       <h2>Название вопроса</h2>
@@ -13,12 +13,17 @@
 
     <h2>Описание</h2>
     <as-split class="simple-split" [gutterSize]="2" direction="horizontal">
-      <as-split-area *ngIf="canEdit" size="50">
-        <app-code-editor [(code)]="question.description" [language]="'markdown'"></app-code-editor>
-      </as-split-area>
-      <as-split-area size="50">
+      <ng-container *ngIf="canEdit">
+        <as-split-area size="50">
+          <app-code-editor [(code)]="question.description" [language]="'markdown'" ></app-code-editor>
+        </as-split-area>
+        <as-split-area size="50">
+          <markdown [data]="question.description"></markdown>
+        </as-split-area>
+      </ng-container>
+      <ng-container *ngIf="!canEdit">
         <markdown [data]="question.description"></markdown>
-      </as-split-area>
+      </ng-container>
     </as-split>
   </div>
   <div class="section-panel-auto g--min-height-px-350">

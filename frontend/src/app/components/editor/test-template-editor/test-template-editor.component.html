@@ -16,7 +16,7 @@
       <h2 class="text-left">Вопросы</h2>
       <button class="btn btn-outline-primary mb-1 float-left" (click)="addQuestion()">Добавить вопрос</button>
       <app-question-list [(questions)]="testTemplate.questionTemplates" [(selectedQuestions)]="currentQuestion"
-                         [multiSelection]="false" [allowDeletion]="true"></app-question-list>
+                         [multiSelection]="false" [allowDeletion]="true" [change$]="questionsChanged$"></app-question-list>
     </div>
     <div class="d-flex">
       <button class="btn btn-outline-danger mr-2" *ngIf="isCreating === false" (click)="deleteTemplate()">Удалить

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Model;
+using DataAccess.Repository.Interfaces;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -16,21 +17,20 @@ namespace DataAccess.Repository
         public TestTemplateRepository(TestRunnerDbContext context) : base(context)
         {
         }
-
-        private IIncludableQueryable<DbTestTemplate, DbCodeSnippet> GetFullQuery()
-            => Context.TestTemplates
+        
+        public IQueryable<DbTestTemplate> FullTestTemplateQuery()
+            => Set
                 .Include(t => t.QuestionTemplates)
-                    .ThenInclude(t => t.QuestionTemplate)
-                        .ThenInclude(t => t.TestingInputs)
+                .ThenInclude(t => t.QuestionTemplate)
+                .ThenInclude(t => t.TestingInputs)
                 .Include(t => t.QuestionTemplates)
-                    .ThenInclude(t => t.QuestionTemplate.SolutionCodeSnippet);
-
+                .ThenInclude(t => t.QuestionTemplate.SolutionCodeSnippet);
 
         public async Task<DbTestTemplate> GetFullByIdAsync(int id)
-            => await GetFullQuery().FirstAsync(t => t.Id == id);
+            => await FullTestTemplateQuery().FirstAsync(t => t.Id == id);
 
         public async Task<List<DbTestTemplate>> GetAllFullAsync()
-            => await GetFullQuery().ToListAsync();
+            => await FullTestTemplateQuery().ToListAsync();
 
         public override async Task Update(DbTestTemplate updated)
         {

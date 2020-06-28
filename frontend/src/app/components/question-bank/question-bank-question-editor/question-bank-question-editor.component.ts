@@ -5,9 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { TestQuestionTemplate } from '../../../shared/TestQuestionTemplate'
 import { QuestionBankSectionDto } from '../../../shared/question-bank/QuestionBankSectionDto'
 import { of, Subject } from 'rxjs'
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators'
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators'
 import { CodeSnippet } from '../../../shared/CodeSnippet'
-import { TestingInputParserService } from '../../../services/logic/testing-input-parser.service'
 import { TestQuestionTemplateEditorComponent } from '../../editor/test-question-template-editor/test-question-template-editor.component'
 
 @Component({
@@ -51,10 +50,17 @@ export class QuestionBankQuestionEditorComponent extends BaseComponent implement
     this.save$.pipe(
       takeUntil(this.onDestroy$),
       tap(() => this.testQuestionEditor.onSave()),
-      switchMap(() => this.questionTemplateService.addQuestion(
-        this.question).pipe(catchError(() => of()))),
+      switchMap(() => this.getSaveClickObs().pipe(catchError(of))),
+      map((id: number | null) => id || this.question.id),
       tap(id => this.router.navigate(['..', id, 'edit']))
     ).subscribe()
+  }
+
+  private getSaveClickObs() {
+    if (this.creatingNew) {
+      return this.questionTemplateService.addQuestion(this.question)
+    }
+    return this.questionTemplateService.updateQuestion(this.question)
   }
 
   onSectionChanged(newSection: QuestionBankSectionDto) {

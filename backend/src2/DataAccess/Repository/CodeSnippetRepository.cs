@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Model;
+using DataAccess.Repository.Interfaces;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ namespace DataAccess.Repository
 
         public async Task<DbCodeSnippet> GetSolutionSnippetForQuestionAnswer(int questionAnswerId)
         {
-            return await Context.QuestionAnswers
+            return await ((IRepository) this).Set<DbQuestionAnswer>()
                 .Where(a => a.Id == questionAnswerId)
                 .Select(a => a.QuestionInstance)
                 .Select(i => i.QuestionTemplate)

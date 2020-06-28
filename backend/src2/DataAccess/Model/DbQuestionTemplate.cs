@@ -15,6 +15,7 @@ namespace DataAccess.Model
         public string Description { get; set; }
         public int SolutionCodeSnippetId { get; set; }
         public bool IsOpen { get; set; } = false;
+        public bool IsDeleted { get; set; }
 
         public int? QuestionBankSectionId { get; set; }
         public DbQuestionBankSection QuestionBankSection { get; set; }

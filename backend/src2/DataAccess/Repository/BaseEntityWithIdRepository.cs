@@ -8,20 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository
 {
-    public class BaseRepository<T> where T : class
+    public class BaseRepository<T>: Repository where T : class
 
     {
-        protected BaseRepository(TestRunnerDbContext context)
+        protected BaseRepository(TestRunnerDbContext context) : base(context)
         {
-            Context = context;
         }
 
-        protected TestRunnerDbContext Context { get; }
         protected DbSet<T> Set => Context.Set<T>();
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression) => await Set.AnyAsync(expression);
 
         public async Task<List<T>> GetAllAsync() => await Context.Set<T>().ToListAsync();
+
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression)
+            => await Context.Set<T>().Where(expression).ToListAsync();
 
         public async Task<T> GetFirstAsync(Expression<Func<T, bool>> expression) =>
             await Context.Set<T>().FirstAsync(expression);
@@ -29,12 +30,8 @@ namespace DataAccess.Repository
         public async Task<T> GetFirstOrDefaultAsync(Expression<Func<T, bool>> expression)
             => await Context.Set<T>().FirstOrDefaultAsync(expression);
 
-        public void Add(T entity) => Context.Add(entity);
-        public void AddRange(IEnumerable<T> items) => Context.AddRange(items);
         public void Remove(T entity) => Context.Remove(entity);
-
-        public async Task SaveChangesAsync() => await Context.SaveChangesAsync();
-
+        
         public virtual Task Update(T updated)
         {
             Context.Update(updated);

@@ -24,7 +24,7 @@ export class TestTemplateEditorComponent extends BaseComponent implements OnInit
   questionSearchQuery: string
   displayQuestions: TestQuestionTemplate[]
   currentQuestion: TestQuestionTemplate
-  search$ = new Subject<string>()
+  questionsChanged$ = new Subject()
 
   @ViewChildren(TestQuestionTemplateEditorComponent)
   private questionEditorComponents: QueryList<TestQuestionTemplateEditorComponent>
@@ -63,7 +63,7 @@ export class TestTemplateEditorComponent extends BaseComponent implements OnInit
     testQuestionTemplate.name = 'Новый вопрос'
     testQuestionTemplate.codeSnippet = new CodeSnippet()
     this.testTemplate.questionTemplates.push(testQuestionTemplate)
-    this.search$.next(this.questionSearchQuery)
+    this.questionsChanged$.next()
   }
 
   private save(): void {

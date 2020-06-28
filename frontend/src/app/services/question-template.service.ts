@@ -20,4 +20,12 @@ export class QuestionTemplateService extends BaseApiEntityService<TestQuestionTe
   public addQuestion(question: TestQuestionTemplate): Observable<number> {
     return this.http.post<number>(this.buildUrl(), this.json.serialize(question))
   }
+
+  public updateQuestion(question: TestQuestionTemplate): Observable<any> {
+    return this.http.put(this.buildUrl(question.id), this.json.serialize(question))
+  }
+
+  public deleteQuestion(id: number): Observable<any> {
+    return this.http.delete(this.buildUrl(id))
+  }
 }

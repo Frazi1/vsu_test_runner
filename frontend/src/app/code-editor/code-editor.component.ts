@@ -30,11 +30,13 @@ export class CodeEditorComponent implements OnInit {
   isReadOnly = false
 
   @Input()
-  minLines = 20
+  minLines = 5
 
   @Output()
   private codeChange = new EventEmitter<String>()
 
+  @Input()
+  fontSize: string | number
 
   config: AceConfigInterface
 
@@ -61,7 +63,8 @@ export class CodeEditorComponent implements OnInit {
     this.config = {
       autoScrollEditorIntoView: true,
       minLines:                 this.minLines,
-      maxLines:                 50
+      maxLines:                 50,
+      fontSize:                 this.fontSize
     }
 
   }

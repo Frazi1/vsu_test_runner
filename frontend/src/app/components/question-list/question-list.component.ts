@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
-import { of, Subject } from 'rxjs'
+import { merge, Observable, of, Subject } from 'rxjs'
 import { IQuestion } from '../../shared/IQuestion'
 import { startWith, switchMap, takeUntil, tap } from 'rxjs/operators'
 import { BaseComponent } from '../base.component'
@@ -32,6 +32,9 @@ export class QuestionListComponent extends BaseComponent implements OnInit {
   @Input()
   showSearch: boolean = true
 
+  @Input()
+  change$: Observable<any>
+
   displayQuestions: IQuestion[]
   questionSearchQuery: string
   search$ = new Subject<string>()
@@ -39,7 +42,7 @@ export class QuestionListComponent extends BaseComponent implements OnInit {
   constructor() {super() }
 
   ngOnInit() {
-    this.search$.pipe(
+    merge(this.change$ || of(), this.search$).pipe(
       takeUntil(this.onDestroy$),
       startWith(''),
       // debounceTime(100),

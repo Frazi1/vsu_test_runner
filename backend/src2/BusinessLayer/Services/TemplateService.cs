@@ -112,5 +112,21 @@ namespace BusinessLayer.Services
             await _questionTemplateRepository.SaveChangesAsync();
             return dbQuestion.Id;
         }
+
+        public async Task UpdateQuestionTemplateAsync(int id, QuestionTemplateDto question)
+        {
+            var dbQuestionTemplate = question.ToDbQuestionTemplate();
+            await _questionTemplateRepository.UpdateAndRemoveOld(dbQuestionTemplate);
+            await _repository.SaveChangesAsync();
+            await ExecuteQuestionSolutionAndSetResults(dbQuestionTemplate);
+            await _repository.SaveChangesAsync();
+        }
+
+        public async Task DeleteQuestionTemplateAsync(int id)
+        {
+            var question = await _questionTemplateRepository.GetByIdAsync(id);
+            question.IsDeleted = true;
+            await _questionTemplateRepository.SaveChangesAsync();
+        }
     }
 }

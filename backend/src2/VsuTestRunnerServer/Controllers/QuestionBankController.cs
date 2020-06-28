@@ -15,19 +15,26 @@ namespace VsuTestRunnerServer.Controllers
         {
             _questionBankService = questionBankService;
         }
-        
+
         [HttpGet("")]
         [AllowAnonymous]
-        public async Task<List<QuestionBankSectionDto>> GetSectionsWithQuestions()
+        public async Task<List<QuestionBankSectionDto>> GetSectionsWithQuestions(bool includeClosed = true,
+            bool includeDeleted = false)
         {
-            return await _questionBankService.GetSectionsWithQuestionsAsync();
+            return await _questionBankService.GetSectionsWithQuestions2Async(includeClosed, includeDeleted);
         }
-        
+
         [HttpGet("headers")]
         [AllowAnonymous]
         public async Task<List<QuestionBankSectionDto>> GetSectionHeaders()
         {
             return await _questionBankService.GetSectionHeadersAsync();
+        }
+
+        [HttpPost]
+        public async Task<int> AddSection([FromBody] QuestionBankSectionDto section)
+        {
+            return await _questionBankService.AddSectionAsync(section);
         }
     }
 }

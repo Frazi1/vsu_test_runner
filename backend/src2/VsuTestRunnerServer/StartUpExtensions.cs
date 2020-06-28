@@ -11,6 +11,7 @@ using BusinessLayer.Services;
 using BusinessLayer.Validators;
 using BusinessLayer.Wildcards;
 using DataAccess.Repository;
+using DataAccess.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -34,13 +35,15 @@ namespace VsuTestRunnerServer
         public static void AddRepositories(this IServiceCollection services)
         {
             foreach (var type in Assembly
-                .GetAssembly(typeof(BaseEntityWithIdRepository<>))
+                .GetAssembly(typeof(IRepository))
                 .GetTypes()
                 .Where(t => t.Name.EndsWith("Repository"))
                 .Where(t => !t.IsAbstract))
             {
                 services.AddScoped(type);
             }
+
+            services.AddScoped<IRepository, Repository>();
         }
 
         public static void AddBusinessServices(this IServiceCollection services)

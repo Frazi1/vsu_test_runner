@@ -27,6 +27,9 @@ export class CodeEditorWithExecutorComponent implements OnInit, OnDestroy {
   @Input()
   onRunTestsClick: () => Observable<CodeExecutionResponseDto[]>
 
+  @Input()
+  fontSize: number | string
+
   textInput: string
   codeExecutionOutput$ = new Subject<CodeExecutionResponseDto>()
 

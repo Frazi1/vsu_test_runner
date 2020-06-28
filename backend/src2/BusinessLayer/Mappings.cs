@@ -52,8 +52,8 @@ namespace BusinessLayer
                 e.Description,
                 e.IsOpen,
                 e.QuestionBankSectionId,
-                e.SolutionCodeSnippet.ToCodeSnippetDto(),
-                e.TestingInputs.Select(ToTestingInputDto).ToList());
+                e.SolutionCodeSnippet?.ToCodeSnippetDto(),
+                e.TestingInputs?.Select(ToTestingInputDto)?.ToList());
 
         public static DbQuestionTemplate ToDbQuestionTemplate(this QuestionTemplateDto d)
             => new DbQuestionTemplate
@@ -62,7 +62,9 @@ namespace BusinessLayer
                 Name = d.Name,
                 Description = d.Description,
                 SolutionCodeSnippet = d.CodeSnippet.ToDbCodeSnippet(),
-                TestingInputs = d.TestingInputs.Select(ToDbTestingInput).ToList()
+                TestingInputs = d.TestingInputs.Select(ToDbTestingInput).ToList(),
+                IsOpen = d.IsOpen,
+                QuestionBankSectionId = d.QuestionBankSectionId
             };
 
         public static TestTemplateDto ToTestTemplateDto(this DbTestTemplate e)

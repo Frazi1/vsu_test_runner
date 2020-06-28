@@ -25,4 +25,8 @@ export class QuestionBankService extends BaseApiEntityService<QuestionBankSectio
       map(res => this.transformMany(res as Object[]))
     )
   }
+
+  public addSection(section: QuestionBankSectionDto): Observable<number> {
+    return this.http.post<number>(this.buildUrl(), this.json.serialize(section))
+  }
 }

@@ -45,7 +45,8 @@ namespace VsuTestRunnerServer
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUser, CurrentUser>(provider => GetUser(provider)());
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            services.AddMvc(options => options.Filters.Add<ExceptionFilter>())
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options => { options.SerializerSettings.Converters.Add(new StringEnumConverter()); });
 
             services.AddSwaggerGen(c =>

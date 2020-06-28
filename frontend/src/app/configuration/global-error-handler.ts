@@ -9,15 +9,13 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private toastr: ToastrService) {
   }
 
+  getErrorTitle(error: any): string {
+    if (error instanceof HttpErrorResponse) return 'Server error'
+    return 'Unexpected error'
+  }
+
   handleError(error: any): void {
-    if (error instanceof HttpErrorResponse) {
-      // noinspection TypeScriptValidateTypes
-      this.toastr.error(error.error.message || error.message, 'Server error',
-        {onActivateTick: true}
-      )
-    } else {
-      setTimeout(() => this.toastr.error(error.message, 'Unexpected error', {onActivateTick: true}))
-    }
+    alert(error.error || error.message)
     console.error(error)
   }
 }

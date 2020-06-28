@@ -32,6 +32,11 @@ namespace DataAccess.Repository
         public async Task<List<DbTestTemplate>> GetAllFullAsync()
             => await FullTestTemplateQuery().ToListAsync();
 
+        public async Task<bool> HasStartedInstances(int id)
+            => await Set
+                .Where(t => t.Id == id)
+                .AnyAsync(t => t.TestInstances.Any());
+
         public override async Task Update(DbTestTemplate updated)
         {
             Context.ChangeTracker.Entries().ForEach(e => e.State = EntityState.Detached);

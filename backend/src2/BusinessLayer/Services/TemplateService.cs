@@ -96,6 +96,11 @@ namespace BusinessLayer.Services
 
         public async Task UpdateTestTemplateAsync(TestTemplateDto template)
         {
+            if (await _repository.HasStartedInstances(template.Id))
+            {
+                throw new BusinessException("Template has started instances and cannot be updated");
+            }
+
             var dbTestTemplate = template.ToDbTestTemplate();
             await _repository.Update(dbTestTemplate);
             await _repository.SaveChangesAsync();

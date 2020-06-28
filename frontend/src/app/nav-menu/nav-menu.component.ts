@@ -33,7 +33,6 @@ export class NavMenuComponent implements OnInit {
   }
 
   public get currentUserName(): string {
-    // return 'Администратор'
-    return 'Александр С.'
+    return this.authStorage.getUsername()
   }
 }

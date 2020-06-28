@@ -82,6 +82,7 @@ export class AuthComponent implements OnInit {
     let passwordValue = this.password.value
     this.authService.authenticate(new AuthenticationRequestDto(usernameValue, passwordValue)).pipe(
       tap(res => this.authStorageService.setAccessToken(res.accessToken)),
+      tap (() => this.authStorageService.setUsername(usernameValue)),
       tap(() => this.router.navigate(['']))
     ).subscribe()
   }

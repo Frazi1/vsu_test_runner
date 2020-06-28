@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 
 const ACCESS_TOKEN_KEY = 'accessToken'
+const USER_NAME = 'userName'
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,14 @@ export class AuthStorageService {
       this._accessToken = localStorage.getItem(ACCESS_TOKEN_KEY)
     }
     return this._accessToken
+  }
+
+  public setUsername(userName: string): void {
+    localStorage.setItem(USER_NAME, userName)
+  }
+
+  public getUsername(): string {
+    return localStorage.getItem(USER_NAME)
   }
 
   public get isAuthenticated(): boolean {
